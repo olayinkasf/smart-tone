@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#ffb9312a</color>
+    <color name="primaryDark">#ff9b3029</color>
+    <color name="accent">#ffff00ff</color>
+    <color name="not_activated">#ff1f3669</color>
+    <color name="white">#FFF</color>
+    <color name="black">#000</color>
+    <color name="def">#ffebebeb</color>
+    <color name="window_background">#ffe0e0e0</color>
+    <color name="def_text">#ff878787</color>
+    <color name="cancel">#e0ffffff</color>
+    <color name="transparent">#00000000</color>
+    <color name="dialog">#f8efefef</color>
+
+</resources>

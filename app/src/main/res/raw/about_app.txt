@@ -1,0 +1,9 @@
+Thank you for downloading SmartTone!
+
+With SmartTone you can mix up your ringtones and notification sounds. To start, create a collection for your ringtone and another for your notifications (notification sounds are advised to stay short). Then activate the SmartTone service by setting active collections for your ringtone and notification sound.
+
+You can set shuffle frequency for both the ring tones and notification sounds. Keep in mind that changing your notification sound after every detected notification requires special permission from the system. You can choose to be notified for any change in notification sound or ringtone except if you've chosen to shuffle the notification sound after every detected notification (that will result in an infinite sequence of notifications).
+
+Please note that contact assigned ringtone are not affected in any way and only apps that use the default notification sounds will be affected.
+
+Use the buttons above to contact us if you have some questions or you just want to say hi. We don't bite. Also don't hesitate to rate the app on the Play Store and of course spread the good word by clicking the share button and broadcasting the app to your social network.

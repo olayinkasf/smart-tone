@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="requires.accessibility">Notification shuffle frequency requires phone Accessibility permission to
+        listen to your notifications. Grant permission now?
+    </string>
+    <string name="grant.accessibility">SmartTone needs phone Accessibility permission</string>
+</resources>

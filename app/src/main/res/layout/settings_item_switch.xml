@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:orientation="vertical"
+                android:padding="5dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:minHeight="?android:actionBarSize">
+
+    <TextView
+            android:textColor="@android:color/secondary_text_light"
+            android:padding="5dp"
+            android:layout_centerVertical="true"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/switchCompat"
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:gravity="center_vertical"
+            android:textSize="18sp"/>
+
+    <com.olayinka.smart.tone.widget.PrefsSwitchCompat
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:id="@+id/switchCompat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:background="#00000000"
+            app:prefs_name="@string/app.settings"
+            app:prefs_key="@string/active.app.service"/>
+
+
+</RelativeLayout>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:fab="http://schemas.android.com/apk/res-auto"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    <ImageView
+            android:id="@+id/albumArt"
+            android:transitionName="@string/transition.collection.page"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:src="@mipmap/album_unknown"/>
+
+    <android.support.v7.widget.Toolbar
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="100dp"
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/primary_padding"
+            android:minHeight="?attr/actionBarSize"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+    <ListView
+            android:layout_below="@+id/toolbar"
+            android:scrollbarSize="20dp"
+            android:id="@+id/list"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/white_padding_no_corners"
+            android:divider="@null"
+            android:fastScrollAlwaysVisible="true"
+            android:fastScrollEnabled="true"
+            android:overScrollMode="never"
+            android:scrollbarStyle="outsideInset"/>
+
+    <com.melnykov.fab.FloatingActionButton
+            android:layout_marginEnd="42dp"
+            android:layout_marginTop="-28dp"
+            android:layout_below="@+id/toolbar"
+            android:id="@+id/edit"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_mode_edit_white_24dp"
+            fab:fab_colorNormal="@color/accent"
+            fab:fab_colorPressed="@color/primary"/>
+
+</RelativeLayout>

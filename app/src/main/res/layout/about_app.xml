@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:paddingRight="5dp"
+            android:paddingEnd="5dp"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+    <ScrollView
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <include android:id="@+id/appVersion" layout="@layout/menu_item"/>
+            <include android:id="@+id/donate" layout="@layout/menu_item"/>
+            <include android:id="@+id/legal" layout="@layout/menu_item"/>
+            <LinearLayout
+                    android:padding="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:textColor="@android:color/secondary_text_light"
+                        android:padding="5dp"
+                        android:text="@string/app.name"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/title"
+                        android:layout_width="match_parent"
+                        android:gravity="center_vertical"
+                        android:textSize="18sp"/>
+                <View
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:background="#33333333"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"/>
+                <TextView
+                        android:id="@+id/aboutAppText"
+                        android:textSize="16sp"
+                        android:padding="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

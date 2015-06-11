@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Prefs">
+        <attr name="prefs_key" format="string"/>
+        <attr name="prefs_name" format="string"/>
+    </declare-styleable>
+</resources>

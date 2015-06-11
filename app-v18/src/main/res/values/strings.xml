@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="requires.notification.listener">Notification shuffle frequency requires permission to listen to your
+        notifications. Grant permission now?
+    </string>
+    <string name="grant.notification.listener">SmartTone needs Notification Access permission</string>
+</resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+    <ScrollView
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <include android:id="@+id/service" layout="@layout/settings_item_switch"/>
+            <include android:id="@+id/ringtoneFreq" layout="@layout/menu_item"/>
+            <include android:id="@+id/notifFreq" layout="@layout/menu_item"/>
+            <include android:id="@+id/notifyChange" layout="@layout/settings_item_switch"/>
+            <include android:id="@+id/reindex" layout="@layout/menu_item"/>
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

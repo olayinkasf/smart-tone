@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="media_grid_num_columns">4</integer>
+    <dimen name="album_icon_size">189dp</dimen>
+    <dimen name="collection_item_art_width">196dp</dimen>
+    <dimen name="collection_item_art_height">98dp</dimen>
+</resources>
