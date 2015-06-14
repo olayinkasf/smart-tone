@@ -2,7 +2,8 @@
 <resources>
     <item name="menuItem" type="id"/>
     <item name="mediaItem" type="id"/>
-    <item name="collectionItem" type="id"/>
+    <item name="collectionId" type="id"/>
+    <item name="collectionName" type="id"/>
     <item name="save" type="id"/>
     <item name="appNotifSettings" type="id"/>
     <item name="array" type="id"/>

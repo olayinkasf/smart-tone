@@ -13,7 +13,10 @@
             android:minHeight="?attr/actionBarSize"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
-
+    <include
+            android:visibility="gone"
+            android:id="@+id/longPressHeader"
+            layout="@layout/long_press_header"/>
     <GridView
             android:id="@+id/list"
             android:layout_marginLeft="5dp"

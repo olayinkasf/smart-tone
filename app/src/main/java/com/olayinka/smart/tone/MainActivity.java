@@ -19,6 +19,10 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome);
+
+        //TODO
+        //getSharedPreferences(AppSettings.APP_SETTINGS, MODE_PRIVATE)
+        //        .edit().clear().commit();
     }
 
     @Override

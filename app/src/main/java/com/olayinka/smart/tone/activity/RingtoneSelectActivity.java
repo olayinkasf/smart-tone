@@ -41,7 +41,7 @@ public class RingtoneSelectActivity extends CollectionPickerActivity {
 
     @Override
     public void onClick(View v) {
-        final long id = (long) v.getTag(R.id.collectionItem);
+        final long id = (long) v.getTag(R.id.collectionId);
         if (!getSharedPreferences(AppSettings.APP_SETTINGS, MODE_PRIVATE).getBoolean(AppSettings.ACTIVE_APP_SERVICE, false)) {
             new AlertDialog.Builder(this)
                     .setMessage(R.string.activate_service)

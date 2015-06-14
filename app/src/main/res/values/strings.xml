@@ -91,8 +91,16 @@
     <string name="open.source.license">Open Source Libraries</string>
     <string name="install.browser">No application can handle this request. Please install a web browser</string>
     <string name="open.source.license.header">Open Source libraries we use</string>
-    <string name="open.source.license.sub.header">This software is a result of some open source libraries. The following software may be included in this product:</string>
+    <string name="open.source.license.sub.header">This software is a result of some open source libraries. The following
+        software may be included in this product:
+    </string>
     <string name="app.name.caps">SMARTTONE 2</string>
+    <string name="nothing.beyond">Sorry! Nothing beyond this point!</string>
+    <string name="double.tap">Double tap on album art to preview music, single tap on any album art to stop preview.
+    </string>
+    <string name="long.press">Long press on any collection to delete</string>
+
+    <string name="got.it">GOT IT</string>
 
 
     <string-array name="ringtone_freq">

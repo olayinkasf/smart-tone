@@ -185,11 +185,11 @@ public class IndexerService extends IntentService {
         long lastIndex = getSharedPreferences(NAME, MODE_PRIVATE)
                 .getLong(LAST_INDEX, System.currentTimeMillis() - 8 * 24 * 60 * 60 * 1000);
         boolean forceIndexFlag = intent.getBooleanExtra(FORCE_INDEX, false);
-        cleanCollection();
         if (System.currentTimeMillis() - lastIndex >= 7 * 24 * 60 * 60 * 1000 || forceIndexFlag)
             index();
         if (intent.getData() != null)
             importCollection(intent.getData());
+        cleanCollection();
         intent = new Intent(MSG_DONE);
         sendBroadcast(intent);
         stopSelf();

@@ -47,6 +47,7 @@ public class CollectionListAdapter extends CursorAdapter {
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         View view = LayoutInflater.from(context).inflate(R.layout.collection_item, null);
         view.setOnClickListener(mItemClickListener);
+        view.setOnLongClickListener((View.OnLongClickListener) mItemClickListener);
         RelativeLayout albumTable = (RelativeLayout) view.findViewById(R.id.albumArt);
         for (int i = 0; i < 3; i++) albumTable.addView(new CenterTopImageView(context));
         ImageView transitionImageView = new CenterTopImageView(context);
@@ -60,7 +61,8 @@ public class CollectionListAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        view.setTag(R.id.collectionItem, cursor.getLong(0));
+        view.setTag(R.id.collectionId, cursor.getLong(0));
+        view.setTag(R.id.collectionName, cursor.getString(1));
 
         RelativeLayout albumTable = (RelativeLayout) view.findViewById(R.id.albumArt);
         TextView collectionName = (TextView) view.findViewById(R.id.collectionName);
@@ -80,6 +82,11 @@ public class CollectionListAdapter extends CursorAdapter {
         return mTonesMap.get(tag);
     }
 
+    public void changeCursor(Context context) {
+        changeCursor(AppSqlHelper.instance(context).getReadableDatabase()
+                .query(Media.Collection.TABLE, new String[]{"*"}, null, null, null, null, Media.Columns.NAME));
+        notifyDataSetChanged();
+    }
 
     class ToneLoader extends AsyncTask<Object, Void, TreeSet<MediaItem>> {
 

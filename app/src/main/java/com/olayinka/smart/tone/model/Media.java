@@ -165,6 +165,7 @@ public class Media {
     }
 
     public static class FolderColumns {
+        public static final String _ID = "_id";
         public static final String PATH = Columns.PATH;
         public static final String NAME = Columns.NAME;
         public static final String IS_INTERNAL = Columns.IS_INTERNAL;

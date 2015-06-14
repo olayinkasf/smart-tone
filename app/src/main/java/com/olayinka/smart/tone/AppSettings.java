@@ -33,6 +33,8 @@ public class AppSettings {
     public static final String LAST_CHANGE = ".last.change";
     public static final String FORCE_CHANGE_NOTIF = "force.change.notif";
     public static final String FORCE_CHANGE_RINGTONE = "force.change.notification";
+    public static final String GOT_IT_DOUBLE_TAP = "got.it.double.tap";
+    public static final String GOT_IT_LONG_PRESS = "got.it.long.press";
 
     public static void setFreq(Context context, String key, int which, int arrayId) {
         long time = (which == 3 ? 4 : which) * 6 * 60 * 60 * 1000;

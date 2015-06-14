@@ -39,8 +39,8 @@ public class CollectionToManageActivity extends CollectionPickerActivity {
         GridView gridView = (GridView) findViewById(R.id.list);
         CollectionListAdapter adapter = (CollectionListAdapter) gridView.getAdapter();
         MediaItem mediaItem = null;
-        long collectionId = (long) v.getTag(R.id.collectionItem);
-        TreeSet<MediaItem> items = adapter.getItemsForCollection((long) v.getTag(R.id.collectionItem));
+        long collectionId = (long) v.getTag(R.id.collectionId);
+        TreeSet<MediaItem> items = adapter.getItemsForCollection((long) v.getTag(R.id.collectionId));
         if (items != null && items.size() > 0) {
             mediaItem = items.last();
         }
