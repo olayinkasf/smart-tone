@@ -5,8 +5,8 @@ android {
 
     defaultConfig {
         minSdkVersion 18
-        versionCode 34
-        versionName "2.0.3"
+        versionCode 36
+        versionName "2.0.4"
     }
 
     repositories {
@@ -25,14 +25,34 @@ android {
         compile project(':app')
     }
 
+
+    signingConfigs {
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file('local.properties').newDataInputStream())
+        def STORE_FILE = properties.getProperty('STORE_FILE')
+        def STORE_PASSWORD = properties.getProperty('STORE_PASSWORD')
+        def KEY_ALIAS = properties.getProperty('KEY_ALIAS')
+        def KEY_PASSWORD = properties.getProperty('KEY_PASSWORD')
+
+        release {
+            storeFile file(STORE_FILE)
+            storePassword STORE_PASSWORD
+            keyAlias KEY_ALIAS
+            keyPassword KEY_PASSWORD
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.release
         }
 
     }
-
 
 }

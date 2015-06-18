@@ -8,12 +8,13 @@
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:padding="5dp"
             android:orientation="vertical">
         <TextView
                 android:clickable="true"
                 android:text="@string/double.tap"
                 android:textSize="20sp"
+                android:padding="10dp"
                 android:textColor="@android:color/black"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

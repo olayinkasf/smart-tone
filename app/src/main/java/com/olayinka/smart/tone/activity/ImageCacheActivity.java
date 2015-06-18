@@ -152,7 +152,7 @@ public abstract class ImageCacheActivity extends AppCompatActivity implements Vi
         return super.onOptionsItemSelected(item);
     }
 
-    private void setActionBar() {
+    protected void setActionBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();

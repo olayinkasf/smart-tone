@@ -101,6 +101,7 @@
     <string name="long.press">Long press on any collection to delete</string>
 
     <string name="got.it">GOT IT</string>
+    <string name="action.search">Search music</string>
 
 
     <string-array name="ringtone_freq">

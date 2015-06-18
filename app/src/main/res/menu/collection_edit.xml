@@ -9,5 +9,10 @@
             android:icon="@drawable/ic_save_white_24dp"
             android:id="@+id/save"
             android:title="@string/action.save"/>
+    <item
+            app:showAsAction="always"
+            android:icon="@drawable/ic_search_white_24dp"
+            android:id="@+id/search"
+            android:title="@string/action.search"/>
 
 </menu>

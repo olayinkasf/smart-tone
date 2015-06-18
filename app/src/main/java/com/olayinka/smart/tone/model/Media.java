@@ -18,8 +18,10 @@ public class Media {
 
     public static final String TABLE = "media";
     public static final String ALBUM = "album";
-    public static final String AND = " and ";
+    public static final String AND = " AND ";
     public static final String EQUALS = " = ? ";
+    public static final String OR = " OR ";
+    public static String LIKE = " LIKE ?";
 
 
     public static JSONArray getTones(Context context, long mCollectionId) throws JSONException {

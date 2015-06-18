@@ -37,16 +37,16 @@
 
                 <data android:scheme="file"/>
                 <data android:mimeType="*/*"/>
-                <data android:pathPattern=".*\\.smt" />
-                <data android:pathPattern=".*\\..*\\.smt" />
-                <data android:pathPattern=".*\\..*\\..*\\.smt" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\.smt" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.smt" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.smt" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.smt" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.smt" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.smt" />
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.smt" />
+                <data android:pathPattern=".*\\.smt"/>
+                <data android:pathPattern=".*\\..*\\.smt"/>
+                <data android:pathPattern=".*\\..*\\..*\\.smt"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.smt"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.smt"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.smt"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.smt"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.smt"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.smt"/>
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.smt"/>
                 <data android:host="*"/>
             </intent-filter>
         </activity>
@@ -57,6 +57,12 @@
         <activity android:name=".activity.CollectionEditActivity"
                   android:screenOrientation="portrait"
                   android:configChanges="orientation|keyboardHidden"/>
+        <activity android:name=".activity.SearchMusicActivity"
+                  android:screenOrientation="portrait"
+                  android:configChanges="orientation|keyboardHidden">
+            <meta-data android:name="android.app.searchable"
+                       android:resource="@xml/searchable"/>
+        </activity>
         <activity android:name=".activity.MediaGroupActivity"
                   android:screenOrientation="portrait"
                   android:configChanges="orientation|keyboardHidden"/>

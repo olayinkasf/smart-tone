@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import com.olayinka.smart.tone.activity.AbsMenuActivity;
 import com.olayinka.smart.tone.service.IndexerService;
+import lib.olayinka.smart.tone.BuildConfig;
 import lib.olayinka.smart.tone.R;
 
 /**
@@ -20,9 +21,9 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome);
 
-        //TODO
-        //getSharedPreferences(AppSettings.APP_SETTINGS, MODE_PRIVATE)
-        //        .edit().clear().commit();
+        //if (BuildConfig.DEBUG)
+            //getSharedPreferences(AppSettings.APP_SETTINGS, MODE_PRIVATE)
+            //        .edit().clear().commit();
     }
 
     @Override

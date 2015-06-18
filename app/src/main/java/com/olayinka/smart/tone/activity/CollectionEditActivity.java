@@ -11,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.transition.Explode;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -32,7 +31,7 @@ import java.util.Set;
 /**
  * Created by olayinka on 4/30/15.
  */
-public class CollectionEditActivity extends ImageCacheActivity implements View.OnTouchListener {
+public class CollectionEditActivity extends ImageCacheActivity {
 
     public static final int GROUP_RETURN_CODE = 16916;
     public static final String COLLECTION_ID = "collection.id";
@@ -82,9 +81,14 @@ public class CollectionEditActivity extends ImageCacheActivity implements View.O
                             }).show();
                 }
             }
+        } else if (id == R.id.search) {
+            Intent intent = new Intent(this, SearchMusicActivity.class);
+            intent.putExtra(SearchMusicActivity.SELECTION, Utils.serialize(mSelection));
+            startActivityForResult(intent, GROUP_RETURN_CODE);
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     private void saveCollection(EditText textView) {
         final long fauxId = System.currentTimeMillis();
@@ -180,6 +184,7 @@ public class CollectionEditActivity extends ImageCacheActivity implements View.O
                     mSelection.add(selectionJsonArray.getLong(i));
                 }
                 mPagerAdapter.notifyDataSetChanged();
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }

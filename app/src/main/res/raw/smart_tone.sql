@@ -1,8 +1,8 @@
 CREATE TABLE `album` (
   _id           INTEGER PRIMARY KEY AUTOINCREMENT,
   album_id      INTEGER,
-  _name         VARCHAR(255),
-  artist_name   VARCHAR(255),
+  _name         VARCHAR(255) COLLATE NOCASE,
+  artist_name   VARCHAR(255) COLLATE NOCASE,
   'is_internal' INTEGER(1),
   UNIQUE (`album_id`, `is_internal`)
 );
@@ -10,19 +10,19 @@ CREATE TABLE `album` (
 CREATE TABLE `folder` (
   _id           INTEGER PRIMARY KEY AUTOINCREMENT,
   `album_id`    INTEGER,
-  _name         VARCHAR(255),
-  path          VARCHAR(255) UNIQUE NOT NULL,
+  _name         VARCHAR(255) COLLATE NOCASE,
+  path          VARCHAR(255) COLLATE NOCASE UNIQUE NOT NULL,
   'is_internal' INTEGER(1)
 );
 
 CREATE TABLE IF NOT EXISTS `media` (
   `_id`             INTEGER PRIMARY KEY AUTOINCREMENT,
-  'media_id'        INTEGER             NOT NULL,
-  `_name`           VARCHAR(255)        NOT NULL,
-  `path`            VARCHAR(255) UNIQUE NOT NULL,
+  'media_id'        INTEGER                            NOT NULL,
+  `_name`           VARCHAR(255) COLLATE NOCASE        NOT NULL,
+  `path`            VARCHAR(255) COLLATE NOCASE UNIQUE NOT NULL,
   `album_id`        INTEGER,
-  `album_name`      VARCHAR(255),
-  `artist_name`     VARCHAR(255),
+  `album_name`      VARCHAR(255) COLLATE NOCASE,
+  `artist_name`     VARCHAR(255) COLLATE NOCASE,
   'folder_id'       INTEGER,
   'is_notification' INTEGER(1),
   'is_ringtone'     INTEGER(1),
@@ -34,8 +34,8 @@ CREATE TABLE IF NOT EXISTS `media` (
 
 CREATE TABLE IF NOT EXISTS `collection` (
   `_id`          INTEGER PRIMARY KEY AUTOINCREMENT,
-  `_name`        VARCHAR(255) NOT NULL,
-  `date_created` timestamp    NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `_name`        VARCHAR(255) COLLATE NOCASE NOT NULL,
+  `date_created` timestamp                   NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS `tone` (

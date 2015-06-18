@@ -4,11 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.view.MenuItem;
-import android.view.View;
 import android.webkit.WebView;
-import android.widget.TextView;
 import com.olayinka.smart.tone.Utils;
 import lib.olayinka.smart.tone.R;
 

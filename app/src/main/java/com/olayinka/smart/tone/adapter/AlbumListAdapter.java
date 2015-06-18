@@ -28,7 +28,7 @@ import java.util.Set;
 /**
  * Created by Olayinka on 5/3/2015.
  */
-public class AlbumListAdapter extends CursorAdapter implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+public class AlbumListAdapter extends CursorAdapter implements  View.OnClickListener {
 
     private Set<Long> mSelection;
 
@@ -71,10 +71,6 @@ public class AlbumListAdapter extends CursorAdapter implements CompoundButton.On
         return new MediaItem(cursor.getLong(0), cursor.getLong(1), cursor.getInt(4));
     }
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-    }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override

@@ -32,6 +32,11 @@ public class MediaPagerAdapter extends PagerAdapter {
     }
 
     @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
+
+    @Override
     public boolean isViewFromObject(View view, Object o) {
         return o == view;
     }

@@ -27,6 +27,10 @@ public class MediaListAdapter extends CursorAdapter implements CompoundButton.On
     public static final String SELECTION_RINGTONE = Media.Columns.IS_NOTIFICATION + " == 0";
     public static final String SELECTION_NOTIFICATION = Media.Columns.IS_NOTIFICATION + " != 0";
     public static final String SELECTION_SELECTED = Media.Columns._ID + " IN (%s)";
+    public static final String SELECTION_NONE = Media.Columns._ID + " = 0";
+    public static final String SELECTION_SEARCH = Media.Columns.NAME + Media.LIKE + Media.OR
+            + Media.Columns.ALBUM_NAME + Media.LIKE + Media.OR
+            + Media.Columns.ARTIST_NAME + Media.LIKE;
     public static SelectionListAdapter SELECTION_ADAPTER;
 
     protected Set<Long> mSelection;
@@ -37,7 +41,7 @@ public class MediaListAdapter extends CursorAdapter implements CompoundButton.On
 
     public MediaListAdapter(Context context, String selection, String[] selectionArgs, Set<Long> selected) {
         super(context, AppSqlHelper.instance(context).getReadableDatabase()
-                .query(Media.TABLE, new String[]{"*"}, selection, null, null, null, Media.Columns.NAME)
+                .query(Media.TABLE, new String[]{"*"}, selection, selectionArgs, null, null, Media.Columns.NAME)
                 , false);
         this.mSelection = selected;
     }
