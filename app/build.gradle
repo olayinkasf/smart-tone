@@ -1,10 +1,10 @@
 import java.text.SimpleDateFormat
-
 apply plugin: 'com.android.library'
 android {
+    signingConfigs {
+    }
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
-
     defaultConfig {
         minSdkVersion 11
         targetSdkVersion 22
@@ -29,18 +29,15 @@ android {
         buildConfigField "long", "BUILD_TIME", "" + date.getTime() + "L"
 
     }
-
     repositories {
         mavenLocal()
         mavenCentral()
         jcenter()
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
-
     dependencies {
         compile fileTree(dir: 'libs', include: ['*.jar'])
         compile 'com.android.support:appcompat-v7:22.2.0'
@@ -48,7 +45,6 @@ android {
         compile 'com.android.support:recyclerview-v7:22.0.0'
         compile 'com.melnykov:floatingactionbutton:1.1.0'
     }
-
     buildTypes {
         release {
             minifyEnabled false
@@ -56,6 +52,6 @@ android {
         }
 
     }
-
-
+}
+dependencies {
 }

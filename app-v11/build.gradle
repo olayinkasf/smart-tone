@@ -5,8 +5,8 @@ android {
 
     defaultConfig {
         minSdkVersion 11
-        versionCode 35
-        versionName "2.0.4"
+        versionCode 41
+        versionName "2.1.0"
 
     }
 
@@ -34,7 +34,8 @@ android {
         def KEY_ALIAS = properties.getProperty('KEY_ALIAS')
         def KEY_PASSWORD = properties.getProperty('KEY_PASSWORD')
 
-        release {KEY_ALIAS
+        release {
+            KEY_ALIAS
             storeFile file(STORE_FILE)
             storePassword STORE_PASSWORD
             keyAlias KEY_ALIAS
@@ -48,11 +49,14 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
             signingConfig signingConfigs.release
+            debuggable false
+            zipAlignEnabled true
         }
         debug {
             signingConfig signingConfigs.release
         }
-
     }
 
+}
+dependencies {
 }

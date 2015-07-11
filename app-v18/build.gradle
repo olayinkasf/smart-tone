@@ -5,8 +5,8 @@ android {
 
     defaultConfig {
         minSdkVersion 18
-        versionCode 36
-        versionName "2.0.4"
+        versionCode 42
+        versionName "2.1.0"
     }
 
     repositories {

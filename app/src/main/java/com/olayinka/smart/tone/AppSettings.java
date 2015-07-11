@@ -2,6 +2,7 @@ package com.olayinka.smart.tone;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -31,10 +32,9 @@ public class AppSettings {
     public static final String NOTIFY_CHANGE = "notify.change";
     public static final String ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners";
     public static final String LAST_CHANGE = ".last.change";
-    public static final String FORCE_CHANGE_NOTIF = "force.change.notif";
-    public static final String FORCE_CHANGE_RINGTONE = "force.change.notification";
     public static final String GOT_IT_DOUBLE_TAP = "got.it.double.tap";
     public static final String GOT_IT_LONG_PRESS = "got.it.long.press";
+    public static final String JUST_CHANGED = "just.changed";
 
     public static void setFreq(Context context, String key, int which, int arrayId) {
         long time = (which == 3 ? 4 : which) * 6 * 60 * 60 * 1000;
@@ -97,6 +97,11 @@ public class AppSettings {
         if (uri != null && notify) {
             notify(context, context.getString(R.string.notification_change));
         }
+        if (uri != null) {
+            Intent intent = new Intent(JUST_CHANGED);
+            intent.putExtra(JUST_CHANGED, ACTIVE_NOTIFICATION);
+            context.sendBroadcast(intent);
+        }
         return uri;
     }
 
@@ -112,6 +117,11 @@ public class AppSettings {
         if (uri != null && notify) {
             notify(context, context.getString(R.string.ringtone_change));
         }
+        if (uri != null) {
+            Intent intent = new Intent(JUST_CHANGED);
+            intent.putExtra(JUST_CHANGED, ACTIVE_RINGTONE);
+            context.sendBroadcast(intent);
+        }
         return uri;
     }
 
@@ -121,5 +131,13 @@ public class AppSettings {
             prefs.edit().remove(ACTIVE_RINGTONE).apply();
         if (prefs.getLong(AppSettings.ACTIVE_NOTIFICATION, 0) == collectionId)
             prefs.edit().remove(ACTIVE_NOTIFICATION).apply();
+    }
+
+    public static Long[] getActivePairs(Context context) {
+        Long[] ret = new Long[]{0L, 0L};
+        SharedPreferences prefs = context.getSharedPreferences(AppSettings.APP_SETTINGS, MODE_PRIVATE);
+        ret[0] = prefs.getLong(AppSettings.ACTIVE_RINGTONE, 0);
+        ret[1] = prefs.getLong(AppSettings.ACTIVE_NOTIFICATION, 0);
+        return ret;
     }
 }

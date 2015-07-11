@@ -9,6 +9,7 @@ import android.widget.*;
 import com.olayinka.smart.tone.AppSqlHelper;
 import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.activity.ImageCacheActivity;
+import com.olayinka.smart.tone.model.ListenableHashSet;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.MediaItem;
 import com.olayinka.smart.tone.task.MediaPlayBackTask;
@@ -20,7 +21,7 @@ import java.util.Set;
  * Created by Olayinka on 5/3/2015.
  */
 
-public class MediaListAdapter extends CursorAdapter implements CompoundButton.OnCheckedChangeListener, View.OnClickListener {
+public class MediaListAdapter extends CursorAdapter implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, ListenableHashSet.HashSetListener {
 
 
     public static final String SELECTION_ALL = null;
@@ -31,7 +32,6 @@ public class MediaListAdapter extends CursorAdapter implements CompoundButton.On
     public static final String SELECTION_SEARCH = Media.Columns.NAME + Media.LIKE + Media.OR
             + Media.Columns.ALBUM_NAME + Media.LIKE + Media.OR
             + Media.Columns.ARTIST_NAME + Media.LIKE;
-    public static SelectionListAdapter SELECTION_ADAPTER;
 
     protected Set<Long> mSelection;
 
@@ -92,8 +92,10 @@ public class MediaListAdapter extends CursorAdapter implements CompoundButton.On
         MediaPlayBackTask.stop();
         CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox);
         checkBox.setChecked(!checkBox.isChecked());
-        if (SELECTION_ADAPTER != null) {
-            SELECTION_ADAPTER.requery(view.getContext());
-        }
+    }
+
+    @Override
+    public void onDataSetChanged() {
+        notifyDataSetChanged();
     }
 }

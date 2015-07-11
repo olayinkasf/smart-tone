@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * Created by Olayinka on 5/9/2015.
  */
-public class MenuActivity extends AbsMenuActivity {
+public class MenuActivity extends AnotherMenuActivity {
 
     private AlertDialog mDialog;
 

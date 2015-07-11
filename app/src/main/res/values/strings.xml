@@ -13,7 +13,8 @@
     <string name="mail_uri" formatted="false" translatable="false">
         mailto:olayinka.sf@gmail.com?subject=Help%20and%20Support
     </string>
-    <string name="create_collection">New Collection</string>
+    <string name="create.collection">Click the button below to create a collection of ringtones or notification sounds
+    </string>
     <string name="manage_collection" translatable="false">Collections</string>
     <string name="activate">Activate</string>
     <string name="select_all">Select all</string>
@@ -55,7 +56,7 @@
     <string name="after.every.call">After every call</string>
     <string name="after.every.notif">After every notification</string>
     <string name="notify.change">Notify on ringtone change</string>
-    <string name="reindex_media">Reindex media files</string>
+    <string name="rescan.media">Rescan media files</string>
     <string name="notification.service">SmartTone Notification Service</string>
     <string name="notification_freq_changed">Notification shuffle frequency changed.</string>
     <string name="ringtone.service">SmartTone Ringtone Service</string>
@@ -102,6 +103,30 @@
 
     <string name="got.it">GOT IT</string>
     <string name="action.search">Search music</string>
+    <string name="billing.error">Error querying billing services</string>
+    <string name="billing.missing">Billing service unavailable on device</string>
+    <string name="select.one">Select one of your collections below to use as ringtones or notification sounds
+    </string>
+    <string name="toggle.activate">SmartTone service is inactive. Use the toggle button above to activate</string>
+    <string name="no.collection">WELCOME\nYOU HAVE NOT CREATED A COLLECTION</string>
+    <string name="action.edit.collection">Edit collection</string>
+    <string name="action.set.notif">Set for notification</string>
+    <string name="action.set.ringtone">Set for ringtone</string>
+    <string name="action.remove.ringtone">Remove for ringtone</string>
+    <string name="action.remove.notif">Remove for notification</string>
+    <string name="set">Set</string>
+    <string name="as.ringtone">as ringtone collection</string>
+    <string name="remove">Remove</string>
+    <string name="as_notif">as notification collection</string>
+    <string name="change.notif">Change notification sound</string>
+    <string name="change.ringtone">Change ringtone</string>
+    <string name="action.settings">Settings</string>
+    <string name="backup.collections">Backup collections</string>
+    <string name="about.app">About app</string>
+    <string name="no.active.ringtone">You have no active ringtone collection</string>
+    <string name="shuffle.error">An error occurred</string>
+    <string name="service.inactive">SmartTone service is inactive</string>
+    <string name="no.active.notification">You have no active collection for notification sounds</string>
 
 
     <string-array name="ringtone_freq">

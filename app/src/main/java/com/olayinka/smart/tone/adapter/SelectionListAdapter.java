@@ -12,13 +12,15 @@ import java.util.Set;
  * Created by Olayinka on 5/24/2015.
  */
 public class SelectionListAdapter extends MediaListAdapter {
-    public SelectionListAdapter(Context context,  Set<Long> selected) {
+    private Context mContext;
+
+    public SelectionListAdapter(Context context, Set<Long> selected) {
         super(context, String.format(MediaListAdapter.SELECTION_SELECTED, TextUtils.join(", ", selected)), null, selected);
-        MediaListAdapter.SELECTION_ADAPTER = this;
+        mContext = context;
     }
 
-    public void requery(Context context) {
-        Cursor cursor = AppSqlHelper.instance(context).getReadableDatabase()
+    public void requery() {
+        Cursor cursor = AppSqlHelper.instance(mContext).getReadableDatabase()
                 .query(
                         Media.TABLE,
                         new String[]{"*"},
@@ -28,5 +30,10 @@ public class SelectionListAdapter extends MediaListAdapter {
                 );
         swapCursor(cursor);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDataSetChanged() {
+        requery();
     }
 }

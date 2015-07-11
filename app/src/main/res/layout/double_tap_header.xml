@@ -22,7 +22,7 @@
 
         <TextView
                 android:id="@+id/got_it"
-                android:background="?attr/selectableItemBackground"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:textColor="@android:color/black"
                 android:layout_gravity="center_vertical|right|end"
                 android:gravity="center_vertical|end"

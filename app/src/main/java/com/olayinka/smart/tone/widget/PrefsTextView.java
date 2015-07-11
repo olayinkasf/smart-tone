@@ -43,6 +43,7 @@ public class PrefsTextView extends TextView {
     public void setPrefs(String name, String key) {
         mPrefsName = name;
         mPrefsKey = key;
+        setPrefsText();
     }
 
     public void setPrefsText() {

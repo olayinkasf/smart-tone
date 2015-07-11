@@ -48,10 +48,10 @@ public class PrefsSwitchCompat extends SwitchCompat {
 
     @Override
     public void setChecked(boolean checked) {
-        super.setChecked(checked);
         getContext().getSharedPreferences(mPrefsName, Context.MODE_PRIVATE)
                 .edit()
-                .putBoolean(mPrefsKey, isChecked())
+                .putBoolean(mPrefsKey, checked)
                 .apply();
+        super.setChecked(checked);
     }
 }

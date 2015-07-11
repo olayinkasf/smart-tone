@@ -149,17 +149,23 @@ public class AboutAppActivity extends AppCompatActivity {
 
         ((TextView) findViewById(R.id.aboutAppText)).setText(Utils.getRawString(this, R.raw.about_app));
 
-
-        // compute your public key and store it in base64EncodedPublicKey
-        mHelper = new IabHelper(this, mBase64EncodedPublicKey);
-        mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-            public void onIabSetupFinished(IabResult result) {
-                if (!result.isSuccess()) {
-                } else {
-                    mHelper.queryInventoryAsync(mGotInventoryListener);
+        Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");
+        serviceIntent.setPackage("com.android.vending");
+        if (getPackageManager().queryIntentServices(serviceIntent, 0) != null) {
+            // compute your public key and store it in base64EncodedPublicKey
+            mHelper = new IabHelper(this, mBase64EncodedPublicKey);
+            mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+                public void onIabSetupFinished(IabResult result) {
+                    if (!result.isSuccess()) {
+                        Utils.toast(AboutAppActivity.this, R.string.billing_error);
+                    } else {
+                        mHelper.queryInventoryAsync(mGotInventoryListener);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            Utils.toast(AboutAppActivity.this, R.string.billing_missing);
+        }
     }
 
     private void setDonation() {

@@ -172,16 +172,20 @@ public abstract class ImageCacheActivity extends AppCompatActivity implements Vi
         return mMemoryCache.get(key);
     }
 
-    public void loadBitmap(Uri uri, ImageView imageView, int size) {
-        Bitmap bitmap = getBitmapFromMemCache(String.valueOf(uri));
+    public void loadBitmap(Uri uri, ImageView imageView, int size, String keySuffix) {
+        Bitmap bitmap = getBitmapFromMemCache(String.valueOf(uri) + keySuffix);
         if (bitmap != null) {
             imageView.setImageBitmap(bitmap);
         } else if (cancelPotentialWork(uri, imageView)) {
-            final UriBitmapWorkerTask task = new UriBitmapWorkerTask(imageView, size);
+            final UriBitmapWorkerTask task = new UriBitmapWorkerTask(imageView, size, keySuffix);
             final AsyncDrawable asyncDrawable = new AsyncDrawable(getResources(), mPlaceHolderBitmap, task);
             imageView.setImageDrawable(asyncDrawable);
             task.execute(uri);
         }
+    }
+
+    public void loadBitmap(Uri uri, ImageView imageView, int size) {
+        loadBitmap(uri, imageView, size, "");
     }
 
     abstract void initToolbar(Toolbar toolbar);
@@ -217,18 +221,20 @@ public abstract class ImageCacheActivity extends AppCompatActivity implements Vi
         private final WeakReference<ImageView> imageViewReference;
         protected int mSize;
         private Uri mData;
+        String keySuffix;
 
-        public UriBitmapWorkerTask(ImageView imageView, int size) {
+        public UriBitmapWorkerTask(ImageView imageView, int size, String keySuffix) {
             // Use a WeakReference to ensure the ImageView can be garbage collected
             imageViewReference = new WeakReference<>(imageView);
             this.mSize = size;
+            this.keySuffix = keySuffix;
         }
 
         // Once complete, see if ImageView is still around and set bitmap.
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap != null) {
-                addBitmapToMemoryCache(String.valueOf(mData), bitmap);
+                addBitmapToMemoryCache(String.valueOf(mData) + keySuffix, bitmap);
             }
             if (isCancelled()) {
                 bitmap = null;

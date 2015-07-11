@@ -12,11 +12,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import com.olayinka.smart.tone.AbsSmartTone;
-import com.olayinka.smart.tone.AppSettings;
-import com.olayinka.smart.tone.AppSqlHelper;
-import com.olayinka.smart.tone.MainActivity;
+import com.olayinka.smart.tone.*;
 import com.olayinka.smart.tone.model.Media;
+import com.olayinka.smart.tone.service.AppService;
 import com.olayinka.smart.tone.service.IndexerService;
 import com.olayinka.smart.tone.widget.PrefsSwitchCompat;
 import com.olayinka.smart.tone.widget.PrefsTextView;
@@ -100,11 +98,26 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         view.setOnClickListener(this);
 
 
+        //backup collections
+        view = findViewById(R.id.backup);
+        titleView = (TextView) view.findViewById(R.id.title);
+        view.findViewById(R.id.text).setVisibility(View.GONE);
+        titleView.setText(R.string.backup_collections);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                Intent intent = new Intent(v.getContext(), AppService.class);
+                intent.setType(AppService.EXPORT_COLLECTIONS);
+                Utils.toast(v.getContext(), R.string.collection_export_sent);
+                v.getContext().startService(intent);
+            }
+        });
+
         //rescan media files
         view = findViewById(R.id.reindex);
         titleView = (TextView) view.findViewById(R.id.title);
         view.findViewById(R.id.text).setVisibility(View.GONE);
-        titleView.setText(R.string.reindex_media);
+        titleView.setText(R.string.rescan_media);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -123,6 +136,21 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                         .show();
             }
         });
+
+
+        //about app
+        view = findViewById(R.id.aboutApp);
+        titleView = (TextView) view.findViewById(R.id.title);
+        textView = (PrefsTextView) view.findViewById(R.id.text);
+        textView.setText(String.format("SmartTone v%s", Utils.VAR_MAP.get("version.name")));
+        titleView.setText(R.string.about_app);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                v.getContext().startActivity(new Intent(v.getContext(), AboutAppActivity.class));
+            }
+        });
+
     }
 
     private void setActionBar() {

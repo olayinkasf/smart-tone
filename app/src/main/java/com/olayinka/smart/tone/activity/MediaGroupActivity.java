@@ -4,11 +4,13 @@ import android.annotation.TargetApi;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.transition.Explode;
+import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -38,7 +40,6 @@ public class MediaGroupActivity extends ImageCacheActivity {
     MediaItem mMediaItem;
     long[] mMedias;
     private Set<Long> mSelection;
-    private MediaListAdapter mAdapter;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -76,11 +77,6 @@ public class MediaGroupActivity extends ImageCacheActivity {
         });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mAdapter.notifyDataSetChanged();
-    }
 
     @Override
     void initToolbar(Toolbar toolbar) {
@@ -102,6 +98,7 @@ public class MediaGroupActivity extends ImageCacheActivity {
         }
         mMediaItem = MediaItem.fromJSONObject(new JSONObject(getIntent().getStringExtra(MEDIA_ITEM)));
         ImageView albumArt = (ImageView) findViewById(R.id.albumArt);
+        Utils.squareImageView(this, albumArt);
         albumArt.setTag(R.id.mediaItem, mMediaItem);
         Uri sArtworkUri = Uri.parse("content://media/" + (mMediaItem.getInternal() == 0 ? "external" : "internal") + "/audio/albumart");
         Uri uri = ContentUris.withAppendedId(sArtworkUri, mMediaItem.getAlbumId());
@@ -121,7 +118,6 @@ public class MediaGroupActivity extends ImageCacheActivity {
                 break;
         }
 
-        mAdapter = new MediaListAdapter(this, selection, mSelection);
         listView.setAdapter(new MediaListAdapter(this, selection, mSelection));
         Cursor cursor = AppSqlHelper.instance(this).getReadableDatabase()
                 .query(Media.TABLE, new String[]{Media.Columns._ID}, selection, null, null, null, null);

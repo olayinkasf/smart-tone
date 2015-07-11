@@ -27,12 +27,19 @@ public class RingtoneTelephonyService extends Service {
             Log.wtf("onCreate", "New telephony listener instance." + this);
             TelephonyManager mTelephonyMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
             mListener = new PhoneStateListener() {
+                public boolean lookOut;
+
                 @Override
                 public void onCallStateChanged(int state, String incomingNumber) {
                     switch (state) {
                         case TelephonyManager.CALL_STATE_IDLE:
-                            onCallStateIdle();
+                            if (lookOut)
+                                onCallStateIdle();
+                            lookOut = false;
                             break;
+                        case TelephonyManager.CALL_STATE_RINGING:
+                            lookOut = true;
+                            return;
                     }
                     super.onCallStateChanged(state, incomingNumber);
                 }

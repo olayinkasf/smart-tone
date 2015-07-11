@@ -10,30 +10,24 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.ListView;
 import com.olayinka.smart.tone.AppSettings;
+import com.olayinka.smart.tone.model.ListenableHashSet;
 import com.olayinka.smart.tone.model.Media;
 import lib.olayinka.smart.tone.R;
-
-import java.util.Set;
 
 /**
  * Created by olayinka on 5/1/15.
  */
 public class MediaPagerAdapter extends PagerAdapter {
 
-    private Set<Long> mSelection;
+    private ListenableHashSet<Long> mSelection;
 
-    public MediaPagerAdapter(Set<Long> mSelection) {
+    public MediaPagerAdapter(ListenableHashSet<Long> mSelection) {
         this.mSelection = mSelection;
     }
 
     @Override
     public int getCount() {
         return 6;
-    }
-
-    @Override
-    public int getItemPosition(Object object) {
-        return POSITION_NONE;
     }
 
     @Override
@@ -63,47 +57,55 @@ public class MediaPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View view = null;
+        Context context = container.getContext();
         if (position < 4)
-            view = LayoutInflater.from(container.getContext()).inflate(R.layout.media_list, container, false);
-        else view = LayoutInflater.from(container.getContext()).inflate(R.layout.media_grid, container, false);
+            view = LayoutInflater.from(context).inflate(R.layout.media_list, container, false);
+        else view = LayoutInflater.from(context).inflate(R.layout.media_grid, container, false);
 
         AbsListView mediaListView = (AbsListView) view.findViewById(R.id.list);
-
+        MediaListAdapter mediaListAdapter = null;
         switch (position) {
             case 0:
-                mediaListView.setAdapter(new SelectionListAdapter(container.getContext(), mSelection));
+                mediaListAdapter = new SelectionListAdapter(context, mSelection);
+                mediaListView.setAdapter(mediaListAdapter);
+                mSelection.addListener(MediaListAdapter.SELECTION_SELECTED, mediaListAdapter);
                 break;
             case 1:
-                LayoutInflater inflater = (LayoutInflater) mediaListView.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                if (!alreadyGotIt(container.getContext())) {
+                if (!alreadyGotIt(context)) {
+                    LayoutInflater inflater = (LayoutInflater) mediaListView.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                     final ViewGroup header = (ViewGroup) inflater.inflate(R.layout.double_tap_header, mediaListView, false);
                     header.findViewById(R.id.got_it).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             gotIt(v.getContext(), header);
                         }
-
                     });
                     ((ListView) mediaListView).addHeaderView(header, null, true);
                 }
-                mediaListView.setAdapter(new MediaListAdapter(container.getContext(), MediaListAdapter.SELECTION_ALL, mSelection));
+                adaptMediaListView(context, MediaListAdapter.SELECTION_ALL, mediaListView);
                 break;
             case 2:
-                mediaListView.setAdapter(new MediaListAdapter(container.getContext(), MediaListAdapter.SELECTION_RINGTONE, mSelection));
+                adaptMediaListView(context, MediaListAdapter.SELECTION_RINGTONE, mediaListView);
                 break;
             case 3:
-                mediaListView.setAdapter(new MediaListAdapter(container.getContext(), MediaListAdapter.SELECTION_NOTIFICATION, mSelection));
+                adaptMediaListView(context, MediaListAdapter.SELECTION_NOTIFICATION, mediaListView);
                 break;
             case 4:
-                mediaListView.setAdapter(new AlbumListAdapter(container.getContext(), Media.Album.TABLE, mSelection));
+                mediaListView.setAdapter(new AlbumListAdapter(context, Media.Album.TABLE, mSelection));
                 break;
             case 5:
-                mediaListView.setAdapter(new FolderListAdapter(container.getContext(), mSelection));
+                mediaListView.setAdapter(new FolderListAdapter(context, mSelection));
                 break;
         }
 
         container.addView(view);
         return view;
+    }
+
+    private void adaptMediaListView(Context context, String selection, AbsListView listView) {
+        MediaListAdapter mediaListAdapter = new MediaListAdapter(context, selection, mSelection);
+        listView.setAdapter(mediaListAdapter);
+        mSelection.addListener(selection, mediaListAdapter);
     }
 
     private void gotIt(Context context, final View header) {

@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.adapter.MediaPagerAdapter;
+import com.olayinka.smart.tone.model.ListenableHashSet;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.service.AppService;
 import com.olayinka.smart.tone.widget.SlidingTabLayout;
@@ -26,7 +27,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created by olayinka on 4/30/15.
@@ -38,9 +38,7 @@ public class CollectionEditActivity extends ImageCacheActivity {
     public static final String COLLECTION_NAME = "collection.name";
     private long mCollectionId;
     private String mCollectionName;
-    private Set<Long> mSelection;
-    private ViewPager mViewPager;
-    private MediaPagerAdapter mPagerAdapter;
+    private ListenableHashSet<Long> mSelection;
 
     @Override
     public void onBackPressed() {
@@ -89,7 +87,6 @@ public class CollectionEditActivity extends ImageCacheActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
     private void saveCollection(EditText textView) {
         final long fauxId = System.currentTimeMillis();
         Intent intent = new Intent(this, AppService.class);
@@ -136,15 +133,9 @@ public class CollectionEditActivity extends ImageCacheActivity {
         setPager();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mPagerAdapter.notifyDataSetChanged();
-    }
-
     private void setPager() {
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        mPagerAdapter = new MediaPagerAdapter(mSelection);
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        MediaPagerAdapter mPagerAdapter = new MediaPagerAdapter(mSelection);
         mViewPager.setAdapter(mPagerAdapter);
         SlidingTabLayout mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
         mSlidingTabLayout.setViewPager(mViewPager);
@@ -158,7 +149,7 @@ public class CollectionEditActivity extends ImageCacheActivity {
             JSONObject collectionObject = Media.getCollection(this, mCollectionId);
             JSONArray selectionJsonArray = Media.getTones(this, mCollectionId);
             mCollectionName = collectionObject.optString(Media.CollectionColumns.NAME, "");
-            mSelection = new HashSet<>(selectionJsonArray.length());
+            mSelection = new ListenableHashSet<>(selectionJsonArray.length());
             for (int i = 0; i < selectionJsonArray.length(); i++) {
                 mSelection.add(selectionJsonArray.getLong(i));
             }
@@ -180,11 +171,11 @@ public class CollectionEditActivity extends ImageCacheActivity {
             try {
                 mSelection.clear();
                 JSONArray selectionJsonArray = new JSONArray(data.getStringExtra(MediaGroupActivity.SELECTION));
+                HashSet<Long> tmpCollection = new HashSet<>(selectionJsonArray.length());
                 for (int i = 0; i < selectionJsonArray.length(); i++) {
-                    mSelection.add(selectionJsonArray.getLong(i));
+                    tmpCollection.add(selectionJsonArray.getLong(i));
                 }
-                mPagerAdapter.notifyDataSetChanged();
-
+                mSelection.addAll(tmpCollection);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

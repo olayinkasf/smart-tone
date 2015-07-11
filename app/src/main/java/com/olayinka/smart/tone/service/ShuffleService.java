@@ -24,18 +24,12 @@ public class ShuffleService extends Service {
             return START_NOT_STICKY;
         }
 
-        if (runForRingtone &&
-                (shouldChange(AppSettings.RINGTONE_FREQ) ||
-                        (intent != null && intent.getBooleanExtra(AppSettings.FORCE_CHANGE_RINGTONE, false)))
-                ) try {
+        if (runForRingtone && shouldChange(AppSettings.RINGTONE_FREQ)) try {
             AppSettings.changeRingtoneSound(this);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (runForNotification &&
-                (shouldChange(AppSettings.NOTIF_FREQ) ||
-                        (intent != null && intent.getBooleanExtra(AppSettings.FORCE_CHANGE_NOTIF, false)))
-                ) try {
+        if (runForNotification && shouldChange(AppSettings.NOTIF_FREQ)) try {
             AppSettings.changeNotificationSound(this);
         } catch (JSONException e) {
             e.printStackTrace();

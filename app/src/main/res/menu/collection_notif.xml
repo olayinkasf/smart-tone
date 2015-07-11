@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item app:showAsAction="always"
+          android:icon="@drawable/ic_notifications_black_24dp"/>
+    <item
+            app:showAsAction="never"
+            android:id="@+id/setRingtone"
+            android:title="@string/action.set.ringtone"/>
+    <item
+            app:showAsAction="never"
+            android:id="@+id/removeNotif"
+            android:title="@string/action.remove.notif"/>
+    <item
+            app:showAsAction="never"
+            android:id="@+id/editCollection"
+            android:title="@string/action.edit.collection"/>
+    <item
+            app:showAsAction="never"
+            android:id="@+id/deleteCollection"
+            android:title="@string/action.delete.collection"/>
+</menu>
