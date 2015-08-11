@@ -39,6 +39,8 @@ public class Media {
     public static final String ALBUM = "album";
     public static final String AND = " AND ";
     public static final String EQUALS = " = ? ";
+    public static final String NOT_EQUALS = " != ? ";
+    public static final String NOT_IN = " NOT IN ";
     public static final String OR = " OR ";
     public static String LIKE = " LIKE ?";
 

@@ -28,8 +28,8 @@ android {
 
     defaultConfig {
         minSdkVersion 11
-        versionCode 45
-        versionName "2.1.2"
+        versionCode 47
+        versionName "2.1.3"
 
     }
 

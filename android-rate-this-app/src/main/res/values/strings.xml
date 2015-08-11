@@ -19,7 +19,7 @@
   -->
 
 <resources>
-    <string name="rate.this.app.remind">REMIND ME LATER</string>
+    <string name="rate.this.app.remind">MAYBE LATER</string>
     <string name="rate.this.app.positive">RATE NOW</string>
     <string name="rate.this.app.negative">ALREADY DID</string>
     <string name="app.name"></string>

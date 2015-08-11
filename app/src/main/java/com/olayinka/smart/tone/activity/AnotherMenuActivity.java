@@ -143,15 +143,15 @@ public abstract class AnotherMenuActivity extends ImageCacheActivity implements 
         if ((activePairs[0] == 0 && activePairs[1] == 0) || active) {
             hide(mListHeader.findViewById(R.id.serviceNotifier), init);
         } else {
-            show(mListHeader.findViewById(R.id.serviceNotifier), init);
+            show(mListHeader.findViewById(R.id.serviceNotifier), init, null);
         }
     }
 
-    private void show(View view, boolean init) {
+    private void show(View view, boolean init, Float v) {
         if (init)
             view.setVisibility(View.VISIBLE);
         else
-            unGotIt(view);
+            unGotIt(view, v);
     }
 
     private void hide(View view, boolean init) {
@@ -191,7 +191,7 @@ public abstract class AnotherMenuActivity extends ImageCacheActivity implements 
     private void refreshSelectNotifier(boolean init) {
         Long[] activePairs = AppSettings.getActivePairs(this);
         if (activePairs[0] == 0l && activePairs[1] == 0l) {
-            show(findViewById(R.id.selectNotifier), init);
+            show(findViewById(R.id.selectNotifier), init, null);
         } else {
             hide(findViewById(R.id.selectNotifier), init);
         }
@@ -284,18 +284,18 @@ public abstract class AnotherMenuActivity extends ImageCacheActivity implements 
 
     private void refresh(Uri uri, View view, boolean init) {
         if (uri == null) {
-            hide(view, init);
+            hide(view.findViewById(R.id.properties), init);
             return;
         }
         Cursor cursor = getContentResolver().query(uri, IndexerService.PROJECTION, null, null, null);
 
         if (cursor == null) {
-            hide(view, init);
+            hide(view.findViewById(R.id.properties), init);
             return;
         }
         if (!cursor.moveToNext()) {
             cursor.close();
-            hide(view, init);
+            hide(view.findViewById(R.id.properties), init);
             return;
         }
 
@@ -331,7 +331,7 @@ public abstract class AnotherMenuActivity extends ImageCacheActivity implements 
 
 
         loadBitmap(Utils.uriForMediaItem(mediaItem), albumArt, (int) Utils.pxFromDp(view.getContext(), 50));
-        show(view, init);
+        show(view.findViewById(R.id.properties), init, Utils.pxFromDp(this, 100.0f));
     }
 
     public void loadBitmap(RelativeLayout albumArts, long collectionId, HashMap<Long, TreeSet<MediaItem>> itemsMap) {
@@ -427,11 +427,13 @@ public abstract class AnotherMenuActivity extends ImageCacheActivity implements 
         set.start();
     }
 
-    private void unGotIt(final View header) {
+    private void unGotIt(final View header, Float v) {
         if (header.getVisibility() == View.VISIBLE)
             return;
         header.measure(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT);
-        final int height = header.getMeasuredHeight();
+        int height = header.getMeasuredHeight();
+        if (v != null)
+            height = (int) (float) v;
         final ViewGroup.LayoutParams layoutParams = header.getLayoutParams();
         header.setVisibility(View.VISIBLE);
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(this, "alpha", 1.0f).setDuration(300);
