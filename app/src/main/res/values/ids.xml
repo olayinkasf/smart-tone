@@ -28,4 +28,7 @@
     <item name="array" type="id"/>
     <item name="transitionImage" type="id"/>
     <item name="transitionMediaItem" type="id"/>
+    <item name="changeNotif" type="id"/>
+    <item name="changeRingtoneNotif" type="id"/>
+    <item name="changeNotifNotif" type="id"/>
 </resources>

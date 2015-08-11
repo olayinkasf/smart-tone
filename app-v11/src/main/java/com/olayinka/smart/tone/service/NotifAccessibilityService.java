@@ -30,6 +30,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
@@ -100,15 +102,17 @@ public class NotifAccessibilityService extends AccessibilityService {
             return START_NOT_STICKY;
         }
         if (mLargeIcon == null) {
-            mLargeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.large_notif_icon);
+            mLargeIcon = BitmapFactory.decodeResource(getResources(), lib.olayinka.smart.tone.R.mipmap.ic_notif_large);
         }
         if (!isEnabled(this)) {
+            Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.small_notif_icon)
+                    .setSmallIcon(R.drawable.ic_notif_small)
                     .setLargeIcon(mLargeIcon)
                     .setContentTitle(getString(R.string.notification_service))
                     .setContentText(getString(R.string.grant_accessibility))
                     .setTicker(getString(R.string.grant_accessibility))
+                    .setSound(uri)
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.grant_accessibility)))
                     .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS), 0));
             int mNotificationId = R.id.appNotifSettings;

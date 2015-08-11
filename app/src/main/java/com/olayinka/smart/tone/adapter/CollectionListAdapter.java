@@ -45,7 +45,7 @@ import com.olayinka.smart.tone.AbsSmartTone;
 import com.olayinka.smart.tone.AppSettings;
 import com.olayinka.smart.tone.AppSqlHelper;
 import com.olayinka.smart.tone.Utils;
-import com.olayinka.smart.tone.activity.AnotherMenuActivity;
+import com.olayinka.smart.tone.activity.AbstractMenuActivity;
 import com.olayinka.smart.tone.activity.CollectionEditActivity;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.MediaItem;
@@ -66,14 +66,14 @@ public class CollectionListAdapter extends CursorAdapter {
     private HashMap<Long, ToneLoader> mToneLoaderMap;
     private View.OnClickListener mItemClickListener;
     private Long[] mActivePairs;
-    private AnotherMenuActivity mActivity;
+    private AbstractMenuActivity mActivity;
 
     public CollectionListAdapter(Context context) {
         super(context, cursor(context), false);
         mTonesMap = new HashMap<>(50);
         mToneLoaderMap = new HashMap<>(50);
         mItemClickListener = (View.OnClickListener) context;
-        mActivity = (AnotherMenuActivity) context;
+        mActivity = (AbstractMenuActivity) context;
         mActivePairs = AppSettings.getActivePairs(context);
     }
 
@@ -83,7 +83,7 @@ public class CollectionListAdapter extends CursorAdapter {
         final View view = LayoutInflater.from(context).inflate(R.layout.collection_item, null);
         view.setOnClickListener(mItemClickListener);
         RelativeLayout albumTable = (RelativeLayout) view.findViewById(R.id.albumArt);
-        for (int i = 0; i < AnotherMenuActivity.NUM_THUMBNAILS - 1; i++)
+        for (int i = 0; i < AbstractMenuActivity.NUM_THUMBNAILS - 1; i++)
             albumTable.addView(new CenterTopImageView(context));
         ImageView transitionImageView = new CenterTopImageView(context);
         if (Utils.hasLollipop()) {
@@ -205,7 +205,7 @@ public class CollectionListAdapter extends CursorAdapter {
             mToneLoaderMap.put(id, toneLoader);
             toneLoader.execute(view.getContext());
         }
-        ((AnotherMenuActivity) albumTable.getContext()).loadBitmap(albumTable, id, mTonesMap);
+        ((AbstractMenuActivity) albumTable.getContext()).loadBitmap(albumTable, id, mTonesMap);
     }
 
     public TreeSet<MediaItem> getItemsForCollection(long tag) {
@@ -291,7 +291,7 @@ public class CollectionListAdapter extends CursorAdapter {
                     new String[]{"" + mId}
             );
             TreeSet<MediaItem> items = new TreeSet<>();
-            while (cursor.moveToNext() && items.size() < AnotherMenuActivity.NUM_THUMBNAILS) {
+            while (cursor.moveToNext() && items.size() < AbstractMenuActivity.NUM_THUMBNAILS) {
 
                 MediaItem mediaItem = new MediaItem(cursor.getLong(0), cursor.getLong(1), cursor.getInt(2));
                 if (Utils.isValidUri((Context) params[0], Utils.uriForMediaItem(mediaItem))) {

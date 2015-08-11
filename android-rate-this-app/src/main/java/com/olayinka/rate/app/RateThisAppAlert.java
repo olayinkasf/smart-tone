@@ -30,7 +30,7 @@ import android.support.v7.app.AlertDialog;
  */
 public class RateThisAppAlert extends AlertDialog.Builder {
 
-
+    public static final String ID = "com.olayinka.rate.app";
     Context mContext;
     boolean mShowRemind = false;
 
@@ -269,7 +269,15 @@ public class RateThisAppAlert extends AlertDialog.Builder {
     public AlertDialog launchInterval(int interval) {
         LAUNCH_FREQ = mContext.getSharedPreferences("com.olayinka.rate.app", Context.MODE_PRIVATE).getLong("launch.freq", 0l);
         mShouldShow = (LAUNCH_FREQ > 0 && LAUNCH_FREQ % interval == 0);
+        mShowRemind = true;
+        mShouldRemind = true;
         return show();
+    }
+
+    public RateThisAppAlert minLaunchWait(int interval) {
+        LAUNCH_FREQ = mContext.getSharedPreferences("com.olayinka.rate.app", Context.MODE_PRIVATE).getLong("launch.freq", 0l);
+        mShouldShow &= LAUNCH_FREQ > interval;
+        return this;
     }
 
 }

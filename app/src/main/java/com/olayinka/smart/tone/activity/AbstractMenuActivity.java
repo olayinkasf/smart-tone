@@ -58,7 +58,7 @@ import java.util.TreeSet;
 /**
  * Created by Olayinka on 7/8/2015.
  */
-public abstract class AnotherMenuActivity extends ImageCacheActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public abstract class AbstractMenuActivity extends ImageCacheActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     public static final String CONCRETE = "com.olayinka.smart.tone.activity.MenuActivity";
     public static int NUM_THUMBNAILS = 6;
@@ -98,12 +98,19 @@ public abstract class AnotherMenuActivity extends ImageCacheActivity implements 
         varMap.put("build.time", Long.toHexString(BuildConfig.BUILD_TIME));
         varMap.put("build.number", String.valueOf(BuildConfig.BUILD_NUMBER));
         getVersion(varMap);
+        if ("debug".equalsIgnoreCase(varMap.get("build.type"))) {
+           // getSharedPreferences(AppSettings.APP_SETTINGS, MODE_PRIVATE)
+                //    .edit().clear().commit();
+            //getSharedPreferences(RateThisAppAlert.ID, MODE_PRIVATE)
+              //      .edit().clear().commit();
+        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu);
+        getVersion();
         mDisplayDimens = Utils.displayDimens(this);
         mAlbumArtWidth = (int) ((mDisplayDimens.widthPixels - Utils.pxFromDp(this, 20.0f)) / 2);
         mListView = (ListView) findViewById(R.id.list);
@@ -125,7 +132,6 @@ public abstract class AnotherMenuActivity extends ImageCacheActivity implements 
 
         mOnStartFlag = false;
 
-        getVersion();
         showRateThisApp();
     }
 
@@ -134,6 +140,7 @@ public abstract class AnotherMenuActivity extends ImageCacheActivity implements 
                 .remind(true, 7)
                 .addPrefsCondition(AppSettings.APP_SETTINGS, AppSettings.RINGTONE_FREQ + AppSettings.LAST_CHANGE, 0L, RateThisAppAlert.GREATER)
                 .addPrefsCondition(AppSettings.APP_SETTINGS, AppSettings.ACTIVE_APP_SERVICE)
+                .minLaunchWait(5)
                 .show();
     }
 
@@ -201,7 +208,7 @@ public abstract class AnotherMenuActivity extends ImageCacheActivity implements 
         findViewById(R.id.createCollection).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AnotherMenuActivity.this, CollectionEditActivity.class));
+                startActivity(new Intent(AbstractMenuActivity.this, CollectionEditActivity.class));
             }
         });
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.createCollection);

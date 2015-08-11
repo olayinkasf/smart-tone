@@ -19,10 +19,12 @@
 
 package com.olayinka.smart.tone;
 
+import android.app.PendingIntent;
 import android.content.*;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import com.olayinka.smart.tone.model.Media;
 import lib.olayinka.smart.tone.R;
@@ -130,7 +132,7 @@ public class AppSettings {
     public static Uri changeNotificationSound(Context context, Boolean notify) throws JSONException {
         Uri uri = changeSound(context, RingtoneManager.TYPE_NOTIFICATION, ACTIVE_NOTIFICATION, NOTIF_FREQ, false, true);
         if (uri != null && notify) {
-            notify(context, context.getString(R.string.notification_change));
+            notify(context, context.getString(R.string.notification_change), R.id.changeNotifNotif);
         }
         if (uri != null) {
             Intent intent = new Intent(JUST_CHANGED);
@@ -140,17 +142,18 @@ public class AppSettings {
         return uri;
     }
 
-    private static void notify(Context context, String string) {
+    private static void notify(Context context, String string, int notificationId) {
         SharedPreferences preferences = context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE);
         if (preferences.getBoolean(NOTIFY_CHANGE, false)) {
-            Utils.notify(context, string);
+            Intent intent = new Intent(Settings.ACTION_SOUND_SETTINGS);
+            Utils.notify(context, string, notificationId, PendingIntent.getActivity(context, 0, intent, 0));
         }
     }
 
     public static Uri changeRingtoneSound(Context context, Boolean notify) throws JSONException {
         Uri uri = changeSound(context, RingtoneManager.TYPE_RINGTONE, ACTIVE_RINGTONE, RINGTONE_FREQ, true, false);
         if (uri != null && notify) {
-            notify(context, context.getString(R.string.ringtone_change));
+            notify(context, context.getString(R.string.ringtone_change), R.id.changeRingtoneNotif);
         }
         if (uri != null) {
             Intent intent = new Intent(JUST_CHANGED);

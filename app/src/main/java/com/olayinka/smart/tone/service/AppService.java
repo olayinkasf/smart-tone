@@ -21,9 +21,11 @@ package com.olayinka.smart.tone.service;
 
 import android.annotation.SuppressLint;
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Environment;
 import com.olayinka.smart.tone.AppSqlHelper;
 import com.olayinka.smart.tone.Utils;
@@ -93,7 +95,7 @@ public class AppService extends IntentService {
             file = new File(sdCard.getAbsolutePath() + "/com.olayinka.smart.tone/export");
         } else file = getDir("export", MODE_PRIVATE);
         if (!file.exists() && !file.mkdirs()) {
-            Utils.notify(this, getString(R.string.cant_create_dir));
+            Utils.notify(this, getString(R.string.cant_create_dir), R.id.backup, null);
             return null;
         }
 
@@ -132,7 +134,13 @@ public class AppService extends IntentService {
         }
         writer.flush();
         writer.close();
-        Utils.notify(this, getString(R.string.export_complete) + " " + file.getAbsolutePath());
+
+        Uri selectedUri = Uri.parse(file.getParent());
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(selectedUri, "resource/folder");
+        if (intent.resolveActivity(getPackageManager()) != null)
+            Utils.notify(this, getString(R.string.export_complete) + " " + file.getAbsolutePath(), R.id.backup, PendingIntent.getActivity(this, 0, intent, 0));
+        else Utils.notify(this, getString(R.string.export_complete) + " " + file.getAbsolutePath(), R.id.backup, null);
         return file.getAbsolutePath();
     }
 

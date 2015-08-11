@@ -23,7 +23,7 @@ import android.app.Activity;
 import android.content.*;
 import android.os.Bundle;
 import android.util.Log;
-import com.olayinka.smart.tone.activity.AnotherMenuActivity;
+import com.olayinka.smart.tone.activity.AbstractMenuActivity;
 import com.olayinka.smart.tone.service.IndexerService;
 import lib.olayinka.smart.tone.R;
 
@@ -38,10 +38,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome);
-
-        //if (BuildConfig.DEBUG)
-            //getSharedPreferences(AppSettings.APP_SETTINGS, MODE_PRIVATE)
-            //        .edit().clear().commit();
     }
 
     @Override
@@ -54,7 +50,7 @@ public class MainActivity extends Activity {
                 unregisterReceiver(this);
                 mReceiverUnregistered = true;
                 intent = new Intent();
-                intent.setComponent(new ComponentName(MainActivity.this, AnotherMenuActivity.CONCRETE));
+                intent.setComponent(new ComponentName(MainActivity.this, AbstractMenuActivity.CONCRETE));
                 startActivity(intent);
                 finish();
             }

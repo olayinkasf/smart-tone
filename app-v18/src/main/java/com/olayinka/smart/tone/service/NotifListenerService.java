@@ -28,6 +28,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.provider.Settings;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -80,17 +82,19 @@ public class NotifListenerService extends NotificationListenerService {
             return START_NOT_STICKY;
         }
         if (mLargeIcon == null) {
-            mLargeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.large_notif_icon);
+            mLargeIcon = BitmapFactory.decodeResource(getResources(), lib.olayinka.smart.tone.R.mipmap.ic_notif_large);
         }
         if (!isEnabled(this)) {
+            Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.small_notif_icon)
+                    .setSmallIcon(R.drawable.ic_notif_small)
                     .setLargeIcon(mLargeIcon)
                     .setContentTitle(getString(R.string.notification_service))
                     .setContentText(getString(R.string.grant_notification_listener))
                     .setTicker(getString(R.string.grant_notification_listener))
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.grant_notification_listener)))
                     .setPriority(Notification.PRIORITY_MAX)
+                    .setSound(uri)
                     .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), 0));
             int mNotificationId = R.id.appNotifSettings;
             Notification notification = mBuilder.build();
