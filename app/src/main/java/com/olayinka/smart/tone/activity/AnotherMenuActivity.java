@@ -1,3 +1,23 @@
+
+/*
+ * Copyright 2015
+ *
+ * Olayinka S. Folorunso <mail@olayinkasf.com>
+ * http://olayinkasf.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.olayinka.smart.tone.activity;
 
 import android.animation.*;
@@ -17,6 +37,7 @@ import android.view.*;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.*;
 import com.melnykov.fab.FloatingActionButton;
+import com.olayinka.rate.app.RateThisAppAlert;
 import com.olayinka.smart.tone.AbsSmartTone;
 import com.olayinka.smart.tone.AppSettings;
 import com.olayinka.smart.tone.AppSqlHelper;
@@ -105,6 +126,15 @@ public abstract class AnotherMenuActivity extends ImageCacheActivity implements 
         mOnStartFlag = false;
 
         getVersion();
+        showRateThisApp();
+    }
+
+    private void showRateThisApp() {
+        new RateThisAppAlert(this)
+                .remind(true, 7)
+                .addPrefsCondition(AppSettings.APP_SETTINGS, AppSettings.RINGTONE_FREQ + AppSettings.LAST_CHANGE, 0L, RateThisAppAlert.GREATER)
+                .addPrefsCondition(AppSettings.APP_SETTINGS, AppSettings.ACTIVE_APP_SERVICE)
+                .show();
     }
 
     private void refreshServiceNotifier(boolean init) {
@@ -259,6 +289,10 @@ public abstract class AnotherMenuActivity extends ImageCacheActivity implements 
         }
         Cursor cursor = getContentResolver().query(uri, IndexerService.PROJECTION, null, null, null);
 
+        if (cursor == null) {
+            hide(view, init);
+            return;
+        }
         if (!cursor.moveToNext()) {
             cursor.close();
             hide(view, init);
@@ -267,7 +301,6 @@ public abstract class AnotherMenuActivity extends ImageCacheActivity implements 
 
         long id = ContentUris.parseId(uri);
         boolean internal = uri.toString().contains("internal");
-
         MediaItem mediaItem = new MediaItem(id, cursor.getLong(3), internal ? 1 : 0);
 
         ImageView albumArt = (ImageView) view.findViewById(R.id.albumArt);
@@ -279,8 +312,24 @@ public abstract class AnotherMenuActivity extends ImageCacheActivity implements 
         albumNameView.setText(cursor.getString(4));
         artistView.setText(cursor.getString(5));
 
-        view.setTag(R.id.mediaItem, mediaItem);
         cursor.close();
+        cursor = AppSqlHelper.instance(this).getReadableDatabase()
+                .query(
+                        Media.TABLE, new String[]{Media.Columns._ID},
+                        Media.Columns.MEDIA_ID + Media.EQUALS + Media.AND + Media.Columns.IS_INTERNAL + Media.EQUALS,
+                        new String[]{"" + mediaItem.getId(), "" + mediaItem.getInternal()}, null, null, null
+                );
+        if (cursor != null && cursor.moveToNext()) {
+            mediaItem.setId(cursor.getLong(0));
+            cursor.close();
+        }
+
+        albumArt.setClickable(true);
+        albumArt.setOnTouchListener(this);
+        view.setTag(R.id.mediaItem, mediaItem);
+        albumArt.setTag(R.id.mediaItem, mediaItem);
+
+
         loadBitmap(Utils.uriForMediaItem(mediaItem), albumArt, (int) Utils.pxFromDp(view.getContext(), 50));
         show(view, init);
     }

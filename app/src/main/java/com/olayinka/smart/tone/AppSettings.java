@@ -1,3 +1,22 @@
+/*
+ * Copyright 2015
+ *
+ * Olayinka S. Folorunso <mail@olayinkasf.com>
+ * http://olayinkasf.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.olayinka.smart.tone;
 
 import android.content.ContentValues;
@@ -33,7 +52,6 @@ public class AppSettings {
     public static final String ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners";
     public static final String LAST_CHANGE = ".last.change";
     public static final String GOT_IT_DOUBLE_TAP = "got.it.double.tap";
-    public static final String GOT_IT_LONG_PRESS = "got.it.long.press";
     public static final String JUST_CHANGED = "just.changed";
 
     public static void setFreq(Context context, String key, int which, int arrayId) {

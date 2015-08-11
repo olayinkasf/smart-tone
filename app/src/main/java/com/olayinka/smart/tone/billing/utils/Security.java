@@ -1,4 +1,8 @@
-/* Copyright (c) 2012 Google Inc.
+/*
+ * Copyright 2015
+ *
+ * Olayinka S. Folorunso <mail@olayinkasf.com>
+ * http://olayinkasf.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
