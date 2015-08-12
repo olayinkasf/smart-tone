@@ -28,25 +28,14 @@ android {
 
     defaultConfig {
         minSdkVersion 11
-        versionCode 49
+        versionCode 51
         versionName "2.1.4"
 
-    }
-
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        jcenter()
     }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
-    }
-
-    dependencies {
-        compile fileTree(dir: 'libs', include: ['*.jar'])
-        compile project(':app')
     }
 
     signingConfigs {
@@ -58,7 +47,6 @@ android {
         def KEY_PASSWORD = properties.getProperty('KEY_PASSWORD')
 
         release {
-            KEY_ALIAS
             storeFile file(STORE_FILE)
             storePassword STORE_PASSWORD
             keyAlias KEY_ALIAS
@@ -80,6 +68,15 @@ android {
         }
     }
 
-}
-dependencies {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        compile fileTree(dir: 'libs', include: ['*.jar'])
+        compile project(':app')
+    }
+
 }

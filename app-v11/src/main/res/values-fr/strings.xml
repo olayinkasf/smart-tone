@@ -19,9 +19,7 @@
   -->
 
 <resources>
-    <string name="rate.this.app.remind">MAYBE LATER</string>
-    <string name="rate.this.app.positive">RATE NOW</string>
-    <string name="rate.this.app.negative">ALREADY DID</string>
-    <string name="app.name" translatable="false"></string>
-    <string name="rate.this.app.message">You seem to be enjoying %s. Please take a minute to rate it on the play store so others can find the app easily and get the chance to enjoy it!</string>
+    <string name="requires.accessibility">Les paramètres choisis nécessitent une permission d\'accessibilité aux notifications. Accorder cette permission?
+    </string>
+    <string name="grant.accessibility">SmartTone a besoin d\'une permission d\'accessibilité aux notifications.</string>
 </resources>

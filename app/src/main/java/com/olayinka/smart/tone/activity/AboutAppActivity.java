@@ -113,7 +113,9 @@ public class AboutAppActivity extends AppCompatActivity {
 
         final IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
             public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
+                //noinspection StatementWithEmptyBody
                 if (result.isFailure()) {
+                    //TODO something to do if result failed, nothing for now :(
                 } else if (purchase != null && purchase.getPurchaseState() == 0 && purchase.getSku().equals(mDonationKey))
                     setDonation();
             }
@@ -121,7 +123,9 @@ public class AboutAppActivity extends AppCompatActivity {
 
         final IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
             public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
+                //noinspection StatementWithEmptyBody
                 if (result.isFailure()) {
+                    //TODO something to do if result failed, nothing for now :(
                 } else {
                     Purchase purchase = inventory.getPurchase(mDonationKey);
                     activateDonation();

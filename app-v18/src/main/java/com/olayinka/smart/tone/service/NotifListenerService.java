@@ -93,7 +93,6 @@ public class NotifListenerService extends NotificationListenerService {
                     .setContentText(getString(R.string.grant_notification_listener))
                     .setTicker(getString(R.string.grant_notification_listener))
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.grant_notification_listener)))
-                    .setPriority(Notification.PRIORITY_MAX)
                     .setSound(uri)
                     .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), 0));
             int mNotificationId = R.id.appNotifSettings;

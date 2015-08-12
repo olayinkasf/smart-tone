@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2015
+  ~
+  ~ Olayinka S. Folorunso <mail@olayinkasf.com>
+  ~ http://olayinkasf.com
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<resources>
+
+    <string name="app.settings">app.settings</string>
+    <string name="active.app.service">active.app.service</string>
+
+    <string name="about.app.title">A propos</string>
+    <string name="done">Fait</string>
+    <string name="share_using">Partager</string>
+    <string name="checkout">Hey! Jette un coup d\'oeil à l\'appli SmartTone :</string>
+
+    <string name="create.collection">Utilise le bouton ci-dessous pour créer une collection de sonneries ou de sons de notifications
+    </string>
+    <string name="activate">Activer</string>
+    <string name="select_all">Tout sélectionner</string>
+    <string name="clear_selection">Supprimer la sélection</string>
+    <string name="not_activated">Activer</string>
+    <string name="activated">Active</string>
+    <string name="deactivate">Désactiver</string>
+    <string name="collection_name_exist">Ce nom est déjà utilisé par une autre collection.</string>
+    <string name="rename">Renommer la collection</string>
+    <string name="previewing">Aperçu</string>
+    <string name="douple_tap">Appuyer deux fois sur l\'icone pour avoir un aperçu</string>
+    <string name="importing">Importation des collections …</string>
+    <string name="ringtone">Sonnerie</string>
+    <string name="notification">Notifications</string>
+    <string name="name_empty">Donner un nom à cette collection</string>
+    <string name="empty_selection">Vous n\'avez sélectionné aucun fichier</string>
+    <string name="collection_icon">Icône de la collection</string>
+    <string name="collection_removed">La collection a bien été supprimée</string>
+    <string name="collection_activated">La collection a bien été activée</string>
+    <string name="collections">Collections</string>
+    <string name="settings">Réglages</string>
+    <string name="shuffle_freq">Fréquence de changement</string>
+    <string name="delete">Supprimer</string>
+    <string name="edit">Editer la collection</string>
+    <string name="notif_service_name">Notification Service</string>
+    <string name="wait_index">Indexation de vos fichiers en cours, merci de patienter</string>
+    <string name="exit_warning">Êtes-vous sûr(e)?</string>
+    <string name="cancel">Annuler</string>
+    <string name="yes">Oui</string>
+    <string name="saving_collection">Sauvegarde de la collection …</string>
+    <string name="save_collection">Sauvegarder la collection?</string>
+    <string name="ringtone.selected">Collection de sonneries sélectionnée !</string>
+    <string name="activate.service">Activer le fonctionnement de SmartTone ?</string>
+    <string name="no">Non</string>
+    <string name="notification.selected">Collection de sons de notifications sélectionnée !</string>
+    <string name="smarttone.service">SmartTone Service</string>
+    <string name="ringtone.freq">Fréquence de changement de sonnerie</string>
+    <string name="notification.freq">Fréquence de changement des sons de notifications</string>
+    <string name="after.every.call">Après chaque appel</string>
+    <string name="after.every.notif">Après chaque notification</string>
+    <string name="notify.change">M\'envoyer une notification après chaque changement</string>
+    <string name="rescan.media">Rescanner les fichiers audio</string>
+    <string name="notification.service">SmartTone Notification Service</string>
+    <string name="notification_freq_changed">Notification shuffle frequency changed.</string>
+    <string name="ringtone.service">SmartTone Ringtone Service</string>
+    <string name="imported">(Importé)</string>
+    <string name="transition.collection.page">transitionCollectionPage</string>
+    <string name="transition.media.group">transitionMediaGroup</string>
+    <string name="reindex.warning">Relancer l\'application?</string>
+    <string name="action.save">Sauvegarder</string>
+    <string name="collection.name.hint">Donner un nom à cette collection</string>
+    <string name="action.share.app">Partager cette appli !</string>
+    <string name="app.version">Version de l\'application</string>
+    <string name="donate">Faire un don</string>
+    <string name="donate.text">SmartTone est gratuite, mais si vous pensez qu\'elle le mérite, faites un don
+    </string>
+    <string name="donated">T\'es génial(e)!</string>
+    <string name="action.contact.help">Contact/Aide</string>
+    <string name="action.rate">Noter et commenter sur le Play Store</string>
+    <string name="market.fail">Erreur lors de l\'ouverture du Store</string>
+    <string name="contact">Contact</string>
+    <string name="contact.dev">Contacter le développeur</string>
+    <string name="share">Hey check out the SmartTone app at:</string>
+    <string name="ringtone.change">Votre sonnerie a été changée !</string>
+    <string name="notification.change">Votre son de notifications a été changé !</string>
+    <string name="action.delete.collection">Supprimer la collection</string>
+    <string name="deleted">supprimée</string>
+    <string name="collection">Collection</string>
+    <string name="cant.create.dir">Erreur pendant l\'exportation de la collection. Impossible de créer un dossier de backup !</string>
+    <string name="collection.export.sent">Vos collections sont en cours d\'exportation</string>
+    <string name="export.complete">Vos collections ont été exportées dans:</string>
+    <string name="legal">Termes légaux</string>
+    <string name="terms.of.service">Conditions de service</string>
+    <string name="privacy.policy">Politique de confidentialité</string>
+    <string name="open.source.license">Librairies Open Source</string>
+    <string name="install.browser">Aucune application ne peut éxecuter cette requête. Installez un navigateur web !</string>
+    <string name="open.source.license.header">Librairies Open Source utilisées</string>
+    <string name="open.source.license.sub.header">Cette application utilise plusieurs librairies Open Source. Les logiciels suivants peuvent êtres inclus dans ce produit :
+    </string>
+    <string name="app.name.caps">SMARTTONE 2</string>
+    <string name="nothing.beyond">Sorry! Nothing beyond this point!</string>
+    <string name="double.tap">Appuyer deux fois sur une pochette d\'album pour écouter un aperçu, appuyer une fois pour arrêter l\'aperçu.
+    </string>
+    <string name="long.press">Appuyer pendant longtemps sur une collection pour la supprimer</string>
+
+    <string name="got.it">OKAY</string>
+    <string name="action.search">Chercher une musique</string>
+    <string name="billing.error">Erreur de requêtes aux services de facturation</string>
+    <string name="billing.missing">Pas de service de facturation sur cet appareil</string>
+    <string name="select.one">Sélectionnez une des collections ci-dessous pour l\'utiliser comme sonneries ou sons de notifications
+    </string>
+    <string name="toggle.activate">SmartTone est désactivée. Appuyez sur le bouton pour l\'activer</string>
+    <string name="no.collection">BIENVENUE\nVOUS N\'AVEZ PAS DE COLLECTION</string>
+    <string name="action.edit.collection">Editer la collection</string>
+    <string name="action.set.notif">Choisir comme son de notifications</string>
+    <string name="action.set.ringtone">Choisir comme sonnerie</string>
+    <string name="action.remove.ringtone">Enlever des sonneries</string>
+    <string name="action.remove.notif">Enlever des sons de notifications</string>
+    <string name="set">Choisir</string>
+    <string name="as.ringtone">comme collection de sonneries</string>
+    <string name="remove">Supprimer</string>
+    <string name="as_notif">comme collection de sons de notifications</string>
+    <string name="change.notif">Changer de son de notifications</string>
+    <string name="change.ringtone">Changer de sonnerie</string>
+    <string name="action.settings">Réglages</string>
+    <string name="backup.collections">Sauvegarder mes collections</string>
+    <string name="about.app">A propos</string>
+    <string name="no.active.ringtone">Vous n\'avez pas activé de collection de sonneries</string>
+    <string name="shuffle.error">Erreur</string>
+    <string name="service.inactive">SmartTone est désactivée</string>
+    <string name="no.active.notification">Vous n\'avez pas activé de collection de sons de notifications</string>
+
+
+    <string-array name="ringtone_freq">
+        <item>Après chaque appel</item>
+        <item>Toutes les 6 heures</item>
+        <item>Toutes les 12 heures</item>
+        <item>Une fois par jour</item>
+    </string-array>
+
+    <string-array name="notification_freq">
+        <item>Après chaque notification</item>
+        <item>Toutes les 6 heures</item>
+        <item>Toutes les 12 heures</item>
+        <item>Une fois par jour</item>
+    </string-array>
+
+</resources>

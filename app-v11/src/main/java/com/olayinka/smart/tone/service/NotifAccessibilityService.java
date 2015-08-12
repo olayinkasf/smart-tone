@@ -94,6 +94,11 @@ public class NotifAccessibilityService extends AccessibilityService {
     }
 
     @Override
+    public void onInterrupt() {
+
+    }
+
+    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (!shouldRun(this)) {
             Log.wtf("onStartCommand/NotifAccessibilityService", "Shouldn't run! Stop alarm and return START_NOT_STICKY");
@@ -112,8 +117,8 @@ public class NotifAccessibilityService extends AccessibilityService {
                     .setContentTitle(getString(R.string.notification_service))
                     .setContentText(getString(R.string.grant_accessibility))
                     .setTicker(getString(R.string.grant_accessibility))
-                    .setSound(uri)
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.grant_accessibility)))
+                    .setSound(uri)
                     .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS), 0));
             int mNotificationId = R.id.appNotifSettings;
             Notification notification = mBuilder.build();
@@ -125,15 +130,4 @@ public class NotifAccessibilityService extends AccessibilityService {
         }
         return START_NOT_STICKY;
     }
-
-    @Override
-    public void onInterrupt() {
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-
 }
