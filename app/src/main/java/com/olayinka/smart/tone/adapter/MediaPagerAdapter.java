@@ -29,8 +29,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.ListView;
 import com.olayinka.smart.tone.AppSettings;
-import com.olayinka.smart.tone.model.ListenableHashSet;
 import com.olayinka.smart.tone.model.Media;
+import com.olayinka.smart.tone.model.OrderedMediaSet;
 import lib.olayinka.smart.tone.R;
 
 /**
@@ -38,10 +38,12 @@ import lib.olayinka.smart.tone.R;
  */
 public class MediaPagerAdapter extends PagerAdapter {
 
-    private ListenableHashSet<Long> mSelection;
+    private OrderedMediaSet<Long> mSelection;
+    final String[] mHeaders;
 
-    public MediaPagerAdapter(ListenableHashSet<Long> mSelection) {
+    public MediaPagerAdapter(OrderedMediaSet<Long> mSelection, String[] headers) {
         this.mSelection = mSelection;
+        mHeaders = headers;
     }
 
     @Override
@@ -56,39 +58,28 @@ public class MediaPagerAdapter extends PagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        switch (position) {
-            case 0:
-                return "Selection";
-            case 1:
-                return "All Media";
-            case 2:
-                return "Ringtone";
-            case 3:
-                return "Notification";
-            case 4:
-                return "Album";
-            case 5:
-                return "Folder";
-        }
-        throw new RuntimeException();
+        return mHeaders[position];
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View view = null;
         Context context = container.getContext();
-        if (position < 4)
+        if (position == 0)
+            view = LayoutInflater.from(context).inflate(R.layout.drag_media_list, container, false);
+        else if (position < 4)
             view = LayoutInflater.from(context).inflate(R.layout.media_list, container, false);
         else view = LayoutInflater.from(context).inflate(R.layout.media_grid, container, false);
 
         AbsListView mediaListView = (AbsListView) view.findViewById(R.id.list);
         MediaListAdapter mediaListAdapter = null;
         switch (position) {
-            case 0:
-                mediaListAdapter = new SelectionListAdapter(context, mSelection);
-                mediaListView.setAdapter(mediaListAdapter);
-                mSelection.addListener(MediaListAdapter.SELECTION_SELECTED, mediaListAdapter);
+            case 0: {
+                SelectionListAdapter selectionListAdapter = new SelectionListAdapter(context, mSelection);
+                mediaListView.setAdapter(selectionListAdapter);
+                mSelection.addListener(MediaListAdapter.SELECTION_SELECTED, selectionListAdapter);
                 break;
+            }
             case 1:
                 if (!alreadyGotIt(context)) {
                     LayoutInflater inflater = (LayoutInflater) mediaListView.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -167,6 +158,5 @@ public class MediaPagerAdapter extends PagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
     }
-
 
 }

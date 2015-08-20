@@ -58,6 +58,21 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             }).show();
         }
     };
+    View.OnClickListener mShuffleModeClickListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(final View v) {
+            new AlertDialog.Builder(SettingsActivity.this).setItems(getResources().getStringArray(R.array.shuffle_mode), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    getSharedPreferences(AppSettings.APP_SETTINGS, MODE_PRIVATE).edit().putInt(AppSettings.SHUFFLE_MODE, which).apply();
+                    getSharedPreferences(AppSettings.APP_SETTINGS, MODE_PRIVATE).edit().putString(AppSettings.SHUFFLE_MODE + AppSettings.TEXT, getResources().getStringArray(R.array.shuffle_mode)[which]).apply();
+                    PrefsTextView local = (PrefsTextView) v.findViewById(R.id.text);
+                    local.setPrefsText();
+                }
+            }).show();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +83,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         //fix unset text for shuffle frequency
         fixPrefsText(AppSettings.NOTIF_FREQ, R.array.notification_freq);
         fixPrefsText(AppSettings.RINGTONE_FREQ, R.array.ringtone_freq);
+        fixPrefsText(AppSettings.SHUFFLE_MODE, R.array.shuffle_mode);
 
         //set app service prefs
         View view = findViewById(R.id.service);
@@ -106,6 +122,17 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         textView.setPrefs(AppSettings.APP_SETTINGS, AppSettings.NOTIF_FREQ);
         textView.setPrefsText();
         view.setOnClickListener(mFreqClickListener);
+
+
+        //shuffle mode
+        view = findViewById(R.id.shuffleMode);
+        view.setTag(R.id.array, R.array.shuffle_mode);
+        titleView = (TextView) view.findViewById(R.id.title);
+        titleView.setText(R.string.shuffle_mode);
+        textView = (PrefsTextView) view.findViewById(R.id.text);
+        textView.setPrefs(AppSettings.APP_SETTINGS, AppSettings.SHUFFLE_MODE);
+        textView.setPrefsText();
+        view.setOnClickListener(mShuffleModeClickListener);
 
 
         //notify on ringtone change only

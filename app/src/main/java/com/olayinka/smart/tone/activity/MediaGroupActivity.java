@@ -23,13 +23,11 @@ import android.annotation.TargetApi;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.transition.Explode;
-import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -45,8 +43,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedHashSet;
 
 /**
  * Created by Olayinka on 5/2/2015.
@@ -58,7 +55,7 @@ public class MediaGroupActivity extends ImageCacheActivity {
     public static final String TABLE = "media.table";
     MediaItem mMediaItem;
     long[] mMedias;
-    private Set<Long> mSelection;
+    private LinkedHashSet<Long> mSelection;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -111,7 +108,7 @@ public class MediaGroupActivity extends ImageCacheActivity {
 
     private void setSelection() throws JSONException {
         JSONArray jsonArray = new JSONArray(getIntent().getStringExtra(SELECTION));
-        mSelection = new HashSet<>(1000);
+        mSelection = new LinkedHashSet<>(1000);
         for (int i = 0; i < jsonArray.length(); i++) {
             mSelection.add(jsonArray.getLong(i));
         }

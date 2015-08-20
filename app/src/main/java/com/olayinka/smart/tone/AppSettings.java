@@ -50,8 +50,13 @@ public class AppSettings {
     public static final String NOTIFY_CHANGE = "notify.change";
     public static final String ENABLED_NOTIFICATION_LISTENERS = "enabled_notification_listeners";
     public static final String LAST_CHANGE = ".last.change";
+    public static final String LAST_USED = ".last.used";
     public static final String GOT_IT_DOUBLE_TAP = "got.it.double.tap";
     public static final String JUST_CHANGED = "just.changed";
+    public static final String SHUFFLE_MODE = "shuffle.mode";
+    public static final int MODE_NOTIF_ONLY = 2;
+    public static final int MODE_SHUFFLE_ALL = 0;
+    public static final int MODE_RINGTONE_ONLY = 1;
 
     public static void setFreq(Context context, String key, int which, int arrayId) {
         long time = (which == 3 ? 4 : which) * 6 * 60 * 60 * 1000;
@@ -60,7 +65,7 @@ public class AppSettings {
         context.getSharedPreferences(AppSettings.APP_SETTINGS, MODE_PRIVATE).edit().putString(key + TEXT, context.getResources().getStringArray(arrayId)[which]).apply();
     }
 
-    private static Uri changeSound(Context context, int type, String key, String freqKey, boolean isRingtone, boolean isNotification) throws JSONException {
+    private static Uri changeSound(Context context, int type, String key, String freqKey, boolean isRingtone, boolean isNotification, Boolean randomize) throws JSONException {
         {
             ContentValues contentValues = new ContentValues();
 
@@ -95,7 +100,16 @@ public class AppSettings {
                     .putLong(key, 0).apply();
             return null;
         }
-        int position = new Random().nextInt(tones.length());
+
+        int position;
+        if (randomize) {
+            position = new Random().nextInt(tones.length());
+        } else {
+            int lastIndex = context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE).getInt(key + LAST_USED, -1);
+            lastIndex = Math.min(lastIndex, tones.length() - 1);
+            position = (lastIndex + 1) % tones.length();
+        }
+        context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE).edit().putInt(key + LAST_USED, position).apply();
         Log.wtf("changeSound/" + key, "" + position);
         JSONObject tone = Media.getMedia(context, tones.getLong(position));
         Uri uri;
@@ -121,16 +135,39 @@ public class AppSettings {
         return uri;
     }
 
-    public static Uri changeNotificationSound(Context context) throws JSONException {
-        return changeNotificationSound(context, true);
-    }
-
     public static Uri changeRingtoneSound(Context context) throws JSONException {
         return changeRingtoneSound(context, true);
     }
 
+    public static Uri changeRingtoneSound(Context context, Boolean notify) throws JSONException {
+        int shuffleMode = context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE).getInt(SHUFFLE_MODE, 0);
+        return changeRingtoneSound(context, notify, shuffleMode == MODE_SHUFFLE_ALL || shuffleMode == MODE_NOTIF_ONLY);
+    }
+
+    public static Uri changeRingtoneSound(Context context, Boolean notify, Boolean randomize) throws JSONException {
+        Uri uri = changeSound(context, RingtoneManager.TYPE_RINGTONE, ACTIVE_RINGTONE, RINGTONE_FREQ, true, false, randomize);
+        if (uri != null && notify) {
+            notify(context, context.getString(R.string.ringtone_change), R.id.changeRingtoneNotif);
+        }
+        if (uri != null) {
+            Intent intent = new Intent(JUST_CHANGED);
+            intent.putExtra(JUST_CHANGED, ACTIVE_RINGTONE);
+            context.sendBroadcast(intent);
+        }
+        return uri;
+    }
+
+    public static Uri changeNotificationSound(Context context) throws JSONException {
+        return changeNotificationSound(context, true);
+    }
+
     public static Uri changeNotificationSound(Context context, Boolean notify) throws JSONException {
-        Uri uri = changeSound(context, RingtoneManager.TYPE_NOTIFICATION, ACTIVE_NOTIFICATION, NOTIF_FREQ, false, true);
+        int shuffleMode = context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE).getInt(SHUFFLE_MODE, 0);
+        return changeNotificationSound(context, notify, shuffleMode == MODE_SHUFFLE_ALL || shuffleMode == MODE_RINGTONE_ONLY);
+    }
+
+    public static Uri changeNotificationSound(Context context, Boolean notify, Boolean randomize) throws JSONException {
+        Uri uri = changeSound(context, RingtoneManager.TYPE_NOTIFICATION, ACTIVE_NOTIFICATION, NOTIF_FREQ, false, true, randomize);
         if (uri != null && notify) {
             notify(context, context.getString(R.string.notification_change), R.id.changeNotifNotif);
         }
@@ -148,19 +185,6 @@ public class AppSettings {
             Intent intent = new Intent(Settings.ACTION_SOUND_SETTINGS);
             Utils.notify(context, string, notificationId, PendingIntent.getActivity(context, 0, intent, 0));
         }
-    }
-
-    public static Uri changeRingtoneSound(Context context, Boolean notify) throws JSONException {
-        Uri uri = changeSound(context, RingtoneManager.TYPE_RINGTONE, ACTIVE_RINGTONE, RINGTONE_FREQ, true, false);
-        if (uri != null && notify) {
-            notify(context, context.getString(R.string.ringtone_change), R.id.changeRingtoneNotif);
-        }
-        if (uri != null) {
-            Intent intent = new Intent(JUST_CHANGED);
-            intent.putExtra(JUST_CHANGED, ACTIVE_RINGTONE);
-            context.sendBroadcast(intent);
-        }
-        return uri;
     }
 
     public static void deleteCheck(Context context, long collectionId) {

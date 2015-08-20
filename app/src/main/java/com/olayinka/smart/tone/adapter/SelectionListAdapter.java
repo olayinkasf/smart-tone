@@ -21,38 +21,93 @@ package com.olayinka.smart.tone.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.text.TextUtils;
-import com.olayinka.smart.tone.AppSqlHelper;
-import com.olayinka.smart.tone.model.Media;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.mobeta.android.dslv.DragSortCursorAdapter;
+import com.olayinka.smart.tone.Utils;
+import com.olayinka.smart.tone.activity.ImageCacheActivity;
+import com.olayinka.smart.tone.model.ListenableHashSet;
+import com.olayinka.smart.tone.model.MediaItem;
+import com.olayinka.smart.tone.model.OrderedMediaSet;
+import com.olayinka.smart.tone.model.SelectionCursor;
+import lib.olayinka.smart.tone.R;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * Created by Olayinka on 5/24/2015.
  */
-public class SelectionListAdapter extends MediaListAdapter {
+public class SelectionListAdapter extends DragSortCursorAdapter implements ListenableHashSet.HashSetListener<Long> {
+
     private Context mContext;
 
-    public SelectionListAdapter(Context context, Set<Long> selected) {
-        super(context, String.format(MediaListAdapter.SELECTION_SELECTED, TextUtils.join(", ", selected)), null, selected);
-        mContext = context;
+    public SelectionListAdapter(Context context, OrderedMediaSet<Long> selected) {
+        super(context, new SelectionCursor(context, selected), false);
+        this.mSelection = selected;
     }
 
     public void requery() {
-        Cursor cursor = AppSqlHelper.instance(mContext).getReadableDatabase()
-                .query(
-                        Media.TABLE,
-                        new String[]{"*"},
-                        String.format(MediaListAdapter.SELECTION_SELECTED, TextUtils.join(", ", mSelection)),
-                        null, null, null,
-                        Media.Columns.NAME
-                );
-        swapCursor(cursor);
+        swapCursor(new SelectionCursor(mContext, mSelection));
         notifyDataSetChanged();
     }
 
+
+    protected OrderedMediaSet<Long> mSelection;
+
+
     @Override
-    public void onDataSetChanged() {
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+        View view = LayoutInflater.from(context).inflate(R.layout.drag_media_item, null);
+        view.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        return view;
+    }
+
+    @Override
+    public void bindView(View view, Context context, Cursor cursor) {
+        MediaItem mediaItem = new MediaItem(cursor.getLong(0), cursor.getLong(4), cursor.getInt(10));
+
+        ImageView albumArt = (ImageView) view.findViewById(R.id.albumArt);
+        TextView titleView = (TextView) view.findViewById(R.id.title);
+        TextView albumNameView = (TextView) view.findViewById(R.id.album);
+        TextView artistView = (TextView) view.findViewById(R.id.artist);
+
+        titleView.setText(cursor.getString(2));
+        albumNameView.setText(cursor.getString(5));
+        artistView.setText(cursor.getString(6));
+
+        albumArt.setTag(R.id.mediaItem, mediaItem);
+        ((ImageCacheActivity) albumArt.getContext()).loadBitmap(Utils.uriForMediaItem(mediaItem), albumArt, (int) Utils.pxFromDp(view.getContext(), 50));
+
+        albumArt.setOnTouchListener((View.OnTouchListener) context);
+    }
+
+    @Override
+    public void drop(int from, int to) {
+        super.drop(from, to);
+        Log.wtf("drop", "from: " + from + ", to: " + to);
+        mSelection.changePosition(from, to);
+    }
+
+    @Override
+    public void remove(int which) {
+        super.remove(which);
+        Log.wtf("removed", "which: " + which);
+        mSelection.remove(which);
+    }
+
+    @Override
+    public void onDataSetChanged(Collection<? extends Long> objects, int op) {
+        requery();
+    }
+
+    @Override
+    public void onDataSetChanged(Long object, int op) {
         requery();
     }
 }
+

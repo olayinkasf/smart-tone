@@ -53,7 +53,7 @@ public class Media {
                 columns,
                 ToneColumns.COLLECTION_ID + Media.EQUALS,
                 new String[]{"" + mCollectionId},
-                null, null, null
+                null, null, ToneColumns.SORT_ORDER
         );
         JSONArray tones = new JSONArray();
         while (cursor.moveToNext()) {
@@ -120,7 +120,12 @@ public class Media {
         ContentValues toneValues = new ContentValues();
         toneValues.put(Media.ToneColumns.COLLECTION_ID, collectionId);
         for (int i = 0; i < selection.length(); i++) {
-            toneValues.put(Media.ToneColumns.MEDIA_ID, selection.getLong(i));
+            long mediaId = selection.getLong(i);
+            if (mediaId <= 0) {
+                throw new RuntimeException();
+            }
+            toneValues.put(Media.ToneColumns.MEDIA_ID, mediaId);
+            toneValues.put(Media.ToneColumns.SORT_ORDER, i);
             try {
                 database.insertOrThrow(Media.Tone.TABLE, null, toneValues);
             } catch (SQLException ignored) {
@@ -163,6 +168,7 @@ public class Media {
         public static final String _ID = Columns._ID;
         public static final String MEDIA_ID = Columns.MEDIA_ID;
         public static final String COLLECTION_ID = "collection" + CollectionColumns._ID;
+        public static final String SORT_ORDER = "sort_order";
     }
 
     public static class Album {

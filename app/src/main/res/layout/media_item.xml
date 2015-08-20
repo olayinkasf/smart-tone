@@ -88,14 +88,13 @@
 
         </LinearLayout>
 
-        <CheckBox
-                android:duplicateParentState="true"
-                android:id="@+id/checkBox"
-                android:padding="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"/>
-
+            <CheckBox
+                    android:duplicateParentState="true"
+                    android:id="@+id/checkBox"
+                    android:padding="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
     </LinearLayout>
 
 </LinearLayout>

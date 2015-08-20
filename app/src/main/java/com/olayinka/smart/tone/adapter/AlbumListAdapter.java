@@ -29,7 +29,6 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,18 +39,17 @@ import com.olayinka.smart.tone.activity.ImageCacheActivity;
 import com.olayinka.smart.tone.activity.MediaGroupActivity;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.MediaItem;
+import com.olayinka.smart.tone.model.OrderedMediaSet;
 import lib.olayinka.smart.tone.R;
-
-import java.util.Set;
 
 /**
  * Created by Olayinka on 5/3/2015.
  */
 public class AlbumListAdapter extends CursorAdapter implements  View.OnClickListener {
 
-    private Set<Long> mSelection;
+    private OrderedMediaSet<Long> mSelection;
 
-    public AlbumListAdapter(Context context, String table, Set<Long> selected) {
+    public AlbumListAdapter(Context context, String table, OrderedMediaSet<Long> selected) {
         super(context, AppSqlHelper.instance(context).getReadableDatabase()
                 .query(table, new String[]{"*"}, null, null, null, null, Media.Columns.NAME)
                 , false);
@@ -95,7 +93,7 @@ public class AlbumListAdapter extends CursorAdapter implements  View.OnClickList
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(v.getContext(), MediaGroupActivity.class);
-        intent.putExtra(MediaGroupActivity.SELECTION, Utils.serialize(mSelection));
+        intent.putExtra(MediaGroupActivity.SELECTION, Utils.serialize(mSelection.getList()));
         intent.putExtra(MediaGroupActivity.MEDIA_ITEM, v.getTag(R.id.mediaItem).toString());
         intent.putExtra(MediaGroupActivity.TABLE, getTable());
         if (Utils.hasLollipop()) {

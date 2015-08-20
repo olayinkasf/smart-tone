@@ -38,8 +38,7 @@ import lib.olayinka.smart.tone.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedHashSet;
 
 /**
  * Created by Olayinka on 6/17/2015.
@@ -47,7 +46,7 @@ import java.util.Set;
 public class SearchMusicActivity extends ImageCacheActivity {
 
     public static final String SELECTION = "media.selection";
-    private Set<Long> mSelection;
+    private LinkedHashSet<Long> mSelection;
     private MediaListAdapter mAdapter;
 
     @Override
@@ -78,7 +77,7 @@ public class SearchMusicActivity extends ImageCacheActivity {
 
     private void setSelection() throws JSONException {
         JSONArray jsonArray = new JSONArray(getIntent().getStringExtra(SELECTION));
-        mSelection = new HashSet<>(1000);
+        mSelection = new LinkedHashSet<>(1000);
         for (int i = 0; i < jsonArray.length(); i++) {
             mSelection.add(jsonArray.getLong(i));
         }

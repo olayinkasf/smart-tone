@@ -7,3 +7,5 @@ Vous pouvez choisir la fréquence à laquelle votre sonnerie et votre son de not
 Veuillez noter que les sonneries que vous avez affecté spécialement à certains contacts ne seront en aucun cas affectés par ces choix. Les modifications s'appliquent uniquement aux applications qui utilisent les sons de notifications par défaut.
 
 Utilisez les boutons ci-dessus en cas de besoin, ou juste pour dire bonjour. Nous ne mordons pas :) N'hésitez pas non plus à évaluer l'application sur le Play Store, et à partager votre découverte sur les réseaux sociaux en utilisant les boutons appropriés.
+
+@JB

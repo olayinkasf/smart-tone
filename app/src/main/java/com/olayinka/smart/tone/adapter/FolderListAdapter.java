@@ -23,15 +23,14 @@ import android.content.Context;
 import android.database.Cursor;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.MediaItem;
-
-import java.util.Set;
+import com.olayinka.smart.tone.model.OrderedMediaSet;
 
 /**
  * Created by Olayinka on 5/3/2015.
  */
 public class FolderListAdapter extends AlbumListAdapter {
 
-    public FolderListAdapter(Context context, Set<Long> selected) {
+    public FolderListAdapter(Context context, OrderedMediaSet<Long> selected) {
         super(context, Media.Folder.TABLE, selected);
     }
 

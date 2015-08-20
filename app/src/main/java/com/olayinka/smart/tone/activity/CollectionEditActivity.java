@@ -36,8 +36,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.adapter.MediaPagerAdapter;
-import com.olayinka.smart.tone.model.ListenableHashSet;
 import com.olayinka.smart.tone.model.Media;
+import com.olayinka.smart.tone.model.OrderedMediaSet;
 import com.olayinka.smart.tone.service.AppService;
 import com.olayinka.smart.tone.widget.SlidingTabLayout;
 import lib.olayinka.smart.tone.R;
@@ -45,7 +45,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 /**
  * Created by olayinka on 4/30/15.
@@ -57,7 +57,7 @@ public class CollectionEditActivity extends ImageCacheActivity {
     public static final String COLLECTION_NAME = "collection.name";
     private long mCollectionId;
     private String mCollectionName;
-    private ListenableHashSet<Long> mSelection;
+    private OrderedMediaSet<Long> mSelection;
 
     @Override
     public void onBackPressed() {
@@ -93,27 +93,27 @@ public class CollectionEditActivity extends ImageCacheActivity {
                             .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    saveCollection(textView);
+                                    saveCollection(textView.getText().toString());
                                 }
                             }).show();
                 }
             }
         } else if (id == R.id.search) {
             Intent intent = new Intent(this, SearchMusicActivity.class);
-            intent.putExtra(SearchMusicActivity.SELECTION, Utils.serialize(mSelection));
+            intent.putExtra(SearchMusicActivity.SELECTION, Utils.serialize(mSelection.getList()));
             startActivityForResult(intent, GROUP_RETURN_CODE);
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void saveCollection(EditText textView) {
+    private void saveCollection(String name) {
         final long fauxId = System.currentTimeMillis();
         Intent intent = new Intent(this, AppService.class);
         intent.setType(AppService.SAVE_COLLECTION);
-        intent.putExtra(MediaGroupActivity.SELECTION, Utils.serialize(mSelection));
+        intent.putExtra(MediaGroupActivity.SELECTION, Utils.serialize(mSelection.getList()));
         intent.putExtra(COLLECTION_ID, mCollectionId);
         intent.putExtra(AppService.FAUX_ID, fauxId);
-        intent.putExtra(COLLECTION_NAME, textView.getText().toString().trim());
+        intent.putExtra(COLLECTION_NAME, name.trim());
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setCancelable(false);
         dialog.setMessage(getString(R.string.saving_collection));
@@ -154,7 +154,7 @@ public class CollectionEditActivity extends ImageCacheActivity {
 
     private void setPager() {
         ViewPager mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        MediaPagerAdapter mPagerAdapter = new MediaPagerAdapter(mSelection);
+        MediaPagerAdapter mPagerAdapter = new MediaPagerAdapter(mSelection, getResources().getStringArray(R.array.tabs_header));
         mViewPager.setAdapter(mPagerAdapter);
         SlidingTabLayout mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
         mSlidingTabLayout.setViewPager(mViewPager);
@@ -168,7 +168,7 @@ public class CollectionEditActivity extends ImageCacheActivity {
             JSONObject collectionObject = Media.getCollection(this, mCollectionId);
             JSONArray selectionJsonArray = Media.getTones(this, mCollectionId);
             mCollectionName = collectionObject.optString(Media.CollectionColumns.NAME, "");
-            mSelection = new ListenableHashSet<>(selectionJsonArray.length());
+            mSelection = new OrderedMediaSet<>(selectionJsonArray.length());
             for (int i = 0; i < selectionJsonArray.length(); i++) {
                 mSelection.add(selectionJsonArray.getLong(i));
             }
@@ -190,7 +190,7 @@ public class CollectionEditActivity extends ImageCacheActivity {
             try {
                 mSelection.clear();
                 JSONArray selectionJsonArray = new JSONArray(data.getStringExtra(MediaGroupActivity.SELECTION));
-                HashSet<Long> tmpCollection = new HashSet<>(selectionJsonArray.length());
+                LinkedHashSet<Long> tmpCollection = new LinkedHashSet<>(selectionJsonArray.length());
                 for (int i = 0; i < selectionJsonArray.length(); i++) {
                     tmpCollection.add(selectionJsonArray.getLong(i));
                 }

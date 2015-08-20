@@ -26,45 +26,45 @@
     <string name="app.name" translatable="false">SmartTone 2</string>
     <string name="about.app.title">About App</string>
     <string name="done">Done</string>
-    <string name="share_using">Share using</string>
+    <string name="share.using">Share using</string>
     <string name="checkout">Hey! Check out the SmartTone app at:</string>
-    <string name="app_link" translatable="false">https://play.google.com/store/apps/details?id=app.smart.tone</string>
-    <string name="mail_uri" formatted="false" translatable="false">
+    <string name="app.link" translatable="false">https://play.google.com/store/apps/details?id=app.smart.tone</string>
+    <string name="mail.uri" formatted="false" translatable="false">
         mailto:olayinka.sf@gmail.com?subject=Help%20and%20Support
     </string>
     <string name="create.collection">Click the button below to create a collection of ringtones or notification sounds
     </string>
-    <string name="manage_collection" translatable="false">Collections</string>
+    <string name="manage.collection" translatable="false">Collections</string>
     <string name="activate">Activate</string>
-    <string name="select_all">Select all</string>
-    <string name="clear_selection">Clear selection</string>
-    <string name="not_activated">Activate</string>
+    <string name="select.all">Select all</string>
+    <string name="clear.selection">Clear selection</string>
+    <string name="not.activated">Activate</string>
     <string name="activated">Active</string>
     <string name="deactivate">Deactivate</string>
-    <string name="collection_name_exist">Another collection has this name.</string>
+    <string name="collection.name.exist">Another collection has this name.</string>
     <string name="rename">Rename collection</string>
     <string name="previewing">Playing</string>
-    <string name="douple_tap">Double tap on music icon to preview</string>
+    <string name="douple.tap">Double tap on music icon to preview</string>
     <string name="importing">Importing collections …</string>
     <string name="ringtone">Ringtone</string>
     <string name="notification">Notification</string>
-    <string name="name_empty">Enter a name for this collection</string>
-    <string name="empty_selection">No tone has been selected</string>
-    <string name="collection_icon">Collection Icon</string>
-    <string name="collection_removed">Collection removed successfully</string>
-    <string name="collection_activated">Collection activated successfully</string>
+    <string name="name.empty">Enter a name for this collection</string>
+    <string name="empty.selection">No tone has been selected</string>
+    <string name="collection.icon">Collection Icon</string>
+    <string name="collection.removed">Collection removed successfully</string>
+    <string name="collection.activated">Collection activated successfully</string>
     <string name="collections">Collections</string>
     <string name="settings">Settings</string>
-    <string name="shuffle_freq">Shuffle frequency</string>
+    <string name="shuffle.freq">Shuffle frequency</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit collection</string>
-    <string name="notif_service_name">Notification Service</string>
-    <string name="wait_index">Wait while your media files are indexed</string>
-    <string name="exit_warning">Are you sure?</string>
+    <string name="notif.service.name">Notification Service</string>
+    <string name="wait.index">Wait while your media files are indexed</string>
+    <string name="exit.warning">Are you sure you want to exit?</string>
     <string name="cancel">Cancel</string>
     <string name="yes">Yes</string>
-    <string name="saving_collection">Collection is saving …</string>
-    <string name="save_collection">Save collection?</string>
+    <string name="saving.collection">Collection is saving …</string>
+    <string name="save.collection">Save collection?</string>
     <string name="ringtone.selected">Ringtone collection selected!</string>
     <string name="activate.service">Activate SmartTone service now?</string>
     <string name="no">No</string>
@@ -77,7 +77,7 @@
     <string name="notify.change">Notify on ringtone change</string>
     <string name="rescan.media">Rescan media files</string>
     <string name="notification.service">SmartTone Notification Service</string>
-    <string name="notification_freq_changed">Notification shuffle frequency changed.</string>
+    <string name="notification.freq.changed">Notification shuffle frequency changed.</string>
     <string name="ringtone.service">SmartTone Ringtone Service</string>
     <string name="imported">(Imported)</string>
     <string name="transition.collection.page">transitionCollectionPage</string>
@@ -136,7 +136,7 @@
     <string name="set">Set</string>
     <string name="as.ringtone">as ringtone collection</string>
     <string name="remove">Remove</string>
-    <string name="as_notif">as notification collection</string>
+    <string name="as.notif">as notification collection</string>
     <string name="change.notif">Change notification sound</string>
     <string name="change.ringtone">Change ringtone</string>
     <string name="action.settings">Settings</string>
@@ -146,6 +146,8 @@
     <string name="shuffle.error">An error occurred</string>
     <string name="service.inactive">SmartTone service is inactive</string>
     <string name="no.active.notification">You have no active collection for notification sounds</string>
+    <string name="confirm.delete">Delete tone from collection?</string>
+    <string name="shuffle.mode">Use list order or change randomly</string>
 
 
     <string-array name="ringtone_freq">
@@ -160,6 +162,23 @@
         <item>6 hours interval</item>
         <item>12 hours interval</item>
         <item>Once everyday</item>
+    </string-array>
+
+
+    <string-array name="shuffle_mode">
+        <item>Shuffle both!</item>
+        <item>Change ringtones in list order</item>
+        <item>Change notification sounds in list order</item>
+        <item>Change both in list order</item>
+    </string-array>
+
+    <string-array name="tabs_header">
+        <item>SELECTION</item>
+        <item>ALL MEDIA</item>
+        <item>RINGTONE</item>
+        <item>NOTIFICATION</item>
+        <item>ALBUMS</item>
+        <item>FOLDERS</item>
     </string-array>
 
 </resources>

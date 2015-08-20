@@ -34,13 +34,14 @@ import com.olayinka.smart.tone.model.MediaItem;
 import com.olayinka.smart.tone.task.MediaPlayBackTask;
 import lib.olayinka.smart.tone.R;
 
+import java.util.Collection;
 import java.util.Set;
 
 /**
  * Created by Olayinka on 5/3/2015.
  */
 
-public class MediaListAdapter extends CursorAdapter implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, ListenableHashSet.HashSetListener {
+public class MediaListAdapter extends CursorAdapter implements CompoundButton.OnCheckedChangeListener, View.OnClickListener, ListenableHashSet.HashSetListener<Long> {
 
 
     public static final String SELECTION_ALL = null;
@@ -114,7 +115,13 @@ public class MediaListAdapter extends CursorAdapter implements CompoundButton.On
     }
 
     @Override
-    public void onDataSetChanged() {
+    public void onDataSetChanged(Collection<? extends Long> objects, int op) {
+        notifyDataSetChanged();
+    }
+
+
+    @Override
+    public void onDataSetChanged(Long object, int op) {
         notifyDataSetChanged();
     }
 }

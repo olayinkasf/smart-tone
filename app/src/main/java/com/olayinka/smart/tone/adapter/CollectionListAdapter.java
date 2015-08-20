@@ -169,7 +169,7 @@ public class CollectionListAdapter extends CursorAdapter {
                             prefs.edit().putLong(AppSettings.ACTIVE_RINGTONE, collectionId).apply();
                             prefs.edit().putBoolean(AppSettings.ACTIVE_APP_SERVICE, true).apply();
                             try {
-                                AppSettings.changeRingtoneSound(context, true);;
+                                AppSettings.changeRingtoneSound(context, true);
                                 ((AbsSmartTone) context.getApplicationContext()).startServices();
                                 mActivity.refreshForChange();
                             } catch (JSONException e) {

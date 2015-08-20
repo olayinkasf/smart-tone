@@ -295,4 +295,5 @@ public class Utils {
         NotificationManager mNotifyMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mNotifyMgr.notify(notificationId, notification);
     }
+
 }

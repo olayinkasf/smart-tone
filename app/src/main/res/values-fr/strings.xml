@@ -25,41 +25,41 @@
 
     <string name="about.app.title">A propos</string>
     <string name="done">Fait</string>
-    <string name="share_using">Partager</string>
+    <string name="share.using">Partager</string>
     <string name="checkout">Hey! Jette un coup d\'oeil à l\'appli SmartTone :</string>
 
     <string name="create.collection">Utilise le bouton ci-dessous pour créer une collection de sonneries ou de sons de notifications
     </string>
     <string name="activate">Activer</string>
-    <string name="select_all">Tout sélectionner</string>
-    <string name="clear_selection">Supprimer la sélection</string>
-    <string name="not_activated">Activer</string>
+    <string name="select.all">Tout sélectionner</string>
+    <string name="clear.selection">Supprimer la sélection</string>
+    <string name="not.activated">Activer</string>
     <string name="activated">Active</string>
     <string name="deactivate">Désactiver</string>
-    <string name="collection_name_exist">Ce nom est déjà utilisé par une autre collection.</string>
+    <string name="collection.name.exist">Ce nom est déjà utilisé par une autre collection.</string>
     <string name="rename">Renommer la collection</string>
     <string name="previewing">Aperçu</string>
-    <string name="douple_tap">Appuyer deux fois sur l\'icone pour avoir un aperçu</string>
+    <string name="douple.tap">Appuyer deux fois sur l\'icone pour avoir un aperçu</string>
     <string name="importing">Importation des collections …</string>
     <string name="ringtone">Sonnerie</string>
     <string name="notification">Notifications</string>
-    <string name="name_empty">Donner un nom à cette collection</string>
-    <string name="empty_selection">Vous n\'avez sélectionné aucun fichier</string>
-    <string name="collection_icon">Icône de la collection</string>
-    <string name="collection_removed">La collection a bien été supprimée</string>
-    <string name="collection_activated">La collection a bien été activée</string>
+    <string name="name.empty">Donner un nom à cette collection</string>
+    <string name="empty.selection">Vous n\'avez sélectionné aucun fichier</string>
+    <string name="collection.icon">Icône de la collection</string>
+    <string name="collection.removed">La collection a bien été supprimée</string>
+    <string name="collection.activated">La collection a bien été activée</string>
     <string name="collections">Collections</string>
     <string name="settings">Réglages</string>
-    <string name="shuffle_freq">Fréquence de changement</string>
+    <string name="shuffle.freq">Fréquence de changement</string>
     <string name="delete">Supprimer</string>
     <string name="edit">Editer la collection</string>
-    <string name="notif_service_name">Notification Service</string>
-    <string name="wait_index">Indexation de vos fichiers en cours, merci de patienter</string>
-    <string name="exit_warning">Êtes-vous sûr(e)?</string>
+    <string name="notif.service.name">Notification Service</string>
+    <string name="wait.index">Indexation de vos fichiers en cours, merci de patienter</string>
+    <string name="exit.warning">Êtes-vous sûr(e) d\'annuler?</string>
     <string name="cancel">Annuler</string>
     <string name="yes">Oui</string>
-    <string name="saving_collection">Sauvegarde de la collection …</string>
-    <string name="save_collection">Sauvegarder la collection?</string>
+    <string name="saving.collection">Sauvegarde de la collection …</string>
+    <string name="save.collection">Sauvegarder la collection?</string>
     <string name="ringtone.selected">Collection de sonneries sélectionnée !</string>
     <string name="activate.service">Activer le fonctionnement de SmartTone ?</string>
     <string name="no">Non</string>
@@ -72,14 +72,14 @@
     <string name="notify.change">M\'envoyer une notification après chaque changement</string>
     <string name="rescan.media">Rescanner les fichiers audio</string>
     <string name="notification.service">SmartTone Notification Service</string>
-    <string name="notification_freq_changed">Notification shuffle frequency changed.</string>
+    <string name="notification.freq.changed">Notification shuffle frequency changed.</string>
     <string name="ringtone.service">SmartTone Ringtone Service</string>
     <string name="imported">(Importé)</string>
     <string name="transition.collection.page">transitionCollectionPage</string>
     <string name="transition.media.group">transitionMediaGroup</string>
     <string name="reindex.warning">Relancer l\'application?</string>
     <string name="action.save">Sauvegarder</string>
-    <string name="collection.name.hint">Donner un nom à cette collection</string>
+    <string name="collection.name.hint">Nom de la collection</string>
     <string name="action.share.app">Partager cette appli !</string>
     <string name="app.version">Version de l\'application</string>
     <string name="donate">Faire un don</string>
@@ -130,7 +130,7 @@
     <string name="set">Choisir</string>
     <string name="as.ringtone">comme collection de sonneries</string>
     <string name="remove">Supprimer</string>
-    <string name="as_notif">comme collection de sons de notifications</string>
+    <string name="as.notif">comme collection de sons de notifications</string>
     <string name="change.notif">Changer de son de notifications</string>
     <string name="change.ringtone">Changer de sonnerie</string>
     <string name="action.settings">Réglages</string>
@@ -154,6 +154,17 @@
         <item>Toutes les 6 heures</item>
         <item>Toutes les 12 heures</item>
         <item>Une fois par jour</item>
+    </string-array>
+
+
+    <string-array name="tabs_header">
+        <item>SELECTION</item>
+        <item>MEDIAS</item>
+        <item>SONNERIES</item>
+        <item>NOTIFICATIONS</item>
+        <item>ALBUMS</item>
+        <item>DOSSIERS</item>
+
     </string-array>
 
 </resources>

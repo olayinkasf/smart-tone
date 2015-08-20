@@ -53,6 +53,17 @@ public class CollectionPageActivity extends ImageCacheActivity implements View.O
     private ToneListAdapter mAdapter;
 
     @Override
+    protected void onPause() {
+        if(mCollectionId != 0 && mCollectionObject != null)
+        try {
+            mAdapter.persist(mCollectionId, mCollectionObject.getString(Media.CollectionColumns.NAME));
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        super.onPause();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.clear();
         //getMenuInflater().inflate(R.menu.collection_page, menu);

@@ -43,4 +43,8 @@
     <dimen name="album_icon_size">150dp</dimen>
     <dimen name="thumbnail_size">70dp</dimen>
     <integer name="media_grid_num_columns">1</integer>
+
+
+    <dimen name="list_text_size">16sp</dimen>
+    <dimen name="list_item_height">48dip</dimen>
 </resources>

@@ -28,6 +28,9 @@ import java.util.*;
  */
 public class ListenableHashSet<E> extends HashSet<E> {
 
+    public static final int ADDED = 1;
+    public static final int REMOVED = -1;
+
     boolean mCollate = true;
 
     public ListenableHashSet() {
@@ -42,16 +45,21 @@ public class ListenableHashSet<E> extends HashSet<E> {
         mCollate = collate;
     }
 
-    public static interface HashSetListener {
-        public void onDataSetChanged();
+    public static interface HashSetListener<E> {
+
+        void onDataSetChanged(Collection<? extends E> objects, int op);
+
+        void onDataSetChanged(E object, int op);
     }
 
-    HashMap<String, HashSetListener> mListeners = new HashMap<>(10);
+    HashMap<String, HashSetListener<E>> mListeners = new HashMap<>(10);
 
+    //that's for not making remove generic! Ha!
+    @SuppressWarnings("unchecked")
     @Override
     public boolean remove(Object object) {
         if (super.remove(object)) {
-            notifyListeners();
+            notifyListeners((E) object, REMOVED);
             return true;
         }
         return false;
@@ -60,10 +68,22 @@ public class ListenableHashSet<E> extends HashSet<E> {
     @Override
     public boolean add(E object) {
         if (super.add(object)) {
-            notifyListeners();
+            notifyListeners(object, ADDED);
             return true;
         }
         return false;
+    }
+
+    protected void notifyListeners(E object, int op) {
+        for (Map.Entry<String, HashSetListener<E>> listener : mListeners.entrySet()) {
+            listener.getValue().onDataSetChanged(object, op);
+        }
+    }
+
+    protected void notifyListeners(Collection<? extends E> objects, int op) {
+        for (Map.Entry<String, HashSetListener<E>> listener : mListeners.entrySet()) {
+            listener.getValue().onDataSetChanged(objects, op);
+        }
     }
 
     /**
@@ -94,35 +114,37 @@ public class ListenableHashSet<E> extends HashSet<E> {
         boolean result = false;
         Iterator<? extends E> it = collection.iterator();
         while (it.hasNext()) {
-            if (super.add(it.next())) {
+            E holder;
+            if (super.add((holder = it.next()))) {
                 result = true;
                 if (!mCollate) {
-                    notifyListeners();
+                    notifyListeners(holder, ADDED);
                 }
             }
         }
         if (mCollate && result) {
-            notifyListeners();
+            notifyListeners(collection, ADDED);
         }
         return result;
     }
 
-    private void notifyListeners() {
-        Log.wtf("notifyListeners", "" + mListeners.size());
-        for (Map.Entry<String, HashSetListener> listener : mListeners.entrySet()) {
-            listener.getValue().onDataSetChanged();
-        }
-    }
+
 
     public void removeListener(String key) {
         mListeners.remove(key);
     }
 
-    public void addListener(String key, HashSetListener listener) {
+    public void addListener(String key, HashSetListener<E> listener) {
         mListeners.put(key, listener);
         Log.wtf("addListener", listener.toString());
     }
 
+    @Override
+    public void clear() {
+        notifyListeners(this, REMOVED);
+        mListeners.clear();
+        super.clear();
+    }
 
     /**
      * Removes all occurrences in this collection which are contained in the
@@ -133,33 +155,37 @@ public class ListenableHashSet<E> extends HashSet<E> {
      * otherwise.
      * @throws UnsupportedOperationException if removing from this collection is not supported.
      */
+    @SuppressWarnings("unchecked")
     @Override
     public boolean removeAll(Collection<?> collection) {
         boolean result = false;
+        List<E> holders = new LinkedList<>();
         if (size() <= collection.size()) {
-            Iterator<?> it = iterator();
+            E holder;
+            Iterator<E> it = iterator();
             while (it.hasNext()) {
-                if (collection.contains(it.next())) {
+                if (collection.contains((holder = it.next()))) {
                     it.remove();
                     result = true;
                     if (!mCollate) {
-                        notifyListeners();
-                    }
+                        notifyListeners(holder, REMOVED);
+                    } else holders.add(holder);
                 }
             }
         } else {
-            Iterator<?> it = collection.iterator();
+            Iterator<E> it = (Iterator<E>) collection.iterator();
             while (it.hasNext()) {
-                if (super.remove(it.next())) {
+                E holder;
+                if (super.remove((holder = it.next()))) {
                     result = true;
                     if (!mCollate) {
-                        notifyListeners();
-                    }
+                        notifyListeners(holder, REMOVED);
+                    } else holders.add(holder);
                 }
             }
         }
         if (mCollate && result) {
-            notifyListeners();
+            notifyListeners(holders, REMOVED);
         }
         return result;
     }
@@ -189,20 +215,23 @@ public class ListenableHashSet<E> extends HashSet<E> {
      *                                       {@code null} elements.
      * @throws NullPointerException          if {@code collection} is {@code null}.
      */
+    @SuppressWarnings("unchecked")
     public boolean retainAll(Collection<?> collection) {
         boolean result = false;
+        List<E> holders = new LinkedList<>();
         Iterator<?> it = iterator();
         while (it.hasNext()) {
-            if (!collection.contains(it.next())) {
+            E holder;
+            if (!collection.contains((holder = (E) it.next()))) {
                 it.remove();
                 result = true;
                 if (!mCollate) {
-                    notifyListeners();
-                }
+                    notifyListeners(holder, REMOVED);
+                } else holders.add(holder);
             }
         }
         if (mCollate && result) {
-            notifyListeners();
+            notifyListeners(holders, REMOVED);
         }
         return result;
     }

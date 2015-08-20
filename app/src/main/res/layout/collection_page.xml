@@ -43,7 +43,18 @@
             android:minHeight="?attr/actionBarSize"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
-    <ListView
+
+    <com.mobeta.android.dslv.DragSortListView
+            app:remove_enabled="true"
+            app:remove_mode="clickRemove"
+            app:click_remove_id="@+id/remove"
+            app:drag_enabled="true"
+            app:collapsed_height="1px"
+            app:drag_scroll_start="0.33"
+            app:float_alpha="0.50"
+            app:slide_shuffle_speed="0.3"
+            app:drag_start_mode="onMove"
+            app:drag_handle_id="@+id/dragHandle"
             android:layout_below="@+id/toolbar"
             android:scrollbarSize="20dp"
             android:id="@+id/list"

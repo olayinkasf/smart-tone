@@ -35,7 +35,7 @@ import java.util.List;
 public class AppSqlHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "smart_tone";
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 10;
     private static AppSqlHelper sInstance;
     private final Context mContext;
 
@@ -103,6 +103,10 @@ public class AppSqlHelper extends SQLiteOpenHelper {
         }
         if (oldVersion <= 8) {
             for (String query : makeQueries(R.raw.update_db_8))
+                db.execSQL(query);
+        }
+        if (oldVersion <= 9) {
+            for (String query : makeQueries(R.raw.update_db_9))
                 db.execSQL(query);
         }
         db.setTransactionSuccessful();

@@ -64,7 +64,7 @@
 
             <TextView
                     android:layout_below="@+id/albumName"
-                    android:text="@string/collection_removed"
+                    android:text="@string/collection.removed"
                     android:id="@+id/artistName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
