@@ -26,8 +26,7 @@
               android:clickable="true"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:gravity="center"
-              android:minHeight="?android:actionBarSize">
+              android:gravity="center">
 
     <TextView
             android:textColor="@android:color/secondary_text_light"
@@ -36,7 +35,7 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:gravity="center_vertical"
-            android:textSize="18sp"/>
+            android:textSize="16sp"/>
 
     <com.olayinka.smart.tone.widget.PrefsTextView
             android:paddingLeft="5dp"

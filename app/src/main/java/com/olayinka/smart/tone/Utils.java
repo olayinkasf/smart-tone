@@ -278,7 +278,6 @@ public class Utils {
 
         if (sCachedBitmap == null)
             sCachedBitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_notif_large);
-        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_notif_small)
@@ -286,7 +285,6 @@ public class Utils {
                 .setContentText(content)
                 .setAutoCancel(true)
                 .setLargeIcon(sCachedBitmap)
-                .setSound(uri)
                 .setTicker(content)
                 .setContentIntent(intent)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(content));

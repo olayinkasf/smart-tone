@@ -147,7 +147,7 @@
     <string name="service.inactive">SmartTone service is inactive</string>
     <string name="no.active.notification">You have no active collection for notification sounds</string>
     <string name="confirm.delete">Delete tone from collection?</string>
-    <string name="shuffle.mode">Use list order or change randomly</string>
+    <string name="order.change">Use collection\'s order</string>
 
 
     <string-array name="ringtone_freq">
@@ -162,14 +162,6 @@
         <item>6 hours interval</item>
         <item>12 hours interval</item>
         <item>Once everyday</item>
-    </string-array>
-
-
-    <string-array name="shuffle_mode">
-        <item>Shuffle both!</item>
-        <item>Change ringtones in list order</item>
-        <item>Change notification sounds in list order</item>
-        <item>Change both in list order</item>
     </string-array>
 
     <string-array name="tabs_header">

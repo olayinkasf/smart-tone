@@ -119,7 +119,7 @@ public class IndexerService extends IntentService {
 
     private List<ContentValues> cacheAllTones(SQLiteDatabase writableDatabase) {
         List<ContentValues> tones = new ArrayList<>(200);
-        Cursor cursor = writableDatabase.rawQuery("SELECT  t.collection_id,  m.path FROM tone t INNER JOIN media m ON t.media_id = m._id", null);
+        Cursor cursor = writableDatabase.rawQuery("SELECT  t.collection_id,  m.path, t.sort_order FROM tone t INNER JOIN media m ON t.media_id = m._id", null);
         while (cursor.moveToNext()) {
             ContentValues contentValues = new ContentValues();
             DatabaseUtils.cursorRowToContentValues(cursor, contentValues);

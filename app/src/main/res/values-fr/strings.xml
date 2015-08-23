@@ -140,6 +140,8 @@
     <string name="shuffle.error">Erreur</string>
     <string name="service.inactive">SmartTone est désactivée</string>
     <string name="no.active.notification">Vous n\'avez pas activé de collection de sons de notifications</string>
+    <string name="confirm.delete">Voulez-vous supprimer cette sonerie de la collection?</string>
+    <string name="order.change">Utiliser l\'ordre de la collection</string>
 
 
     <string-array name="ringtone_freq">

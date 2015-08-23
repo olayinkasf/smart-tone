@@ -44,7 +44,7 @@
             <include android:id="@+id/service" layout="@layout/settings_item_switch"/>
             <include android:id="@+id/ringtoneFreq" layout="@layout/menu_item"/>
             <include android:id="@+id/notifFreq" layout="@layout/menu_item"/>
-            <include android:id="@+id/shuffleMode" layout="@layout/menu_item"/>
+            <include android:id="@+id/shuffleMode" layout="@layout/settings_item_switch"/>
             <include android:id="@+id/notifyChange" layout="@layout/settings_item_switch"/>
             <include android:id="@+id/backup" layout="@layout/menu_item"/>
             <include android:id="@+id/reindex" layout="@layout/menu_item"/>

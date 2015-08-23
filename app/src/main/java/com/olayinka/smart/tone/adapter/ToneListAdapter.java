@@ -77,7 +77,7 @@ public class ToneListAdapter extends DragSortCursorAdapter {
         TextView albumNameView = (TextView) view.findViewById(R.id.album);
         TextView artistView = (TextView) view.findViewById(R.id.artist);
 
-        titleView.setText(cursor.getString(1) + "-" + cursor.getString(6));
+        titleView.setText(cursor.getString(1));
         albumNameView.setText(cursor.getString(3));
         artistView.setText(cursor.getString(4));
 
