@@ -19,15 +19,19 @@
 
 package com.olayinka.smart.tone.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
+import com.olayinka.smart.tone.AppLogger;
 import com.olayinka.smart.tone.Utils;
 import lib.olayinka.smart.tone.R;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -44,18 +48,29 @@ public class LogActivity extends AppCompatActivity {
         WebView content = (WebView) findViewById(R.id.appLog);
         content.getSettings().setLoadWithOverviewMode(true);
         content.getSettings().setUseWideViewPort(true);
-        String contentString = null;
-        try {
-            contentString = Utils.readFile(getFileStreamPath("smart.tone.log").getAbsolutePath());
-        } catch (IOException e) {
-            Utils.toast(this, e.getMessage());
-            finish();
-            return;
-        }
-        String html = Utils.getRawString(this, R.raw.log).replace("%s", contentString);
+
         String mime = "text/html";
         String encoding = "utf-8";
-        content.loadDataWithBaseURL(null, html, mime, encoding, null);
+        content.loadDataWithBaseURL(null, Utils.getRawString(this, R.raw.log).replace("%s", getSystemLog()), mime, encoding, null);
+    }
+
+    private String getSystemLog() {
+
+        StringBuilder contentString = new StringBuilder();
+
+        File logFile = new File(getFileStreamPath("smart.tone.log").getAbsolutePath());
+        File backUpLogFile = new File(getFileStreamPath("smart.tone.bck.log").getAbsolutePath());
+        try {
+            contentString.append(Utils.readFile(backUpLogFile));
+        } catch (IOException e) {
+            AppLogger.wtf(this, "onCreate", e);
+        }
+        try {
+            contentString.append(Utils.readFile(logFile)).append("\n");
+        } catch (IOException e) {
+            AppLogger.wtf(this, "onCreate", e);
+        }
+        return contentString.toString();
     }
 
     private void setActionBar() {
@@ -69,12 +84,25 @@ public class LogActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                break;
+        int i = item.getItemId();
+        if (i == android.R.id.home) {
+            onBackPressed();
+        } else if (i == R.id.sendLog) {
+            final Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+            emailIntent.setType("text/html");
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"smart.tone.app@gmail.com"});
+            emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Application Log");
+            emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, getSystemLog());
+            startActivity(Intent.createChooser(emailIntent, getString(R.string.send_app_log)));
         }
         return super.onOptionsItemSelected(item);
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.clear();
+        getMenuInflater().inflate(R.menu.log, menu);
+        return true;
+    }
 }

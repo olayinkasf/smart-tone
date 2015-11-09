@@ -61,6 +61,7 @@ public class NotifListenerService extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         try {
+            AppLogger.wtf(this, "onNotificationPosted", sbn.toString());
             if (shouldRun(this)) AppSettings.changeNotificationSound(this, false);
         } catch (JSONException e) {
             AppLogger.wtf(this, "onNotificationPosted", e);
@@ -69,6 +70,7 @@ public class NotifListenerService extends NotificationListenerService {
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
+        AppLogger.wtf(this, "onNotificationRemoved", sbn.toString());
     }
 
     Bitmap mLargeIcon;

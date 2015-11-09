@@ -19,12 +19,8 @@
 
 apply plugin: 'com.android.library'
 
-repositories {
-    jcenter()
-}
-
 android {
-    compileSdkVersion 22
+    compileSdkVersion 23
     buildToolsVersion "22.0.1"
 
     defaultConfig {
@@ -38,9 +34,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    repositories {
+        jcenter()
+    }
+
     dependencies {
         compile fileTree(dir: 'libs', include: ['*.jar'])
-        compile 'com.android.support:appcompat-v7:22.2.1'
+        compile 'com.android.support:appcompat-v7:23.1.0'
     }
 
 }

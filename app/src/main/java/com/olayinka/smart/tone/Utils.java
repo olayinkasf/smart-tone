@@ -293,11 +293,11 @@ public class Utils {
         mNotifyMgr.notify(notificationId, notification);
     }
 
-    public static String readFile(String s) throws IOException {
+    public static String readFile(File file) throws IOException {
         BufferedReader br = null;
         try {
             StringBuilder text = new StringBuilder();
-            br = new BufferedReader(new FileReader(new File(s)));
+            br = new BufferedReader(new FileReader(file));
             String line;
 
             while ((line = br.readLine()) != null) {

@@ -45,7 +45,7 @@ public abstract class AbsSmartTone extends Application {
     private void monitorLog() {
         File logFile = new File(getFileStreamPath("smart.tone.log").getAbsolutePath());
         File backUpLogFile = new File(getFileStreamPath("smart.tone.bck.log").getAbsolutePath());
-        if (logFile.length() <= 1048576) {
+        if (logFile.length() <= 1048576 * 5) {
             try {
                 Utils.copyFile(logFile, backUpLogFile);
             } catch (IOException e) {

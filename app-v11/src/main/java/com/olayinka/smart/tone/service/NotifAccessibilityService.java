@@ -64,7 +64,7 @@ public class NotifAccessibilityService extends AccessibilityService {
 
     @Override
     public void onServiceConnected() {
-        AppLogger.wtf(context, "onServiceConnected", "service connected successfully");
+        AppLogger.wtf(this, "onServiceConnected", "service connected successfully");
         AccessibilityServiceInfo info = new AccessibilityServiceInfo();
 
         info.eventTypes = AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED;
@@ -76,7 +76,7 @@ public class NotifAccessibilityService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        AppLogger.wtf(context, "onNotificationPosted", event.toString());
+        AppLogger.wtf(this, "onNotificationPosted", event.toString());
         final int eventType = event.getEventType();
         if (eventType == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED) {
             Parcelable parcelable = event.getParcelableData();
@@ -86,7 +86,7 @@ public class NotifAccessibilityService extends AccessibilityService {
                     try {
                         if (shouldRun(this)) AppSettings.changeNotificationSound(this, false);
                     } catch (JSONException e) {
-                        AppLogger.wtf(context, "onNotificationPosted", e);
+                        AppLogger.wtf(this, "onNotificationPosted", e);
                     }
                 }
             }
@@ -101,7 +101,7 @@ public class NotifAccessibilityService extends AccessibilityService {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (!shouldRun(this)) {
-            AppLogger.wtf(context, "onStartCommand/NotifAccessibilityService", "Shouldn't run! Stop alarm and return START_NOT_STICKY");
+            AppLogger.wtf(this, "onStartCommand/NotifAccessibilityService", "Shouldn't run! Stop alarm and return START_NOT_STICKY");
             ServiceManager.stopAlarm(getApplicationContext(), NotifAccessibilityService.class);
             stopSelf();
             return START_NOT_STICKY;

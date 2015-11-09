@@ -34,11 +34,14 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import com.olayinka.smart.tone.AppSqlHelper;
+import com.olayinka.smart.tone.MainActivity;
 import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.adapter.MediaPagerAdapter;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.OrderedMediaSet;
 import com.olayinka.smart.tone.service.AppService;
+import com.olayinka.smart.tone.service.IndexerService;
 import com.olayinka.smart.tone.widget.SlidingTabLayout;
 import lib.olayinka.smart.tone.R;
 import org.json.JSONArray;
@@ -153,6 +156,28 @@ public class CollectionEditActivity extends ImageCacheActivity {
     }
 
     private void setPager() {
+        if (!AppSqlHelper.hasData(this, Media.TABLE)) {
+            final Intent intent = new Intent(this, MainActivity.class);
+            new AlertDialog.Builder(this)
+                    .setMessage(R.string.empty_reindex)
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent.putExtra(IndexerService.FORCE_INDEX, true);
+                            startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .setCancelable(false)
+                    .show();
+        }
+
         ViewPager mViewPager = (ViewPager) findViewById(R.id.viewpager);
         MediaPagerAdapter mPagerAdapter = new MediaPagerAdapter(mSelection, getResources().getStringArray(R.array.tabs_header));
         mViewPager.setAdapter(mPagerAdapter);
