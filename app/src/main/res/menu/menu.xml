@@ -23,4 +23,16 @@
             app:showAsAction="never"
             android:id="@+id/settings"
             android:title="@string/action.settings"/>
+    <item
+            app:showAsAction="never"
+            android:id="@+id/aboutApp"
+            android:title="@string/action.about.app"/>
+    <item
+            app:showAsAction="never"
+            android:id="@+id/viewAppLog"
+            android:title="@string/action.view.log"/>
+    <item
+            app:showAsAction="never"
+            android:id="@+id/contactHelp"
+            android:title="@string/action.contact.help"/>
 </menu>

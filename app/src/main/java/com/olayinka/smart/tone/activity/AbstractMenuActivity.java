@@ -99,10 +99,10 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
         varMap.put("build.number", String.valueOf(BuildConfig.BUILD_NUMBER));
         getVersion(varMap);
         if ("debug".equalsIgnoreCase(varMap.get("build.type"))) {
-           // getSharedPreferences(AppSettings.APP_SETTINGS, MODE_PRIVATE)
-                //    .edit().clear().commit();
+            // getSharedPreferences(AppSettings.APP_SETTINGS, MODE_PRIVATE)
+            //    .edit().clear().commit();
             //getSharedPreferences(RateThisAppAlert.ID, MODE_PRIVATE)
-              //      .edit().clear().commit();
+            //      .edit().clear().commit();
         }
     }
 
@@ -479,6 +479,12 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.settings) {
             startActivity(new Intent(this, SettingsActivity.class));
+        } else if (item.getItemId() == R.id.aboutApp) {
+            startActivity(new Intent(this, AboutAppActivity.class));
+        } else if (item.getItemId() == R.id.viewAppLog) {
+            startActivity(new Intent(this, LogActivity.class));
+        }else if (item.getItemId() == R.id.contactHelp) {
+            startActivity(new Intent(this, LegalActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }

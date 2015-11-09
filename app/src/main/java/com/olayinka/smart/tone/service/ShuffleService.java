@@ -23,8 +23,8 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
-import android.util.Log;
 import com.olayinka.smart.tone.AppSettings;
+import com.olayinka.smart.tone.AppLogger;
 import org.json.JSONException;
 
 /**
@@ -37,7 +37,7 @@ public class ShuffleService extends Service {
         boolean runForRingtone = shouldRunForRingtone();
         boolean runForNotification = shouldRunForNotification();
         if (!runForNotification && !runForRingtone) {
-            Log.wtf("onStartCommand/ShuffleService", "Shouldn't run! Stop alarm and return START_NOT_STICKY");
+            AppLogger.wtf(this, "onStartCommand/ShuffleService", "Shouldn't run! Stop alarm and return START_NOT_STICKY");
             ServiceManager.stopAlarm(getApplicationContext(), ShuffleService.class);
             stopSelf();
             return START_NOT_STICKY;

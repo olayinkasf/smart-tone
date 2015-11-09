@@ -26,7 +26,7 @@ import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.util.Log;
+import com.olayinka.smart.tone.AppLogger;
 import com.olayinka.smart.tone.AppSettings;
 import org.json.JSONException;
 
@@ -40,10 +40,10 @@ public class RingtoneTelephonyService extends Service {
 
     @Override
     public void onCreate() {
-        Log.wtf("onCreate", "New telephony service instance." + this);
+        AppLogger.wtf(this, "onCreate", "New telephony service instance." + this);
         super.onCreate();
         if (mListener == null) {
-            Log.wtf("onCreate", "New telephony listener instance." + this);
+            AppLogger.wtf(this, "onCreate", "New telephony listener instance." + this);
             TelephonyManager mTelephonyMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
             mListener = new PhoneStateListener() {
                 public boolean lookOut;
@@ -72,14 +72,14 @@ public class RingtoneTelephonyService extends Service {
         try {
             AppSettings.changeRingtoneSound(this);
         } catch (JSONException e) {
-            Log.wtf("onNotificationPosted", e);
+            AppLogger.wtf(this, "onNotificationPosted", e.getMessage());
         }
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (!shouldRun()) {
-            Log.wtf("onStartCommand/RingtoneTelephonyService", "Shouldn't run! Stop alarm and return START_NOT_STICKY");
+            AppLogger.wtf(this, "onStartCommand/RingtoneTelephonyService", "Shouldn't run! Stop alarm and return START_NOT_STICKY");
             ServiceManager.stopAlarm(getApplicationContext(), RingtoneTelephonyService.class);
             destroyListener();
             stopSelf();
@@ -109,7 +109,7 @@ public class RingtoneTelephonyService extends Service {
     private void destroyListener() {
         TelephonyManager mTelephonyMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         if (mListener != null) {
-            Log.wtf("onCreate", "Telephony listener instance destroyed." + this);
+            AppLogger.wtf(this, "onCreate", "Telephony listener instance destroyed." + this);
             mTelephonyMgr.listen(mListener, PhoneStateListener.LISTEN_NONE);
         }
         mListener = null;

@@ -19,8 +19,6 @@
 
 package com.olayinka.smart.tone.model;
 
-import android.util.Log;
-
 import java.util.*;
 
 /**
@@ -136,7 +134,6 @@ public class ListenableHashSet<E> extends HashSet<E> {
 
     public void addListener(String key, HashSetListener<E> listener) {
         mListeners.put(key, listener);
-        Log.wtf("addListener", listener.toString());
     }
 
     @Override

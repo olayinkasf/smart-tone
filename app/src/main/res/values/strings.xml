@@ -148,6 +148,9 @@
     <string name="no.active.notification">You have no active collection for notification sounds</string>
     <string name="confirm.delete">Delete tone from collection?</string>
     <string name="order.change">Use collection\'s order</string>
+    <string name="action.about.app">About app</string>
+    <string name="action.view.log">View &amp; send log</string>
+    <string name="app.log">Application Log</string>
 
 
     <string-array name="ringtone_freq">

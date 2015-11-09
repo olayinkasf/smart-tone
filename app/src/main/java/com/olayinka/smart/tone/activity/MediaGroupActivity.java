@@ -136,7 +136,7 @@ public class MediaGroupActivity extends ImageCacheActivity {
 
         listView.setAdapter(new MediaListAdapter(this, selection, mSelection));
         Cursor cursor = AppSqlHelper.instance(this).getReadableDatabase()
-                .query(Media.TABLE, new String[]{Media.Columns._ID}, selection, null, null, null, null);
+                .query(Media.TABLE, new String[]{Media.Columns._ID, Media.Columns.NAME}, selection, null, null, null,  Media.Columns.NAME);
         mMedias = new long[cursor.getCount()];
         for (int i = 0; i < mMedias.length; i++) {
             cursor.moveToNext();

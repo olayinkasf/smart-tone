@@ -22,7 +22,6 @@ package com.olayinka.smart.tone;
 import android.app.Activity;
 import android.content.*;
 import android.os.Bundle;
-import android.util.Log;
 import com.olayinka.smart.tone.activity.AbstractMenuActivity;
 import com.olayinka.smart.tone.service.IndexerService;
 import lib.olayinka.smart.tone.R;
@@ -46,7 +45,7 @@ public class MainActivity extends Activity {
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.wtf("onStart", "mReceiver");
+                AppLogger.wtf(context, "onStart", "mReceiver");
                 unregisterReceiver(this);
                 mReceiverUnregistered = true;
                 intent = new Intent();

@@ -82,6 +82,9 @@
         <activity android:name=".activity.MediaGroupActivity"
                   android:screenOrientation="portrait"
                   android:configChanges="orientation|keyboardHidden"/>
+        <activity android:name=".activity.LogActivity"
+                  android:screenOrientation="portrait"
+                  android:configChanges="orientation|keyboardHidden"/>
         <activity android:name=".activity.SettingsActivity"
                   android:screenOrientation="portrait"
                   android:configChanges="orientation|keyboardHidden"/>

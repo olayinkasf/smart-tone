@@ -20,10 +20,14 @@
 package com.olayinka.smart.tone;
 
 import android.app.Application;
-import android.util.Log;
 import com.olayinka.smart.tone.service.RingtoneTelephonyService;
 import com.olayinka.smart.tone.service.ServiceManager;
 import com.olayinka.smart.tone.service.ShuffleService;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * Created by Olayinka on 5/9/2015.
@@ -32,16 +36,38 @@ public abstract class AbsSmartTone extends Application {
 
     @Override
     public void onCreate() {
-        Log.wtf("onCreate", "Launching main process.");
+        monitorLog();
+        AppLogger.wtf(this, "onCreate", "Launching main process.");
         super.onCreate();
         startServices();
     }
+
+    private void monitorLog() {
+        File logFile = new File(getFileStreamPath("smart.tone.log").getAbsolutePath());
+        File backUpLogFile = new File(getFileStreamPath("smart.tone.bck.log").getAbsolutePath());
+        if (logFile.length() <= 1048576) {
+            try {
+                Utils.copyFile(logFile, backUpLogFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            PrintWriter writer = null;
+            try {
+                writer = new PrintWriter(logFile);
+                writer.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     public void startServices() {
         ServiceManager.startAlarm(this, RingtoneTelephonyService.class);
         ServiceManager.startAlarm(this, ShuffleService.class);
         startApiServices();
     }
-    
+
+
     protected abstract void startApiServices();
 }

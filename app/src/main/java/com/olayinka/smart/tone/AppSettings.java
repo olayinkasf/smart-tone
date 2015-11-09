@@ -25,7 +25,6 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.util.Log;
 import com.olayinka.smart.tone.model.Media;
 import lib.olayinka.smart.tone.R;
 import org.json.JSONArray;
@@ -70,8 +69,8 @@ public class AppSettings {
             Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE);
             long notifId = notifUri != null ? ContentUris.parseId(notifUri) : -1l;
             long ringtoneId = ringtoneUri != null ? ContentUris.parseId(ringtoneUri) : -1l;
-            Log.wtf("changeSound/currentNotifSound", "" + notifId);
-            Log.wtf("changeSound/currentRingtoneSound", "" + ringtoneId);
+            AppLogger.wtf(context, "changeSound/currentNotifSound", "" + notifId);
+            AppLogger.wtf(context, "changeSound/currentRingtoneSound", "" + ringtoneId);
             contentValues.put(MediaStore.Audio.Media.IS_NOTIFICATION, 0);
             contentValues.put(MediaStore.Audio.Media.IS_RINGTONE, 0);
             context.getContentResolver().update(
@@ -107,7 +106,7 @@ public class AppSettings {
             position = (lastIndex + 1) % tones.length();
         }
         context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE).edit().putInt(key + LAST_USED, position).apply();
-        Log.wtf("changeSound/" + key, "" + position);
+        AppLogger.wtf(context, "changeSound/" + key, "" + position);
         JSONObject tone = Media.getMedia(context, tones.getLong(position));
         Uri uri;
         if (tone.getInt(Media.Columns.IS_INTERNAL) == 1) uri = MediaStore.Audio.Media.INTERNAL_CONTENT_URI;
@@ -122,7 +121,7 @@ public class AppSettings {
                     values.put(MediaStore.Audio.Media.IS_NOTIFICATION, true);
                 int updated = context.getContentResolver().update(uri, values, null, null);
                 if (updated > 0) {
-                    Log.wtf("changeSound/" + type, "New sound added to list");
+                    AppLogger.wtf(context, "changeSound/" + type, "New sound added to list");
                 }
             }
             RingtoneManager.setActualDefaultRingtoneUri(context, type, uri);

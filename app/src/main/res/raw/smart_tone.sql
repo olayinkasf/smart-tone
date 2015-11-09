@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS `tone` (
   '_id'           INTEGER PRIMARY KEY AUTOINCREMENT,
   `media_id`      INTEGER,
   `collection_id` INTEGER NOT NULL,
+  sort_order      INTEGER NOT NULL DEFAULT -1,
   UNIQUE (`media_id`, `collection_id`),
   FOREIGN KEY (`collection_id`) REFERENCES `collection` (`_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   FOREIGN KEY (`media_id`) REFERENCES `media` (`_id`) ON DELETE CASCADE ON UPDATE NO ACTION

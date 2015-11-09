@@ -35,8 +35,8 @@ import android.net.Uri;
 import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
+import com.olayinka.smart.tone.AppLogger;
 import com.olayinka.smart.tone.AppSettings;
 import com.olayinka.smart.tone.R;
 import com.olayinka.smart.tone.Utils;
@@ -64,7 +64,7 @@ public class NotifAccessibilityService extends AccessibilityService {
 
     @Override
     public void onServiceConnected() {
-        Log.wtf("onServiceConnected", "service connected successfully");
+        AppLogger.wtf(context, "onServiceConnected", "service connected successfully");
         AccessibilityServiceInfo info = new AccessibilityServiceInfo();
 
         info.eventTypes = AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED;
@@ -76,7 +76,7 @@ public class NotifAccessibilityService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        Log.wtf("onNotificationPosted", event.toString());
+        AppLogger.wtf(context, "onNotificationPosted", event.toString());
         final int eventType = event.getEventType();
         if (eventType == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED) {
             Parcelable parcelable = event.getParcelableData();
@@ -86,7 +86,7 @@ public class NotifAccessibilityService extends AccessibilityService {
                     try {
                         if (shouldRun(this)) AppSettings.changeNotificationSound(this, false);
                     } catch (JSONException e) {
-                        Log.wtf("onNotificationPosted", e);
+                        AppLogger.wtf(context, "onNotificationPosted", e);
                     }
                 }
             }
@@ -101,7 +101,7 @@ public class NotifAccessibilityService extends AccessibilityService {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (!shouldRun(this)) {
-            Log.wtf("onStartCommand/NotifAccessibilityService", "Shouldn't run! Stop alarm and return START_NOT_STICKY");
+            AppLogger.wtf(context, "onStartCommand/NotifAccessibilityService", "Shouldn't run! Stop alarm and return START_NOT_STICKY");
             ServiceManager.stopAlarm(getApplicationContext(), NotifAccessibilityService.class);
             stopSelf();
             return START_NOT_STICKY;

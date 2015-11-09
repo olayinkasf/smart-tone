@@ -23,7 +23,6 @@ import android.content.Context;
 import android.graphics.Matrix;
 import android.util.AttributeSet;
 import android.widget.ImageView;
-import lib.olayinka.smart.tone.R;
 
 public class CenterTopImageView extends ImageView {
 

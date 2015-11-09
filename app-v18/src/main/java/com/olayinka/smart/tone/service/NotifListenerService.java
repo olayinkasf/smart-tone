@@ -34,7 +34,7 @@ import android.provider.Settings;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
+import com.olayinka.smart.tone.AppLogger;
 import com.olayinka.smart.tone.AppSettings;
 import com.olayinka.smart.tone.R;
 import com.olayinka.smart.tone.Utils;
@@ -63,7 +63,7 @@ public class NotifListenerService extends NotificationListenerService {
         try {
             if (shouldRun(this)) AppSettings.changeNotificationSound(this, false);
         } catch (JSONException e) {
-            Log.wtf("onNotificationPosted", e);
+            AppLogger.wtf(this, "onNotificationPosted", e);
         }
     }
 
@@ -76,7 +76,7 @@ public class NotifListenerService extends NotificationListenerService {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (!shouldRun(this)) {
-            Log.wtf("onStartCommand/NotifListenerService", "Shouldn't run! Stop alarm and return START_NOT_STICKY");
+            AppLogger.wtf(this, "onStartCommand/NotifListenerService", "Shouldn't run! Stop alarm and return START_NOT_STICKY");
             ServiceManager.stopAlarm(getApplicationContext(), NotifListenerService.class);
             stopSelf();
             return START_NOT_STICKY;

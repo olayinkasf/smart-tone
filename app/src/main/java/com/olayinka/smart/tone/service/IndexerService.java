@@ -28,7 +28,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
+import com.olayinka.smart.tone.AppLogger;
 import com.olayinka.smart.tone.AppSqlHelper;
 import com.olayinka.smart.tone.model.Media;
 import lib.olayinka.smart.tone.R;
@@ -111,7 +111,7 @@ public class IndexerService extends IntentService {
             try {
                 database.insertOrThrow(Media.Tone.TABLE, null, toneValues);
             } catch (SQLException ignored) {
-                Log.wtf("saveCachedTones", ignored.getMessage());
+                AppLogger.wtf(this, "saveCachedTones", ignored);
             }
             cursor.close();
         }
@@ -132,7 +132,7 @@ public class IndexerService extends IntentService {
     private void indexUri(Uri uri, SQLiteDatabase database, int location) {
         Cursor cursor = getApplicationContext().getContentResolver()
                 .query(uri, PROJECTION, SELECTION, null, null);
-        Log.wtf("indexUri/cursorCount", "" + cursor.getCount());
+        AppLogger.wtf(this, "indexUri/cursorCount", "" + cursor.getCount());
         while (cursor.moveToNext()) {
             ContentValues albumValues = new ContentValues();
             ContentValues folderValues = new ContentValues();
@@ -167,7 +167,7 @@ public class IndexerService extends IntentService {
                 if (tmpCursor.moveToNext()) {
                     folderId = tmpCursor.getInt(0);
                 } else {
-                    Log.wtf("indexUri", "This shouldn't happen.");
+                    AppLogger.wtf(this, "indexUri", "This shouldn't happen.");
                     throw new RuntimeException();
                 }
                 tmpCursor.close();

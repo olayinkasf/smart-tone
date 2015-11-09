@@ -21,7 +21,6 @@ package com.olayinka.smart.tone.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +28,7 @@ import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.mobeta.android.dslv.DragSortCursorAdapter;
+import com.olayinka.smart.tone.AppLogger;
 import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.activity.ImageCacheActivity;
 import com.olayinka.smart.tone.model.ListenableHashSet;
@@ -89,14 +89,14 @@ public class SelectionListAdapter extends DragSortCursorAdapter implements Liste
     @Override
     public void drop(int from, int to) {
         super.drop(from, to);
-        Log.wtf("drop", "from: " + from + ", to: " + to);
+        AppLogger.wtf(mContext, "drop", "from: " + from + ", to: " + to);
         mSelection.changePosition(from, to);
     }
 
     @Override
     public void remove(int which) {
         super.remove(which);
-        Log.wtf("removed", "which: " + which);
+        AppLogger.wtf(mContext, "removed", "which: " + which);
         mSelection.remove(which);
     }
 
