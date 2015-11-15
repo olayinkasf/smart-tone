@@ -32,6 +32,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.NotificationCompat;
 import android.util.DisplayMetrics;
@@ -101,6 +102,11 @@ public class Utils {
 
     public static boolean hasIceCreamSandwich() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+    }
+
+    public static boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
     public static boolean hasJellyBean() {
@@ -312,7 +318,7 @@ public class Utils {
         }
     }
 
-    static void copyFile(File source, File dest) throws IOException {
+    public static void copyFile(File source, File dest) throws IOException {
         InputStream input = null;
         OutputStream output = null;
         try {
@@ -332,5 +338,40 @@ public class Utils {
             }
         }
     }
+
+    public static void appendFile(File source, File dest) throws IOException {
+        InputStream input = null;
+        OutputStream output = null;
+        try {
+            input = new FileInputStream(source);
+            output = new FileOutputStream(dest, true);
+            byte[] buf = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = input.read(buf)) > 0) {
+                output.write(buf, 0, bytesRead);
+            }
+        } finally {
+            if (input != null) {
+                input.close();
+            }
+            if (output != null) {
+                output.close();
+            }
+        }
+    }
+
+    public static File getExternalStorageDir(String dir, String fileName) {
+        File file = null;
+        if (isExternalStorageWritable()) {
+            File sdCard = Environment.getExternalStorageDirectory();
+            file = new File(sdCard, "com.olayinka.smart.tone");
+            file = new File(file, dir);
+            if (!file.exists() && !file.mkdirs())
+                return null;
+            file = new File(file, fileName);
+        }
+        return file;
+    }
+
 
 }

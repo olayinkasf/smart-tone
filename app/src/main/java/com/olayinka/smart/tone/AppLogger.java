@@ -15,12 +15,17 @@ import org.slf4j.LoggerFactory;
  */
 public class AppLogger {
     private static org.slf4j.Logger logger = null;
+    private static boolean mPaused = false;
 
     public static void wtf(Context context, String contextP, Throwable content) {
         wtf(context, contextP, content.getMessage());
     }
 
     public static void wtf(Context context1, String context, String content) {
+        if (mPaused) return;
+        if (!context1.getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE).getBoolean(AppSettings.LOG_APP_ACTIVITY, false)) {
+            return;
+        }
         try {
             if (logger == null) {
                 logger = configureLogBackDirectly(context1);
@@ -42,6 +47,7 @@ public class AppLogger {
         PatternLayoutEncoder encoder1 = new PatternLayoutEncoder();
         encoder1.setContext(lc);
         encoder1.setPattern("%d{HH:mm:ss.SSS} %msg%n");
+        encoder1.setImmediateFlush(true);
         encoder1.start();
 
         FileAppender<ILoggingEvent> fileAppender = new FileAppender<>();
@@ -54,6 +60,7 @@ public class AppLogger {
         PatternLayoutEncoder encoder2 = new PatternLayoutEncoder();
         encoder2.setContext(lc);
         encoder2.setPattern("[%thread] %msg%n");
+        encoder2.setImmediateFlush(true);
         encoder2.start();
 
         LogcatAppender logcatAppender = new LogcatAppender();
@@ -68,5 +75,13 @@ public class AppLogger {
         root.addAppender(logcatAppender);
 
         return root;
+    }
+
+    public static void pause() {
+        mPaused = true;
+    }
+
+    public static void resume() {
+        mPaused = false;
     }
 }

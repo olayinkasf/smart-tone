@@ -124,6 +124,14 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         titleView.setText(R.string.notify_change);
         view.setOnClickListener(this);
 
+        //Keep system log
+        view = findViewById(R.id.sendLog);
+        switchCompat = (PrefsSwitchCompat) view.findViewById(R.id.switchCompat);
+        switchCompat.setPrefs(AppSettings.APP_SETTINGS, AppSettings.LOG_APP_ACTIVITY);
+        titleView = (TextView) view.findViewById(R.id.title);
+        titleView.setText(R.string.log_app_activity);
+        view.setOnClickListener(this);
+
 
         //backup collections
         view = findViewById(R.id.backup);

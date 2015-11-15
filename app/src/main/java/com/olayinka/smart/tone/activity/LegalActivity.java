@@ -104,8 +104,7 @@ public class LegalActivity extends AppCompatActivity implements View.OnClickList
         } else if (v.getId() == R.id.openSourceLicense) {
             startActivity(new Intent(v.getContext(), OpenSourceLibraries.class));
         } else if (v.getId() == R.id.contactHelp) {
-            String uriString = ("mailto:" + "smart.tone.app@gmail.com" + "?subject=" + "SmartTone Support" + "&body=").replace(" ", "%20");
-            startActivity(Intent.createChooser(new Intent(Intent.ACTION_SENDTO, Uri.parse(uriString)), getString(R.string.contact_dev)));
+            startActivity(new Intent(this, ContactActivity.class));
         }
     }
 }

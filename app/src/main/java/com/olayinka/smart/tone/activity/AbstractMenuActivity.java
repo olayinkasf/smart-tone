@@ -31,6 +31,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.*;
@@ -133,6 +134,32 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
         mOnStartFlag = false;
 
         showRateThisApp();
+        showAskAppLog();
+    }
+
+    private void showAskAppLog() {
+
+        if (getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE).getBoolean(AppSettings.ASK_LOG_APP_ACTIVITY, false))
+            return;
+        getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE).edit().putBoolean(AppSettings.ASK_LOG_APP_ACTIVITY, true).apply();
+
+        new AlertDialog.Builder(this)
+                .setCancelable(false)
+                .setTitle("What is new")
+                .setMessage("To maintain functionalities across multiple devices, the application logs its activities and save them in a file on the device. We cannot retrieve these log files without your permission so if you come across a bug that you'd like to report please use the contact option in the drop down menu and attach log files with it. \n\nTo enable logging, please click Yes below, otherwise click No.")
+                .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE).edit().putBoolean(AppSettings.LOG_APP_ACTIVITY, false).apply();
+                    }
+                })
+                .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE).edit().putBoolean(AppSettings.LOG_APP_ACTIVITY, true).apply();
+                    }
+                })
+                .show();
     }
 
     private void showRateThisApp() {
@@ -481,10 +508,8 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
             startActivity(new Intent(this, SettingsActivity.class));
         } else if (item.getItemId() == R.id.aboutApp) {
             startActivity(new Intent(this, AboutAppActivity.class));
-        } else if (item.getItemId() == R.id.viewAppLog) {
-            startActivity(new Intent(this, LogActivity.class));
-        }else if (item.getItemId() == R.id.contactHelp) {
-            startActivity(new Intent(this, LegalActivity.class));
+        } else if (item.getItemId() == R.id.contactHelp) {
+            startActivity(new Intent(this, ContactActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }

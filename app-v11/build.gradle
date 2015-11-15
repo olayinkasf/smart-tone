@@ -28,8 +28,8 @@ android {
 
     defaultConfig {
         minSdkVersion 11
-        versionCode 61
-        versionName "2.2.3"
+        versionCode 63
+        versionName "2.2.4"
 
     }
 

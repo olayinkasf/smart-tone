@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-            app:showAsAction="always|withText"
-            android:icon="@drawable/ic_send_white_24dp"
-            android:id="@+id/sendLog"
-            android:title="@string/action.send.log"/>
-</menu>

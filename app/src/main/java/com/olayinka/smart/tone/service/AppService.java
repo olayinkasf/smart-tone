@@ -26,7 +26,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.os.Environment;
 import com.olayinka.smart.tone.AppSqlHelper;
 import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.activity.CollectionEditActivity;
@@ -89,20 +88,14 @@ public class AppService extends IntentService {
 
 
     public String export() throws IOException {
-        File file;
-        if (isExternalStorageWritable()) {
-            File sdCard = Environment.getExternalStorageDirectory();
-            file = new File(sdCard.getAbsolutePath() + "/com.olayinka.smart.tone/export");
-        } else file = getDir("export", MODE_PRIVATE);
-        if (!file.exists() && !file.mkdirs()) {
+        @SuppressLint("SimpleDateFormat")
+        String fileName = "backup-" + new SimpleDateFormat("dd-MM-yyyy.HH:mm.SSS").format(new Date()) + ".smt";
+        File file = Utils.getExternalStorageDir("export", fileName);
+
+        if (file == null) {
             Utils.notify(this, getString(R.string.cant_create_dir), R.id.backup, null);
             return null;
         }
-
-        @SuppressLint("SimpleDateFormat")
-        String fileName = "backup-" + new SimpleDateFormat("dd-MM-yyyy.HH:mm.SSS").format(new Date()) + ".smt";
-
-        file = new File(file, fileName);
 
         FileWriter writer = new FileWriter(file);
 
@@ -142,11 +135,6 @@ public class AppService extends IntentService {
             Utils.notify(this, getString(R.string.export_complete) + " " + file.getAbsolutePath(), R.id.backup, PendingIntent.getActivity(this, 0, intent, 0));
         else Utils.notify(this, getString(R.string.export_complete) + " " + file.getAbsolutePath(), R.id.backup, null);
         return file.getAbsolutePath();
-    }
-
-    public boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
 

@@ -149,11 +149,12 @@
     <string name="confirm.delete">Delete tone from collection?</string>
     <string name="order.change">Use collection\'s order</string>
     <string name="action.about.app">About app</string>
-    <string name="action.view.log">View &amp; send log</string>
     <string name="app.log">Application Log</string>
-    <string name="action.send.log">Send application log</string>
     <string name="send.app.log">Send application log with</string>
     <string name="empty.reindex">Couldn\'t find media files on this device. Rescan for media files?</string>
+    <string name="collecting_log_files">Wait while application log is collected.</string>
+    <string name="ask.attach.log.file">Attach log file with email?</string>
+    <string name="log_app_activity">Log application activities</string>
 
 
     <string-array name="ringtone_freq">
