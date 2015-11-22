@@ -30,6 +30,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import com.olayinka.smart.tone.PermissionUtils;
 import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.billing.utils.IabHelper;
 import com.olayinka.smart.tone.billing.utils.IabResult;
@@ -143,6 +144,18 @@ public class AboutAppActivity extends AppCompatActivity {
         TextView textView = (TextView) itemView.findViewById(R.id.text);
         titleView.setText(R.string.app_version);
         textView.setText(getAppVersion());
+
+        itemView = findViewById(R.id.permissions);
+        titleView = (TextView) itemView.findViewById(R.id.title);
+        textView = (TextView) itemView.findViewById(R.id.text);
+        titleView.setText(R.string.permissions);
+        textView.setText(String.format(getString(R.string.permissions_granted), PermissionUtils.countGrantedPermissions(this), PermissionUtils.PERMISSIONS.length));
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(v.getContext(), PermissionsActivity.class));
+            }
+        });
 
         deactivateDonation();
         itemView = findViewById(R.id.donate);

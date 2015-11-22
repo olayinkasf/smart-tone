@@ -41,10 +41,7 @@ import android.widget.AbsListView;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import com.olayinka.smart.tone.AbsSmartTone;
-import com.olayinka.smart.tone.AppSettings;
-import com.olayinka.smart.tone.AppSqlHelper;
-import com.olayinka.smart.tone.Utils;
+import com.olayinka.smart.tone.*;
 import com.olayinka.smart.tone.activity.AbstractMenuActivity;
 import com.olayinka.smart.tone.activity.CollectionEditActivity;
 import com.olayinka.smart.tone.model.Media;
@@ -168,13 +165,15 @@ public class CollectionListAdapter extends CursorAdapter {
                             SharedPreferences prefs = context.getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE);
                             prefs.edit().putLong(AppSettings.ACTIVE_RINGTONE, collectionId).apply();
                             prefs.edit().putBoolean(AppSettings.ACTIVE_APP_SERVICE, true).apply();
+
                             try {
-                                AppSettings.changeRingtoneSound(context, true);
+                                AppSettings.changeRingtone(context, true);
                                 ((AbsSmartTone) context.getApplicationContext()).startServices();
                                 mActivity.refreshForChange();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
+
                         }
                     }).show();
         }

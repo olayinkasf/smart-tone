@@ -19,15 +19,23 @@
 
 package com.olayinka.smart.tone.service;
 
+import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import com.olayinka.smart.tone.AppLogger;
-import com.olayinka.smart.tone.AppSettings;
+import com.olayinka.smart.tone.*;
+import com.olayinka.smart.tone.activity.PermissionsActivity;
+import lib.olayinka.smart.tone.R;
 import org.json.JSONException;
 
 /**
@@ -37,6 +45,7 @@ public class RingtoneTelephonyService extends Service {
 
 
     private PhoneStateListener mListener;
+    private long mLastNotifiedListener = 0;
 
     @Override
     public void onCreate() {
@@ -68,9 +77,12 @@ public class RingtoneTelephonyService extends Service {
     }
 
     public void onCallStateIdle() {
-        if (!shouldRun()) return;
+        if (!shouldRun()) {
+            destroyListener();
+            stopSelf();
+        }
         try {
-            AppSettings.changeRingtoneSound(this);
+            AppSettings.changeRingtone(this);
         } catch (JSONException e) {
             AppLogger.wtf(this, "onNotificationPosted", e.getMessage());
         }
@@ -85,6 +97,41 @@ public class RingtoneTelephonyService extends Service {
             stopSelf();
             return START_NOT_STICKY;
         }
+
+        if (intent.getBooleanExtra(AppSettings.NOTIF_CANCELED, false) && !PermissionUtils.hasSelfPermission(this, Manifest.permission.READ_PHONE_STATE)) {
+            ServiceManager.stopAlarm(this, RingtoneTelephonyService.class);
+            //Start repeating change service
+            AppSettings.setFreq(this, AppSettings.RINGTONE_FREQ, 1, R.array.ringtone_freq);
+            ServiceManager.startAlarm(this, ShuffleService.class);
+            stopSelf();
+            return START_NOT_STICKY;
+        }
+
+
+        NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        if (!PermissionUtils.hasSelfPermission(this, Manifest.permission.READ_PHONE_STATE)) {
+            Intent realIntent = new Intent();
+            realIntent.setClass(this, PermissionsActivity.class);
+            realIntent.putExtra(PermissionsActivity.REQUESTED_PERMISSIONS, PermissionUtils.PERMISSION_PHONE);
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.ic_notif_small)
+                    .setLargeIcon(Utils.getLargeIcon(this))
+                    .setContentTitle(getString(R.string.ringtone_service))
+                    .setContentText(getString(R.string.grant_read_phone_state))
+                    .setTicker(getString(R.string.grant_read_phone_state))
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.grant_read_phone_state)))
+                    .setContentIntent(PendingIntent.getActivity(this, 0, realIntent, 0))
+                    .setSound(uri)
+                    .setDeleteIntent(PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT));
+            Notification notification = mBuilder.build();
+            notification.flags = Notification.FLAG_ONLY_ALERT_ONCE;
+            mNotifyMgr.notify(R.id.phoneStateNotif, notification);
+        } else {
+            mNotifyMgr.cancel(R.id.phoneStateNotif);
+        }
+
         return START_NOT_STICKY;
     }
 

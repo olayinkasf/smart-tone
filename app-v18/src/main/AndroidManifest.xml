@@ -85,6 +85,10 @@
         <activity android:name=".activity.ContactActivity"
                   android:screenOrientation="portrait"
                   android:configChanges="orientation|keyboardHidden"/>
+
+        <activity android:name=".activity.PermissionsActivity"
+                  android:screenOrientation="portrait"
+                  android:configChanges="orientation|keyboardHidden"/>
         <activity android:name=".activity.SettingsActivity"
                   android:screenOrientation="portrait"
                   android:configChanges="orientation|keyboardHidden"/>

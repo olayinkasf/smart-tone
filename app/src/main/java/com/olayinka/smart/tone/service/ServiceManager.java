@@ -31,16 +31,18 @@ import android.content.Intent;
 public class ServiceManager {
 
     public static void stopAlarm(Context context, Class<? extends Service> service) {
-        PendingIntent pendingIntent = PendingIntent.getService(context.getApplicationContext(), 0, new Intent(context.getApplicationContext(), service), 0);
+        PendingIntent pendingIntent = PendingIntent.getService(context.getApplicationContext(), 0, new Intent(context.getApplicationContext(), service), PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        context.stopService(new Intent(context.getApplicationContext(), service));
         alarmManager.cancel(pendingIntent);
     }
 
     public static void startAlarm(Context context, Class<? extends Service> service) {
         stopAlarm(context, service);
-        PendingIntent pendingIntent = PendingIntent.getService(context.getApplicationContext(), 0, new Intent(context.getApplicationContext(), service), 0);
+        PendingIntent pendingIntent = PendingIntent.getService(context.getApplicationContext(), 0, new Intent(context.getApplicationContext(), service), PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 10 * 1000, pendingIntent);
+        context.startService(new Intent(context.getApplicationContext(), service));
+        alarmManager.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), 10 * 1000, pendingIntent);
     }
 
 }

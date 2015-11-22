@@ -55,6 +55,12 @@ public class AppSettings {
     public static final String ORDER_CHANGE = "order.change";
     public static final String LOG_APP_ACTIVITY = "log.app.activity";
     public static final String ASK_LOG_APP_ACTIVITY = "ask.log.app.activity";
+    public static final String BIND_ACCESSIBILITY_SERVICE = "android.permission.BIND_ACCESSIBILITY_SERVICE";
+    public static final String BIND_NOTIFICATION_LISTENER_SERVICE = "android.permission.BIND_NOTIFICATION_LISTENER_SERVICE";
+    public static final String ACTION_NOTIFICATION_LISTENER_SETTINGS = "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS";
+    public static final String NOTIFICATION_PERMISSION = (!Utils.hasJellyBeanMR2() ? AppSettings.BIND_ACCESSIBILITY_SERVICE : AppSettings.BIND_NOTIFICATION_LISTENER_SERVICE);
+    public static final String NOTIF_CANCELED = "notif.canceled";
+
 
     public static void setFreq(Context context, String key, int which, int arrayId) {
         long time = (which == 3 ? 4 : which) * 6 * 60 * 60 * 1000;
@@ -65,12 +71,13 @@ public class AppSettings {
 
     private static Uri changeSound(Context context, int type, String key, String freqKey, boolean isRingtone, boolean isNotification) throws JSONException {
         {
+            if (!Utils.checkWriteSettings(context)) return null;
             ContentValues contentValues = new ContentValues();
 
             Uri notifUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
             Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE);
-            long notifId = notifUri != null ? ContentUris.parseId(notifUri) : -1l;
-            long ringtoneId = ringtoneUri != null ? ContentUris.parseId(ringtoneUri) : -1l;
+            long notifId = notifUri != null ? ContentUris.parseId(notifUri) : -1L;
+            long ringtoneId = ringtoneUri != null ? ContentUris.parseId(ringtoneUri) : -1L;
             AppLogger.wtf(context, "changeSound/currentNotifSound", "" + notifId);
             AppLogger.wtf(context, "changeSound/currentRingtoneSound", "" + ringtoneId);
             contentValues.put(MediaStore.Audio.Media.IS_NOTIFICATION, 0);
@@ -133,11 +140,11 @@ public class AppSettings {
         return uri;
     }
 
-    public static Uri changeRingtoneSound(Context context) throws JSONException {
-        return changeRingtoneSound(context, true);
+    public static Uri changeRingtone(Context context) throws JSONException {
+        return changeRingtone(context, true);
     }
 
-    public static Uri changeRingtoneSound(Context context, Boolean notify) throws JSONException {
+    public static Uri changeRingtone(Context context, Boolean notify) throws JSONException {
         Uri uri = changeSound(context, RingtoneManager.TYPE_RINGTONE, ACTIVE_RINGTONE, RINGTONE_FREQ, true, false);
         if (uri != null && notify) {
             notify(context, context.getString(R.string.ringtone_change), R.id.changeRingtoneNotif);

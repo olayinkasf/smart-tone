@@ -24,22 +24,16 @@ import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.view.accessibility.AccessibilityEvent;
-import com.olayinka.smart.tone.AppLogger;
-import com.olayinka.smart.tone.AppSettings;
-import com.olayinka.smart.tone.R;
-import com.olayinka.smart.tone.Utils;
+import com.olayinka.smart.tone.*;
 import org.json.JSONException;
 
 import java.util.List;
@@ -47,13 +41,8 @@ import java.util.List;
 public class NotifAccessibilityService extends AccessibilityService {
 
 
-    private Bitmap mLargeIcon;
+    private long mLastNotifiedListener = 0;
 
-    public static boolean isEnabled(Context context) {
-        ComponentName cn = new ComponentName(context, NotifAccessibilityService.class);
-        String flat = android.provider.Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
-        return flat != null && flat.contains(cn.flattenToString());
-    }
 
     public static boolean shouldRun(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(AppSettings.APP_SETTINGS, MODE_PRIVATE);
@@ -84,7 +73,9 @@ public class NotifAccessibilityService extends AccessibilityService {
                 List<CharSequence> messages = event.getText();
                 if (messages.size() > 0) {
                     try {
-                        if (shouldRun(this)) AppSettings.changeNotificationSound(this, false);
+                        if (!shouldRun(this)) stopSelf();
+                        else AppSettings.changeNotificationSound(this, false);
+
                     } catch (JSONException e) {
                         AppLogger.wtf(this, "onNotificationPosted", e);
                     }
@@ -100,34 +91,49 @@ public class NotifAccessibilityService extends AccessibilityService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         if (!shouldRun(this)) {
             AppLogger.wtf(this, "onStartCommand/NotifAccessibilityService", "Shouldn't run! Stop alarm and return START_NOT_STICKY");
             ServiceManager.stopAlarm(getApplicationContext(), NotifAccessibilityService.class);
             stopSelf();
             return START_NOT_STICKY;
         }
-        if (mLargeIcon == null) {
-            mLargeIcon = BitmapFactory.decodeResource(getResources(), lib.olayinka.smart.tone.R.mipmap.ic_notif_large);
+
+        if (intent.getBooleanExtra(AppSettings.NOTIF_CANCELED, false) && !PermissionUtils.hasNotificationPermission(this)) {
+            ServiceManager.stopAlarm(this, NotifAccessibilityService.class);
+            //Start repeating change service
+            AppSettings.setFreq(this, AppSettings.NOTIF_FREQ, 1, R.array.notification_freq);
+            ServiceManager.startAlarm(this, ShuffleService.class);
+            stopSelf();
+            return START_NOT_STICKY;
         }
-        if (!isEnabled(this)) {
-            Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        if (!PermissionUtils.hasNotificationPermission(this)) {
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                     .setSmallIcon(R.drawable.ic_notif_small)
-                    .setLargeIcon(mLargeIcon)
+                    .setLargeIcon(Utils.getLargeIcon(this))
                     .setContentTitle(getString(R.string.notification_service))
                     .setContentText(getString(R.string.grant_accessibility))
                     .setTicker(getString(R.string.grant_accessibility))
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.grant_accessibility)))
-                    .setSound(uri)
                     .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS), 0));
-            int mNotificationId = R.id.appNotifSettings;
+            intent.putExtra(AppSettings.NOTIF_CANCELED, true);
+            mBuilder.setDeleteIntent(PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT));
+            if (System.currentTimeMillis() - mLastNotifiedListener > 15 * 60 * 1000) {
+                mBuilder.setSound(uri);
+                mLastNotifiedListener = System.currentTimeMillis();
+            } else
+                mBuilder.setSound(null).setVibrate(new long[]{0L});
             Notification notification = mBuilder.build();
-            notification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL | Notification.FLAG_NO_CLEAR;
-            NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            mNotifyMgr.notify(mNotificationId, notification);
+            notification.flags = Notification.DEFAULT_LIGHTS;
+            mNotifyMgr.notify(R.id.notifListenerNotif, notification);
         } else {
-            Utils.removeNotification(this);
+            mNotifyMgr.cancel(R.id.notifListenerNotif);
         }
+
         return START_NOT_STICKY;
+
     }
 }

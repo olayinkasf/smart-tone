@@ -155,7 +155,29 @@
     <string name="collecting_log_files">Wait while application log is collected.</string>
     <string name="ask.attach.log.file">Attach log file with email?</string>
     <string name="log_app_activity">Log application activities</string>
-
+    <string name="permissions">Permissions</string>
+    <string name="permissions.granted" formatted="false">%d of %d permissions granted</string>
+    <string name="revoke">Please use the system settings to revoke permission</string>
+    <string name="permission.alert">Please take a minute to review and allow the necessary permissions needed for this
+        application to run successfully. It is advisable to allow all permissions to avoid app crashing. To revoke any
+        permissions, please use the<b>System Settings</b>. You can review the permissions later on through the
+        <b>System Settings</b>
+        or through the application by going to
+        <b>Settings</b>
+        >
+        <b>About app</b>
+        >
+        <b>Permissions</b>
+    </string>
+    <string name="permission.write.settings.alert">To change your Ringtone or notification, the application needs the
+        permission to write settings.
+    </string>
+    <string name="grant.write.settings">SmartTone needs phone Settings permission to change your ringtone or
+        notification sound
+    </string>
+    <string name="grant.read.phone_state">SmartTone needs  Phone State permission to change your ringtone or
+        notification sound
+    </string>
 
     <string-array name="ringtone_freq">
         <item>After every call</item>

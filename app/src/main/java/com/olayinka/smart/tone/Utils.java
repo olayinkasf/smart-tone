@@ -25,15 +25,18 @@ import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -62,6 +65,8 @@ public class Utils {
     public static Map<String, String> VAR_MAP = new HashMap<>(10);
     private static Toast sAppToast;
     private static Bitmap sCachedBitmap;
+    private static Bitmap sLargeIcon;
+    private static long sLastWriteSettings = 0;
 
     public static void squareImageView(Context mContext, ImageView imageView) {
         int width = 0;
@@ -104,13 +109,12 @@ public class Utils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
     }
 
-    public static boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        return Environment.MEDIA_MOUNTED.equals(state);
-    }
-
     public static boolean hasJellyBean() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
+    }
+
+    public static boolean hasJellyBeanMR2() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
     }
 
     public static boolean hasKitKat() {
@@ -119,6 +123,15 @@ public class Utils {
 
     public static boolean hasLollipop() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    }
+
+    public static boolean hasMarshmallow() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+    }
+
+    public static boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
     public static String format(String text, JSONArray vars) throws JSONException {
@@ -273,11 +286,6 @@ public class Utils {
         return (res == PackageManager.PERMISSION_GRANTED);
     }
 
-    public static void removeNotification(Context context) {
-        NotificationManager notifManager = (NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        notifManager.cancelAll();
-    }
-
     public static void notify(Context context, String content, int notificationId, PendingIntent intent) {
 
 
@@ -374,4 +382,32 @@ public class Utils {
     }
 
 
+    public static boolean checkWriteSettings(Context context) {
+        NotificationManager mNotifyMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (!PermissionUtils.hasWriteSettingsPermisssion(context)) {
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+                    .setSmallIcon(R.drawable.ic_notif_small)
+                    .setLargeIcon(getLargeIcon(context))
+                    .setContentTitle(context.getString(R.string.smarttone_service))
+                    .setContentText(context.getString(R.string.grant_write_settings))
+                    .setTicker(context.getString(R.string.grant_write_settings))
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(context.getString(R.string.grant_write_settings)))
+                    .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS), 0))
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+            Notification notification = mBuilder.build();
+            notification.flags = Notification.FLAG_ONLY_ALERT_ONCE | Notification.FLAG_NO_CLEAR | Notification.FLAG_AUTO_CANCEL;
+            mNotifyMgr.notify(R.id.writeSettingsNotif, notification);
+            return false;
+        } else {
+            mNotifyMgr.cancel(R.id.writeSettingsNotif);
+            return true;
+        }
+    }
+
+    public static Bitmap getLargeIcon(Context context) {
+        if (sLargeIcon == null) {
+            sLargeIcon = BitmapFactory.decodeResource(context.getResources(), lib.olayinka.smart.tone.R.mipmap.ic_notif_large);
+        }
+        return sLargeIcon;
+    }
 }

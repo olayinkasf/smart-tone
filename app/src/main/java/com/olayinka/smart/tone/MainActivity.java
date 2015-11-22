@@ -19,10 +19,13 @@
 
 package com.olayinka.smart.tone;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.*;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import com.olayinka.smart.tone.activity.AbstractMenuActivity;
+import com.olayinka.smart.tone.activity.PermissionsActivity;
 import com.olayinka.smart.tone.service.IndexerService;
 import lib.olayinka.smart.tone.R;
 
@@ -30,7 +33,7 @@ import lib.olayinka.smart.tone.R;
  * Created by Olayinka on 4/19/2015.
  */
 public class MainActivity extends Activity {
-    boolean mReceiverUnregistered;
+    boolean mReceiverUnregistered = true;
     private BroadcastReceiver mReceiver;
 
     @Override
@@ -54,12 +57,46 @@ public class MainActivity extends Activity {
                 finish();
             }
         };
+        if (PermissionUtils.hasSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            startService();
+        else {
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setMessage(R.string.permission_alert)
+                    .setPositiveButton(R.string.done, null)
+                    .show();
+            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    Intent intent = new Intent();
+                    intent.setClass(MainActivity.this, PermissionsActivity.class);
+                    intent.putExtra(PermissionsActivity.REQUESTED_PERMISSIONS, PermissionUtils.PERMISSION_STORAGE);
+                    startActivityForResult(intent, PermissionsActivity.PERMISSION_REQUEST_CODE);
+                }
+            });
+
+        }
+    }
+
+    private void startService() {
+        mReceiverUnregistered = false;
         IntentFilter intentFilter = new IntentFilter(IndexerService.MSG_DONE);
         registerReceiver(mReceiver, intentFilter);
-
         Intent intent = getIntent();
         intent.setClass(this, IndexerService.class);
         startService(intent);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PermissionsActivity.PERMISSION_REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data.getBooleanExtra(PermissionsActivity.PERMISSION_RESULT, false)) {
+                startService();
+            } else {
+                finish();
+            }
+        }
     }
 
     @Override

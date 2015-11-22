@@ -23,6 +23,7 @@ package com.olayinka.smart.tone.activity;
 import android.animation.*;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.*;
 import android.database.Cursor;
 import android.media.RingtoneManager;
@@ -34,15 +35,13 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.*;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.*;
 import com.melnykov.fab.FloatingActionButton;
 import com.olayinka.rate.app.RateThisAppAlert;
-import com.olayinka.smart.tone.AbsSmartTone;
-import com.olayinka.smart.tone.AppSettings;
-import com.olayinka.smart.tone.AppSqlHelper;
-import com.olayinka.smart.tone.Utils;
+import com.olayinka.smart.tone.*;
 import com.olayinka.smart.tone.adapter.CollectionListAdapter;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.MediaItem;
@@ -62,6 +61,10 @@ import java.util.TreeSet;
 public abstract class AbstractMenuActivity extends ImageCacheActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     public static final String CONCRETE = "com.olayinka.smart.tone.activity.MenuActivity";
+    public static final String CHANGE_RINGTONE = "change.ringtone";
+    public static final String CHANGE_NOTIFICATION_SOUND = "change.notification.sound";
+    public static final String CHANGE_RINGTONE_SERVICE = "change.ringtone.service";
+    public static final String CHANGE_NOTIFICATION_SOUND_SERVICE = "change.notification.sound.service";
     public static int NUM_THUMBNAILS = 6;
     private ListView mListView;
     private View mListHeader;
@@ -69,6 +72,8 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
     private int mAlbumArtWidth;
     private DisplayMetrics mDisplayDimens;
     private boolean mOnStartFlag = false;
+
+    public Intent mPendingIntent = null;
 
     BroadcastReceiver mShuffleObserver = new BroadcastReceiver() {
         @Override
@@ -115,6 +120,8 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
         mDisplayDimens = Utils.displayDimens(this);
         mAlbumArtWidth = (int) ((mDisplayDimens.widthPixels - Utils.pxFromDp(this, 20.0f)) / 2);
         mListView = (ListView) findViewById(R.id.list);
+        Log.wtf("dfgh", "" + R.id.list);
+        Log.wtf("dfgh", "" + mListView);
         mListHeader = LayoutInflater.from(this).inflate(R.layout.menu_header, null);
         mListView.addHeaderView(mListHeader);
         mListView.setEmptyView(findViewById(R.id.empty));
@@ -133,14 +140,13 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
 
         mOnStartFlag = false;
 
-        showRateThisApp();
-        showAskAppLog();
+        if (showAskAppLog() || showRateThisApp()) ;
     }
 
-    private void showAskAppLog() {
+    private boolean showAskAppLog() {
 
         if (getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE).getBoolean(AppSettings.ASK_LOG_APP_ACTIVITY, false))
-            return;
+            return false;
         getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE).edit().putBoolean(AppSettings.ASK_LOG_APP_ACTIVITY, true).apply();
 
         new AlertDialog.Builder(this)
@@ -160,15 +166,16 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
                     }
                 })
                 .show();
+        return true;
     }
 
-    private void showRateThisApp() {
-        new RateThisAppAlert(this)
+    private boolean showRateThisApp() {
+        return new RateThisAppAlert(this)
                 .remind(true, 7)
                 .addPrefsCondition(AppSettings.APP_SETTINGS, AppSettings.RINGTONE_FREQ + AppSettings.LAST_CHANGE, 0L, RateThisAppAlert.GREATER)
                 .addPrefsCondition(AppSettings.APP_SETTINGS, AppSettings.ACTIVE_APP_SERVICE)
                 .minLaunchWait(5)
-                .show();
+                .show().isShowing();
     }
 
     private void refreshServiceNotifier(boolean init) {
@@ -242,9 +249,39 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
         fab.attachToListView(mListView);
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PermissionsActivity.PERMISSION_REQUEST_CODE && resultCode == RESULT_OK) {
+            try {
+                switch (mPendingIntent.getAction()) {
+                    case CHANGE_NOTIFICATION_SOUND:
+                        AppSettings.changeNotificationSound(this, true);
+                        break;
+                    case CHANGE_RINGTONE:
+                        AppSettings.changeRingtone(this, true);
+                        break;
+                    case CHANGE_NOTIFICATION_SOUND_SERVICE:
+                        AppSettings.changeNotificationSound(this, true);
+                        ((AbsSmartTone) getApplication()).startServices();
+                        break;
+                    case CHANGE_RINGTONE_SERVICE:
+                        AppSettings.changeRingtone(this, true);
+                        ((AbsSmartTone) getApplication()).startServices();
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        ((AbsSmartTone) getApplication()).startServices();
+        if (isChecked)
+            ((AbsSmartTone) getApplication()).startServices();
+        else ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancelAll();
         refreshServiceNotifier(false);
     }
 
@@ -306,7 +343,7 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
                         return;
                     }
                     try {
-                        AppSettings.changeRingtoneSound(v.getContext(), true);
+                        AppSettings.changeRingtone(v.getContext(), true);
                     } catch (JSONException e) {
                         e.printStackTrace();
                         Utils.toast(v.getContext(), getString(R.string.shuffle_error));

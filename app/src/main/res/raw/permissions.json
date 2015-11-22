@@ -1,0 +1,32 @@
+[
+  {
+    "name": "permissions.storage",
+    "title": "Storage",
+    "text": "Read and write to internal and external storage.",
+    "text.large": "Read and write to internal and external storage."
+  },
+  {
+    "name": "permissions.phone.state",
+    "title": "Phone",
+    "text": "Monitor incoming call to change ringtone",
+    "text.large": "Monitor incoming call to change ringtone"
+  },
+  {
+    "name": "permissions.write.settings",
+    "title": "Write settings",
+    "text": "Change ringtone or notification sound",
+    "text.large": "Change ringtone or notification sound"
+  },
+  {
+    "name": "permissions.accessibility.service",
+    "title": "Accessibility Service",
+    "text": "Accessibility service to listen to incoming notifications",
+    "text.large": "Accessibility service to listen to incoming notifications"
+  },
+  {
+    "name": "permissions.boot.complete",
+    "title": "Boot completed",
+    "text": "Start SmartTone service automatically after reboot",
+    "text.large": "Start SmartTone service automatically after reboot"
+  }
+]

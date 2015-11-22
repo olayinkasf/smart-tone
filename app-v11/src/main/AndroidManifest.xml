@@ -73,6 +73,9 @@
         <activity android:name=".activity.MenuActivity"
                   android:screenOrientation="portrait"
                   android:configChanges="orientation|keyboardHidden"/>
+        <activity android:name=".activity.PermissionsActivity"
+                  android:screenOrientation="portrait"
+                  android:configChanges="orientation|keyboardHidden"/>
         <activity android:name=".activity.CollectionEditActivity"
                   android:screenOrientation="portrait"
                   android:configChanges="orientation|keyboardHidden"/>
