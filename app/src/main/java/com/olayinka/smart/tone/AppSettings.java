@@ -107,10 +107,12 @@ public class AppSettings {
         }
 
         int position;
+        int lastIndex = context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE).getInt(key + LAST_USED, -1);
         if (!context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE).getBoolean(ORDER_CHANGE, false)) {
             position = new Random().nextInt(tones.length());
+            if (position == lastIndex)
+                position = (lastIndex + 1) % tones.length();
         } else {
-            int lastIndex = context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE).getInt(key + LAST_USED, -1);
             lastIndex = Math.min(lastIndex, tones.length() - 1);
             position = (lastIndex + 1) % tones.length();
         }

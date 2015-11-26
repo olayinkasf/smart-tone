@@ -61,10 +61,6 @@ import java.util.TreeSet;
 public abstract class AbstractMenuActivity extends ImageCacheActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     public static final String CONCRETE = "com.olayinka.smart.tone.activity.MenuActivity";
-    public static final String CHANGE_RINGTONE = "change.ringtone";
-    public static final String CHANGE_NOTIFICATION_SOUND = "change.notification.sound";
-    public static final String CHANGE_RINGTONE_SERVICE = "change.ringtone.service";
-    public static final String CHANGE_NOTIFICATION_SOUND_SERVICE = "change.notification.sound.service";
     public static int NUM_THUMBNAILS = 6;
     private ListView mListView;
     private View mListHeader;
@@ -72,8 +68,6 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
     private int mAlbumArtWidth;
     private DisplayMetrics mDisplayDimens;
     private boolean mOnStartFlag = false;
-
-    public Intent mPendingIntent = null;
 
     BroadcastReceiver mShuffleObserver = new BroadcastReceiver() {
         @Override
@@ -249,34 +243,6 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
         fab.attachToListView(mListView);
     }
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PermissionsActivity.PERMISSION_REQUEST_CODE && resultCode == RESULT_OK) {
-            try {
-                switch (mPendingIntent.getAction()) {
-                    case CHANGE_NOTIFICATION_SOUND:
-                        AppSettings.changeNotificationSound(this, true);
-                        break;
-                    case CHANGE_RINGTONE:
-                        AppSettings.changeRingtone(this, true);
-                        break;
-                    case CHANGE_NOTIFICATION_SOUND_SERVICE:
-                        AppSettings.changeNotificationSound(this, true);
-                        ((AbsSmartTone) getApplication()).startServices();
-                        break;
-                    case CHANGE_RINGTONE_SERVICE:
-                        AppSettings.changeRingtone(this, true);
-                        ((AbsSmartTone) getApplication()).startServices();
-                        break;
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (isChecked)
@@ -315,7 +281,7 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
                         return;
                     }
                     try {
-                        AppSettings.changeNotificationSound(v.getContext(), true);
+                        AppSettings.changeNotificationSound(v.getContext(), false);
                     } catch (JSONException e) {
                         e.printStackTrace();
                         Utils.toast(v.getContext(), getString(R.string.shuffle_error));
@@ -343,7 +309,7 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
                         return;
                     }
                     try {
-                        AppSettings.changeRingtone(v.getContext(), true);
+                        AppSettings.changeRingtone(v.getContext(), false);
                     } catch (JSONException e) {
                         e.printStackTrace();
                         Utils.toast(v.getContext(), getString(R.string.shuffle_error));

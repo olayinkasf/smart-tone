@@ -54,6 +54,8 @@ import org.json.JSONException;
 import java.util.HashMap;
 import java.util.TreeSet;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * Created by Olayinka on 5/3/2015.
  */
@@ -134,6 +136,7 @@ public class CollectionListAdapter extends CursorAdapter {
                             prefs.edit().putLong(AppSettings.ACTIVE_NOTIFICATION, collectionId).apply();
                             prefs.edit().putBoolean(AppSettings.ACTIVE_APP_SERVICE, true).apply();
                             try {
+                                context.getSharedPreferences(AppSettings.APP_SETTINGS, MODE_PRIVATE).edit().putInt(AppSettings.ACTIVE_NOTIFICATION + AppSettings.LAST_USED, -1).apply();
                                 AppSettings.changeNotificationSound(context, true);
                                 ((AbsSmartTone) context.getApplicationContext()).startServices();
                                 mActivity.refreshForChange();
@@ -167,6 +170,7 @@ public class CollectionListAdapter extends CursorAdapter {
                             prefs.edit().putBoolean(AppSettings.ACTIVE_APP_SERVICE, true).apply();
 
                             try {
+                                context.getSharedPreferences(AppSettings.APP_SETTINGS, MODE_PRIVATE).edit().putInt(AppSettings.ACTIVE_RINGTONE + AppSettings.LAST_USED, -1).apply();
                                 AppSettings.changeRingtone(context, true);
                                 ((AbsSmartTone) context.getApplicationContext()).startServices();
                                 mActivity.refreshForChange();
