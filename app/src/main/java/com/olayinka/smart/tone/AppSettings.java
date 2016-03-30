@@ -25,6 +25,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Log;
 import com.olayinka.smart.tone.model.Media;
 import lib.olayinka.smart.tone.R;
 import org.json.JSONArray;
@@ -70,37 +71,48 @@ public class AppSettings {
     }
 
     private static Uri changeSound(Context context, int type, String key, String freqKey, boolean isRingtone, boolean isNotification) throws JSONException {
-        {
-            if (!Utils.checkWriteSettings(context)) return null;
-            ContentValues contentValues = new ContentValues();
-
-            Uri notifUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
-            Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE);
-            long notifId = notifUri != null ? ContentUris.parseId(notifUri) : -1L;
-            long ringtoneId = ringtoneUri != null ? ContentUris.parseId(ringtoneUri) : -1L;
-            AppLogger.wtf(context, "changeSound/currentNotifSound", "" + notifId);
-            AppLogger.wtf(context, "changeSound/currentRingtoneSound", "" + ringtoneId);
-            contentValues.put(MediaStore.Audio.Media.IS_NOTIFICATION, 0);
-            contentValues.put(MediaStore.Audio.Media.IS_RINGTONE, 0);
-            context.getContentResolver().update(
-                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                    contentValues,
-                    MediaStore.Audio.Media.IS_MUSIC + Media.EQUALS + Media.AND + MediaStore.Audio.Media._ID + Media.NOT_IN + "(?,?)",
-                    new String[]{"1", "" + notifId, "" + ringtoneId}
-            );
-            context.getContentResolver().update(
-                    MediaStore.Audio.Media.INTERNAL_CONTENT_URI,
-                    contentValues,
-                    MediaStore.Audio.Media.IS_MUSIC + Media.EQUALS + Media.AND + MediaStore.Audio.Media._ID + Media.NOT_IN + "(?,?)",
-                    new String[]{"1", "" + notifId, "" + ringtoneId}
-            );
+        try {
+            if (!Utils.checkWriteSettings(context)) {
+                AppLogger.wtf(context, "changeSound", "No write settings permission");
+                return null;
+            }
+        } catch (Throwable throwable) {
+            Log.wtf("changeSound", throwable.getMessage());
+            throwable.printStackTrace();
         }
+        ContentValues contentValues = new ContentValues();
+
+        Uri notifUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
+        Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE);
+        long notifId = notifUri != null ? ContentUris.parseId(notifUri) : -1L;
+        long ringtoneId = ringtoneUri != null ? ContentUris.parseId(ringtoneUri) : -1L;
+        AppLogger.wtf(context, "changeSound/currentNotifSound", "" + notifId);
+        AppLogger.wtf(context, "changeSound/currentRingtoneSound", "" + ringtoneId);
+        contentValues.put(MediaStore.Audio.Media.IS_NOTIFICATION, 0);
+        contentValues.put(MediaStore.Audio.Media.IS_RINGTONE, 0);
+        context.getContentResolver().update(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                contentValues,
+                MediaStore.Audio.Media.IS_MUSIC + Media.EQUALS + Media.AND + MediaStore.Audio.Media._ID + Media.NOT_IN + "(?,?)",
+                new String[]{"1", "" + notifId, "" + ringtoneId}
+        );
+        context.getContentResolver().update(
+                MediaStore.Audio.Media.INTERNAL_CONTENT_URI,
+                contentValues,
+                MediaStore.Audio.Media.IS_MUSIC + Media.EQUALS + Media.AND + MediaStore.Audio.Media._ID + Media.NOT_IN + "(?,?)",
+                new String[]{"1", "" + notifId, "" + ringtoneId}
+        );
+
 
         long collectionId = context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE)
                 .getLong(key, 0L);
-        if (collectionId == 0) return null;
+        if (collectionId == 0) {
+            AppLogger.wtf(context, "changeSound", "No active collection for " + key);
+            return null;
+        }
         JSONArray tones = Media.getTones(context, collectionId);
         if (tones.length() == 0) {
+            AppLogger.wtf(context, "changeSound", "No tones for collection for " + key);
             context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE).edit()
                     .putLong(key, 0).apply();
             return null;
@@ -138,7 +150,10 @@ public class AppSettings {
             RingtoneManager.setActualDefaultRingtoneUri(context, type, uri);
             context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE).edit()
                     .putLong(freqKey + LAST_CHANGE, System.currentTimeMillis()).apply();
-        } else uri = null;
+        } else {
+            AppLogger.wtf(context, "changeSound/", "Invalid uri selected " + uri.toString());
+            uri = null;
+        }
         return uri;
     }
 
@@ -164,15 +179,18 @@ public class AppSettings {
     }
 
     public static Uri changeNotificationSound(Context context, Boolean notify) throws JSONException {
+        AppLogger.wtf(context, "changeNotificationSound", notify.toString());
         Uri uri = changeSound(context, RingtoneManager.TYPE_NOTIFICATION, ACTIVE_NOTIFICATION, NOTIF_FREQ, false, true);
         if (uri != null && notify) {
             notify(context, context.getString(R.string.notification_change), R.id.changeNotifNotif);
         }
+
         if (uri != null) {
             Intent intent = new Intent(JUST_CHANGED);
             intent.putExtra(JUST_CHANGED, ACTIVE_NOTIFICATION);
             context.sendBroadcast(intent);
         }
+        AppLogger.wtf(context, "changeNotificationSound/uri: ", String.valueOf(uri));
         return uri;
     }
 

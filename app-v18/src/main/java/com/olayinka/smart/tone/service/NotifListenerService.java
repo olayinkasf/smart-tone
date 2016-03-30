@@ -32,14 +32,11 @@ import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.support.v4.app.NotificationCompat;
 import com.olayinka.smart.tone.*;
-import org.json.JSONException;
 
 /**
  * Created by Olayinka on 5/9/2015.
  */
 public class NotifListenerService extends NotificationListenerService {
-
-    long mLastNotifiedListener = 0;
 
     public static boolean shouldRun(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(AppSettings.APP_SETTINGS, MODE_PRIVATE);
@@ -50,13 +47,15 @@ public class NotifListenerService extends NotificationListenerService {
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
+        AppLogger.wtf(this, "onNotificationPosted", sbn.toString());
+        if (sbn.getNotification().contentView == null)
+            return;
         try {
-            AppLogger.wtf(this, "onNotificationPosted", sbn.toString());
-            if (shouldRun(this))
+            if (shouldRun(this)) {
                 AppSettings.changeNotificationSound(this, false);
-            else stopSelf();
-        } catch (JSONException e) {
-            AppLogger.wtf(this, "onNotificationPosted", e);
+            } else stopSelf();
+        } catch (Throwable throwable) {
+            AppLogger.wtf(this, "onNotificationPosted", throwable);
         }
     }
 

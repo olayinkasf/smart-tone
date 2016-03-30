@@ -80,6 +80,7 @@ public class RingtoneTelephonyService extends Service {
         if (!shouldRun()) {
             destroyListener();
             stopSelf();
+            return;
         }
         try {
             AppSettings.changeRingtone(this);

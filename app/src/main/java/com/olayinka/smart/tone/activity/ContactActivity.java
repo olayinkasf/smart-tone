@@ -24,6 +24,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -32,12 +33,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import com.olayinka.smart.tone.AppLogger;
 import com.olayinka.smart.tone.AppSettings;
+import com.olayinka.smart.tone.PermissionUtils;
 import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.task.AsyncTask;
 import lib.olayinka.smart.tone.R;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Map;
 
 import static com.olayinka.smart.tone.Utils.getExternalStorageDir;
 
@@ -99,6 +104,7 @@ public class ContactActivity extends AppCompatActivity {
                         getSystemLog();
                     } catch (IOException e) {
                         e.printStackTrace();
+                        //Utils.toast(getApplicationContext(), "Error while dumping log file.");
                     }
                     AppLogger.resume();
                     return null;
@@ -159,8 +165,38 @@ public class ContactActivity extends AppCompatActivity {
         } catch (Throwable ignored) {
         }
 
-        Utils.copyFile(backUpLogFile, tmpLogFile);
+        try {
+            Utils.copyFile(backUpLogFile, tmpLogFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Utils.appendFile(logFile, tmpLogFile);
+        dumpPreferences(tmpLogFile);
+    }
+
+    public void dumpPreferences(File output) throws IOException {
+        SharedPreferences prefs = getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE);
+        BufferedWriter writer = new BufferedWriter(new FileWriter(output, true));
+        writer.write("Dumping shared preferences and permissions...\n");
+        for (Map.Entry<String, ?> entry : prefs.getAll().entrySet()) {
+            Object val = entry.getValue();
+            if (val == null) {
+                writer.write(String.format("%s :\t <null>%n", entry.getKey()));
+            } else {
+                writer.write(String.format("%s :\t %s (%s)%n", entry.getKey(), String.valueOf(val), val.getClass()
+                        .getSimpleName()));
+            }
+        }
+
+        boolean[] perms = PermissionUtils.getAllPermissions(getApplicationContext());
+        for (int i = 0; i < perms.length; i++) {
+            writer.write(PermissionUtils.PERMISSIONS[i] + " :\t " + String.valueOf(perms[i]));
+            writer.write("\n");
+        }
+
+        writer.write("Dump complete\n");
+        writer.flush();
+        writer.close();
     }
 
     private void setActionBar() {
