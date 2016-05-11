@@ -24,56 +24,62 @@
 apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         minSdkVersion 18
         versionCode 78
         versionName "2.3.2"
-    }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
     }
 
     signingConfigs {
-        Properties properties = new Properties()
-        properties.load(project.rootProject.file('local.properties').newDataInputStream())
-        def STORE_FILE = properties.getProperty('STORE_FILE')
-        def STORE_PASSWORD = properties.getProperty('STORE_PASSWORD')
-        def KEY_ALIAS = properties.getProperty('KEY_ALIAS')
-        def KEY_PASSWORD = properties.getProperty('KEY_PASSWORD')
-
         release {
-            storeFile file(STORE_FILE)
-            storePassword STORE_PASSWORD
-            keyAlias KEY_ALIAS
-            keyPassword KEY_PASSWORD
-        }
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
-            signingConfig signingConfigs.release
-        }
-        debug {
-            signingConfig signingConfigs.release
+            storeFile file("${keystorePath}")
+            keyAlias "${releaseKeyAlias}"
+            storePassword "${keystorePassword}"
+            keyPassword "${releaseKeyPassword}"
         }
 
     }
+
     repositories {
         mavenLocal()
         mavenCentral()
         jcenter()
     }
 
-    dependencies {
-        compile fileTree(dir: 'libs', include: ['*.jar'])
-        compile project(':app')
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+
+        release {
+            minifyEnabled true
+            zipAlignEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+
+        applicationVariants.all { variant ->
+            variant.outputs.each { output ->
+                def bType = variant.buildType.name
+                if (bType.equals("release") || bType.equals("debug")) {
+                    def apk = output.outputFile.name;
+                    apk = apk.replace("nunc", "nunc-$defaultConfig.versionCode" + "-" + "$defaultConfig.versionName")
+                    output.outputFile = new File("$rootProject.projectDir/binaries", apk)
+                }
+            }
+        }
     }
 
 }
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':app')
+}
+
