@@ -126,10 +126,10 @@ public class MediaGroupActivity extends ImageCacheActivity {
         String selection = null;
         switch (getIntent().getStringExtra(TABLE)) {
             case Media.Folder.TABLE:
-                selection = getIntent().getStringExtra(TABLE) + Media.Columns._ID + " = " + mMediaItem.getId();
+                selection = Media.Columns.FOLDER_ID + " = " + mMediaItem.getId();
                 break;
             case Media.Album.TABLE:
-                selection = getIntent().getStringExtra(TABLE) + Media.Columns._ID + " = " + mMediaItem.getAlbumId() + Media.AND
+                selection = Media.Columns.ALBUM_ID  + " = " + mMediaItem.getAlbumId() + Media.AND
                         + Media.Columns.IS_INTERNAL + " = " + mMediaItem.getInternal();
                 break;
         }

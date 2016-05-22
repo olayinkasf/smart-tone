@@ -31,12 +31,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+
 import com.olayinka.smart.tone.*;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.service.AppService;
 import com.olayinka.smart.tone.service.IndexerService;
 import com.olayinka.smart.tone.widget.PrefsSwitchCompat;
 import com.olayinka.smart.tone.widget.PrefsTextView;
+
 import lib.olayinka.smart.tone.R;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -53,6 +55,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                     AppSettings.setFreq(SettingsActivity.this, key, which, arrayId);
                     PrefsTextView local = (PrefsTextView) v.findViewById(R.id.text);
                     local.setPrefsText();
+                    if (arrayId == R.array.index_freq) return;
                     ((AbsSmartTone) getApplication()).startServices();
                 }
             }).show();
@@ -68,6 +71,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         //fix unset text for shuffle frequency
         fixPrefsText(AppSettings.NOTIF_FREQ, R.array.notification_freq);
         fixPrefsText(AppSettings.RINGTONE_FREQ, R.array.ringtone_freq);
+        fixPrefsText(AppSettings.INDEX_FREQ, R.array.index_freq);
 
         //set app service prefs
         View view = findViewById(R.id.service);
@@ -147,6 +151,17 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 v.getContext().startService(intent);
             }
         });
+
+
+        //index frequency
+        view = findViewById(R.id.indexFreq);
+        view.setTag(R.id.array, R.array.index_freq);
+        titleView = (TextView) view.findViewById(R.id.title);
+        titleView.setText(R.string.index_freq);
+        textView = (PrefsTextView) view.findViewById(R.id.text);
+        textView.setPrefs(AppSettings.APP_SETTINGS, AppSettings.INDEX_FREQ);
+        textView.setPrefsText();
+        view.setOnClickListener(mFreqClickListener);
 
         //rescan media files
         view = findViewById(R.id.reindex);

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2015
   ~
   ~ Olayinka S. Folorunso <mail@olayinkasf.com>
@@ -23,7 +22,7 @@
     <string name="app.settings">app.settings</string>
     <string name="active.app.service">active.app.service</string>
 
-    <string name="app.name" translatable="false">SmartTone 2</string>
+    <string name="app_name" translatable="false">SmartTone 2</string>
     <string name="about.app.title">About App</string>
     <string name="done">Done</string>
     <string name="share.using">Share using</string>
@@ -71,11 +70,12 @@
     <string name="notification.selected">Notification collection selected!</string>
     <string name="smarttone.service">SmartTone Service</string>
     <string name="ringtone.freq">Ringtone shuffle frequency</string>
+    <string name="index.freq">Interval to scan for new media files</string>
     <string name="notification.freq">Notification shuffle frequency</string>
     <string name="after.every.call">After every call</string>
     <string name="after.every.notif">After every notification</string>
     <string name="notify.change">Notify on ringtone change</string>
-    <string name="rescan.media">Rescan media files</string>
+    <string name="rescan.media">Scan for media files now</string>
     <string name="notification.service">SmartTone Notification Service</string>
     <string name="notification.freq.changed">Notification shuffle frequency changed.</string>
     <string name="ringtone.service">SmartTone Ringtone Service</string>
@@ -114,7 +114,7 @@
     <string name="open.source.license.sub.header">This software is a result of some open source libraries. The following
         software may be included in this product:
     </string>
-    <string name="app.name.caps">SMARTTONE 2</string>
+    <string name="app_name.caps">SMARTTONE 2</string>
     <string name="nothing.beyond">Sorry! Nothing beyond this point!</string>
     <string name="double.tap">Double tap on album art to preview music, single tap on any album art to stop preview.
     </string>
@@ -147,7 +147,7 @@
     <string name="service.inactive">SmartTone service is inactive</string>
     <string name="no.active.notification">You have no active collection for notification sounds</string>
     <string name="confirm.delete">Delete tone from collection?</string>
-    <string name="order.change">Use collection\'s order</string>
+    <string name="order.change">Use tone list\'s order</string>
     <string name="action.about.app">About app</string>
     <string name="app.log">Application Log</string>
     <string name="send.app.log">Send application log with</string>
@@ -179,11 +179,19 @@
         notification sound
     </string>
 
+    <string-array name="index_freq">
+        <item>Weekly</item>
+        <item>Daily</item>
+        <item>12 hours interval</item>
+        <item>6 hours interval</item>
+        <item>Every hour</item>
+    </string-array>
+
     <string-array name="ringtone_freq">
         <item>After every call</item>
         <item>6 hours interval</item>
         <item>12 hours interval</item>
-        <item>Once everyday</item>
+        <item>Daily</item>
     </string-array>
 
     <string-array name="notification_freq">

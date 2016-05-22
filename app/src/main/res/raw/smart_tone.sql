@@ -35,7 +35,8 @@ CREATE TABLE IF NOT EXISTS `media` (
 CREATE TABLE IF NOT EXISTS `collection` (
   `_id`          INTEGER PRIMARY KEY AUTOINCREMENT,
   `_name`        VARCHAR(255) COLLATE NOCASE NOT NULL,
-  `date_created` timestamp                   NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `date_created` timestamp                   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  folder_id      INTEGER NOT NULL DEFAULT -1
 );
 
 CREATE TABLE IF NOT EXISTS `tone` (

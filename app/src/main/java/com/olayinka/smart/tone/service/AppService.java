@@ -20,18 +20,24 @@
 package com.olayinka.smart.tone.service;
 
 import android.annotation.SuppressLint;
+import android.app.DownloadManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+
 import com.olayinka.smart.tone.AppSqlHelper;
 import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.activity.CollectionEditActivity;
+import com.olayinka.smart.tone.activity.ContactActivity;
 import com.olayinka.smart.tone.activity.MediaGroupActivity;
 import com.olayinka.smart.tone.model.Media;
+
 import lib.olayinka.smart.tone.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,6 +56,8 @@ public class AppService extends IntentService {
     public static final String FAUX_ID = "faux.id";
     private static final String NAME = "SmartTone App Service";
     public static final String EXPORT_COLLECTIONS = "export.collections";
+    public static final String SAVE_FOLDER_COLLECTION = "save.folder.collection";
+    public static final String EXTRA_FOLDER = "extra.folder";
 
 
     public AppService(String name) {
@@ -63,13 +71,13 @@ public class AppService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         switch (intent.getType()) {
-            case SAVE_COLLECTION:
+            case SAVE_COLLECTION: {
                 String selectionString = intent.getStringExtra(MediaGroupActivity.SELECTION);
                 String collectionName = intent.getStringExtra(CollectionEditActivity.COLLECTION_NAME);
                 long collectionId = intent.getLongExtra(CollectionEditActivity.COLLECTION_ID, 0);
                 long fauxId = intent.getLongExtra(FAUX_ID, 0);
                 try {
-                    Media.saveCollection(getApplicationContext(), collectionId, collectionName, selectionString);
+                    Media.saveCollection(getApplicationContext(), collectionId, collectionName, selectionString, -1);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
@@ -77,13 +85,43 @@ public class AppService extends IntentService {
                 intent.putExtra(FAUX_ID, fauxId);
                 sendBroadcast(intent);
                 break;
+            }
             case EXPORT_COLLECTIONS:
                 try {
                     export();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                break;
+            case SAVE_FOLDER_COLLECTION: {
+                long folderId = intent.getLongExtra(EXTRA_FOLDER, -1);
+                if (folderId == -1) throw new RuntimeException("Haha! Joke is on you.");
+                String collectionName = intent.getStringExtra(CollectionEditActivity.COLLECTION_NAME);
+                long fauxId = intent.getLongExtra(FAUX_ID, 0);
+                try {
+                    Media.saveCollection(getApplicationContext(), 0, collectionName, tonesInFolder(this, folderId), folderId);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException(e);
+                }
+                intent = new Intent(SAVE_FOLDER_COLLECTION);
+                intent.putExtra(FAUX_ID, fauxId);
+                sendBroadcast(intent);
+                break;
+            }
         }
+    }
+
+    public static String tonesInFolder(Context context, long folderId) {
+        SQLiteDatabase database = AppSqlHelper.instance(context).getReadableDatabase();
+        Cursor cursor = database.query(
+                Media.TABLE, new String[]{Media.Columns._ID, Media.Columns.NAME},
+                Media.Columns.FOLDER_ID + Media.EQUALS, new String[]{String.valueOf(folderId)}, null, null, Media.Columns.NAME
+        );
+        JSONArray jsonArray = new JSONArray();
+        while (cursor.moveToNext()) jsonArray.put(cursor.getLong(0));
+        cursor.close();
+        return jsonArray.toString();
     }
 
 
@@ -101,7 +139,8 @@ public class AppService extends IntentService {
 
         try {
             SQLiteDatabase database = AppSqlHelper.instance(getApplicationContext()).getReadableDatabase();
-            Cursor collectionCursor = database.rawQuery("select * from collection", null);
+            Cursor collectionCursor = database.rawQuery("select * from collection where folder_id = -1", null);
+            if (collectionCursor.getCount() == 0) return null;
             JSONArray collections = new JSONArray();
             while (collectionCursor.moveToNext()) {
                 JSONObject jsonObject = new JSONObject();
@@ -133,7 +172,8 @@ public class AppService extends IntentService {
         intent.setDataAndType(selectedUri, "resource/folder");
         if (intent.resolveActivity(getPackageManager()) != null)
             Utils.notify(this, getString(R.string.export_complete) + " " + file.getAbsolutePath(), R.id.backup, PendingIntent.getActivity(this, 0, intent, 0));
-        else Utils.notify(this, getString(R.string.export_complete) + " " + file.getAbsolutePath(), R.id.backup, null);
+        else
+            Utils.notify(this, getString(R.string.export_complete) + " " + file.getAbsolutePath(), R.id.backup, null);
         return file.getAbsolutePath();
     }
 

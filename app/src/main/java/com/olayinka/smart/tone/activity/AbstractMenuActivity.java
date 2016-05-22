@@ -20,54 +20,92 @@
 
 package com.olayinka.smart.tone.activity;
 
-import android.animation.*;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.NotificationManager;
-import android.content.*;
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.ContentUris;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.*;
-import com.melnykov.fab.FloatingActionButton;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.nononsenseapps.filepicker.FilePickerActivity;
 import com.olayinka.rate.app.RateThisAppAlert;
-import com.olayinka.smart.tone.*;
+import com.olayinka.smart.tone.AbsSmartTone;
+import com.olayinka.smart.tone.AppLogger;
+import com.olayinka.smart.tone.AppSettings;
+import com.olayinka.smart.tone.AppSqlHelper;
+import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.adapter.CollectionListAdapter;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.MediaItem;
+import com.olayinka.smart.tone.service.AppService;
 import com.olayinka.smart.tone.service.IndexerService;
 import com.olayinka.smart.tone.widget.PrefsSwitchCompat;
-import lib.olayinka.smart.tone.BuildConfig;
-import lib.olayinka.smart.tone.R;
+import com.wangjie.androidbucket.utils.imageprocess.ABShape;
+import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton;
+import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionHelper;
+import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
+import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RFACLabelItem;
+import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RapidFloatingActionContentLabelList;
+
 import org.json.JSONException;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+
+import lib.olayinka.smart.tone.BuildConfig;
+import lib.olayinka.smart.tone.R;
 
 /**
  * Created by Olayinka on 7/8/2015.
  */
-public abstract class AbstractMenuActivity extends ImageCacheActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public abstract class AbstractMenuActivity extends ImageCacheActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, RapidFloatingActionContentLabelList.OnRapidFloatingActionContentLabelListListener {
 
     public static final String CONCRETE = "com.olayinka.smart.tone.activity.MenuActivity";
+    private static final int FILE_PICKER_CODE = 0x9a4d;
     public static int NUM_THUMBNAILS = 6;
     private ListView mListView;
     private View mListHeader;
     private CollectionListAdapter mAdapter;
     private int mAlbumArtWidth;
     private DisplayMetrics mDisplayDimens;
-    private boolean mOnStartFlag = false;
 
     BroadcastReceiver mShuffleObserver = new BroadcastReceiver() {
         @Override
@@ -83,6 +121,7 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
 
         }
     };
+    private RapidFloatingActionHelper mRapidFloatingActionHelper;
 
     @Override
     void initToolbar(Toolbar toolbar) {
@@ -131,8 +170,6 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
         refreshCurrentNotif(true);
         refreshServiceNotifier(true);
         refreshSelectNotifier(true);
-
-        mOnStartFlag = false;
 
         if (showAskAppLog() || showRateThisApp()) ;
     }
@@ -201,9 +238,7 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        if (mOnStartFlag)
-            refresh();
-        mOnStartFlag = true;
+        refresh();
         registerReceiver(mShuffleObserver, new IntentFilter(AppSettings.JUST_CHANGED));
     }
 
@@ -233,14 +268,40 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
     }
 
     private void setCreateButtonClickListener() {
-        findViewById(R.id.createCollection).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AbstractMenuActivity.this, CollectionEditActivity.class));
-            }
-        });
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.createCollection);
-        fab.attachToListView(mListView);
+
+        RapidFloatingActionContentLabelList rfaContent = new RapidFloatingActionContentLabelList(this);
+        rfaContent.setOnRapidFloatingActionContentLabelListListener(this);
+        List<RFACLabelItem> items = new ArrayList<>();
+        items.add(
+                new RFACLabelItem<Integer>().setLabel("Sync. a folder")
+                        .setResId(R.drawable.ic_folder_open_white_24dp)
+                        .setIconNormalColor(0xff4e342e)
+                        .setIconPressedColor(0xff3e2723)
+                        .setLabelColor(Color.WHITE)
+                        .setLabelSizeSp(14)
+                        .setLabelBackgroundDrawable(ABShape.generateCornerShapeDrawable(0xaa000000, (int) Utils.pxFromDp(this, 5)))
+                        .setWrapper(1)
+        );
+        items.add(
+                new RFACLabelItem<Integer>().setLabel("Create collection")
+                        .setResId(R.mipmap.ic_action_create)
+                        .setIconNormalColor(0xff056f00)
+                        .setIconPressedColor(0xff0d5302)
+                        .setLabelColor(0xff056f00)
+                        .setWrapper(2)
+        );
+        rfaContent.setItems(items)
+                .setIconShadowRadius((int) Utils.pxFromDp(this, 5))
+                .setIconShadowColor(0xff888888)
+                .setIconShadowDy((int) Utils.pxFromDp(this, 5));
+        RapidFloatingActionLayout rfaLayout = (RapidFloatingActionLayout) findViewById(R.id.activity_main_rfal);
+        RapidFloatingActionButton rfaBtn = (RapidFloatingActionButton) rfaLayout.findViewById(R.id.activity_main_rfab);
+        mRapidFloatingActionHelper = new RapidFloatingActionHelper(
+                this,
+                rfaLayout,
+                rfaBtn,
+                rfaContent
+        ).build();
     }
 
     @Override
@@ -377,7 +438,8 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
         albumArts.getLayoutParams().width = mAlbumArtWidth * 2;
 
         //default
-        for (int i = 0; i < NUM_THUMBNAILS - 1; i++) albumArts.getChildAt(i).setVisibility(View.GONE);
+        for (int i = 0; i < NUM_THUMBNAILS - 1; i++)
+            albumArts.getChildAt(i).setVisibility(View.GONE);
         ImageView imageView = (ImageView) albumArts.getChildAt(NUM_THUMBNAILS - 1);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         imageView.setLayoutParams(params);
@@ -430,7 +492,8 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
         if (Utils.hasLollipop()) {
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, imageView, getString(R.string.transition_collection_page));
             ((Activity) v.getContext()).startActivityForResult(intent, CollectionPageActivity.GROUP_RETURN_CODE, options.toBundle());
-        } else ((Activity) v.getContext()).startActivityForResult(intent, CollectionPageActivity.GROUP_RETURN_CODE);
+        } else
+            ((Activity) v.getContext()).startActivityForResult(intent, CollectionPageActivity.GROUP_RETURN_CODE);
         //finish();
     }
 
@@ -467,12 +530,11 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
     private void unGotIt(final View header, Float v) {
         if (header.getVisibility() == View.VISIBLE)
             return;
+        header.setVisibility(View.VISIBLE);
         header.measure(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT);
         int height = header.getMeasuredHeight();
-        if (v != null)
-            height = (int) (float) v;
+
         final ViewGroup.LayoutParams layoutParams = header.getLayoutParams();
-        header.setVisibility(View.VISIBLE);
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(this, "alpha", 1.0f).setDuration(300);
 
         ValueAnimator heightAnimator = ValueAnimator.ofInt(layoutParams.height, height).setDuration(400);
@@ -521,5 +583,67 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void onRFACItemLabelClick(int position, RFACLabelItem item) {
+        onRFACItemIconClick(position, item);
+    }
+
+    @Override
+    public void onRFACItemIconClick(int position, RFACLabelItem item) {
+        mRapidFloatingActionHelper.toggleContent();
+        switch (position) {
+            case 0:
+                // This always works
+                Intent intent = new Intent(this, FilePickerActivity.class);
+                intent.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_DIR);
+                intent.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
+
+                startActivityForResult(intent, FILE_PICKER_CODE);
+                break;
+            case 1:
+                startActivity(new Intent(AbstractMenuActivity.this, CollectionEditActivity.class));
+                break;
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == FILE_PICKER_CODE && resultCode == Activity.RESULT_OK) {
+            Uri folderUri = intent.getData();
+            if (folderUri == null) {
+                Utils.toast(this, "No folder selected!");
+            } else {
+                AppLogger.wtf(this, folderUri.toString(), new File(folderUri.getPath()).getAbsolutePath());
+                long folderId = Media.getFolderId(this, new File(folderUri.getPath()));
+                if (folderId == -1) Utils.toast(this, "No indexed-media found in selected folder!");
+                else {
+                    final long fauxId = System.currentTimeMillis();
+                    Intent serviceIntent = new Intent(this, AppService.class);
+                    serviceIntent.setType(AppService.SAVE_FOLDER_COLLECTION);
+                    serviceIntent.putExtra(AppService.EXTRA_FOLDER, folderId);
+                    serviceIntent.putExtra(CollectionEditActivity.COLLECTION_NAME, new File(folderUri.getPath()).getName());
+                    serviceIntent.putExtra(AppService.FAUX_ID, fauxId);
+                    final ProgressDialog dialog = new ProgressDialog(this);
+                    dialog.setCancelable(false);
+                    dialog.setMessage(getString(R.string.saving_collection));
+                    BroadcastReceiver receiver = new BroadcastReceiver() {
+                        @Override
+                        public void onReceive(Context context, Intent intent) {
+                            unregisterReceiver(this);
+                            if (fauxId != intent.getLongExtra(AppService.FAUX_ID, 0))
+                                throw new RuntimeException();
+                            refresh();
+                            dialog.dismiss();
+                        }
+                    };
+                    registerReceiver(receiver, new IntentFilter(AppService.SAVE_FOLDER_COLLECTION));
+                    startService(serviceIntent);
+                }
+            }
+        } else
+            super.onActivityResult(requestCode, resultCode, intent);
     }
 }

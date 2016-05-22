@@ -32,6 +32,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.mobeta.android.dslv.DragSortCursorAdapter;
 import com.olayinka.smart.tone.AppSqlHelper;
 import com.olayinka.smart.tone.Utils;
@@ -40,6 +41,7 @@ import com.olayinka.smart.tone.activity.ImageCacheActivity;
 import com.olayinka.smart.tone.activity.MediaGroupActivity;
 import com.olayinka.smart.tone.model.MediaItem;
 import com.olayinka.smart.tone.service.AppService;
+
 import lib.olayinka.smart.tone.R;
 
 import java.util.ArrayList;
@@ -56,15 +58,19 @@ public class ToneListAdapter extends DragSortCursorAdapter {
             "inner join tone t on m._id = t.media_id  " +
             "where t.collection_id = ? " +
             "order by t.sort_order";
+    private final boolean mRemovable;
 
-    public ToneListAdapter(Context context, long id) {
+    public ToneListAdapter(Context context, long id, boolean removable) {
         super(context, AppSqlHelper.instance(context).getReadableDatabase().rawQuery(QUERY, new String[]{"" + id}), false);
+        this.mRemovable = removable;
     }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         View view = LayoutInflater.from(context).inflate(R.layout.tone_item, null);
         view.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        if (!mRemovable)
+            view.findViewById(R.id.remove).setVisibility(View.GONE);
         return view;
     }
 
@@ -86,7 +92,7 @@ public class ToneListAdapter extends DragSortCursorAdapter {
         albumArt.setTag(R.id.mediaItem, mediaItem);
         Uri sArtworkUri = Uri.parse("content://media/" + (mediaItem.getInternal() == 0 ? "external" : "internal") + "/audio/albumart");
         Uri uri = ContentUris.withAppendedId(sArtworkUri, mediaItem.getAlbumId());
-        ((ImageCacheActivity) albumArt.getContext()).loadBitmap(uri, albumArt, (int) Utils.pxFromDp(view.getContext(), 50));
+        ((ImageCacheActivity) context).loadBitmap(uri, albumArt, (int) Utils.pxFromDp(view.getContext(), 50));
 
         albumArt.setOnTouchListener((View.OnTouchListener) context);
     }

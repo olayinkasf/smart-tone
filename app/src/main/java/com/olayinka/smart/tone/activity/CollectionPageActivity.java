@@ -30,11 +30,15 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.adapter.ToneListAdapter;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.MediaItem;
+
 import lib.olayinka.smart.tone.R;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -54,12 +58,12 @@ public class CollectionPageActivity extends ImageCacheActivity implements View.O
 
     @Override
     protected void onPause() {
-        if(mCollectionId != 0 && mCollectionObject != null)
-        try {
-            mAdapter.persist(mCollectionId, mCollectionObject.getString(Media.CollectionColumns.NAME));
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+        if (mCollectionId != 0 && mCollectionObject != null)
+            try {
+                mAdapter.persist(mCollectionId, mCollectionObject.getString(Media.CollectionColumns.NAME));
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
         super.onPause();
     }
 
@@ -87,11 +91,12 @@ public class CollectionPageActivity extends ImageCacheActivity implements View.O
 
     private void setEditButtonClickListener() {
         findViewById(R.id.edit).setOnClickListener(this);
+        if (isFolderCollection()) findViewById(R.id.edit).setVisibility(View.GONE);
     }
 
     private void setListView() {
         ListView listView = (ListView) findViewById(R.id.list);
-        mAdapter = new ToneListAdapter(this, mCollectionId);
+        mAdapter = new ToneListAdapter(this, mCollectionId, !isFolderCollection());
         listView.setAdapter(mAdapter);
     }
 
@@ -127,10 +132,18 @@ public class CollectionPageActivity extends ImageCacheActivity implements View.O
     @Override
     void initToolbar(Toolbar toolbar) {
         try {
-            toolbar.setTitle(mCollectionObject.getString(Media.CollectionColumns.NAME));
+            ((TextView) toolbar.findViewById(R.id.collectionName)).setText(mCollectionObject.getString(Media.CollectionColumns.NAME));
+            if (isFolderCollection()) {
+                toolbar.findViewById(R.id.folderPath).setVisibility(View.VISIBLE);
+                ((TextView) toolbar.findViewById(R.id.folderPath)).setText(Media.getFolderPath(this, mCollectionObject.getLong(Media.CollectionColumns.FOLDER_ID)));
+            }
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private boolean isFolderCollection() {
+        return mCollectionObject.optLong(Media.CollectionColumns.FOLDER_ID) > 0;
     }
 
     @Override

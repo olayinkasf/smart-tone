@@ -28,7 +28,7 @@ android {
 
     defaultConfig {
         minSdkVersion 11
-        versionCode 77
+        versionCode 79
         versionName "2.3.2"
 
     }

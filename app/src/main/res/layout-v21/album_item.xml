@@ -55,7 +55,7 @@
                     android:orientation="vertical">
 
                 <TextView
-                        android:text="@string/app.name"
+                        android:text="@string/app_name"
                         android:id="@+id/albumName"
                         android:textSize="16sp"
                         android:layout_width="wrap_content"

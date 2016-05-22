@@ -80,7 +80,7 @@ public class AlbumListAdapter extends CursorAdapter implements  View.OnClickList
         artistName.setText(cursor.getString(3));
 
         albumArt.setTag(R.id.mediaItem, albumItem);
-        ((ImageCacheActivity) albumArt.getContext()).loadBitmap(Utils.uriForMediaItem(albumItem), albumArt, (int) Utils.pxFromDp(view.getContext(), 70));
+        ((ImageCacheActivity) context).loadBitmap(Utils.uriForMediaItem(albumItem), albumArt, (int) Utils.pxFromDp(view.getContext(), 70));
 
     }
 

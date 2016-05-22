@@ -66,7 +66,6 @@ public class Utils {
     private static Toast sAppToast;
     private static Bitmap sCachedBitmap;
     private static Bitmap sLargeIcon;
-    private static long sLastWriteSettings = 0;
 
     public static void squareImageView(Context mContext, ImageView imageView) {
         int width = 0;
@@ -134,16 +133,6 @@ public class Utils {
         return Environment.MEDIA_MOUNTED.equals(state);
     }
 
-    public static String format(String text, JSONArray vars) throws JSONException {
-        String[] varVals = new String[vars.length()];
-
-        for (int i = 0; i < vars.length(); i++) {
-            varVals[i] = VAR_MAP.get(vars.getString(i).trim());
-        }
-
-        return String.format(text, varVals);
-    }
-
     public static String getRawString(Context context, int resourceId) {
         InputStream is = context.getResources().openRawResource(resourceId);
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -159,71 +148,6 @@ public class Utils {
             throw new RuntimeException(e);
         }
         return builder.toString();
-    }
-
-    public static void validate(Context context, JSONObject jsonObject) throws JSONException {
-        JSONObject activeObject = jsonObject.getJSONObject("active");
-        if (activeObject.has("value")) {
-            jsonObject.put(ACTIVE_VALUE, true);
-            jsonObject.put(TEXT_VALUE, activeObject.getString("text"));
-            return;
-        }
-        JSONObject settingsObject = activeObject.getJSONObject("settings");
-        boolean active;
-        switch (settingsObject.getString("type")) {
-            case "database":
-                active = AppSqlHelper.hasData(context, settingsObject.getString("table"));
-                break;
-            case "vars":
-                jsonObject.put(ACTIVE_VALUE, true);
-                jsonObject.put(TEXT_VALUE, format(activeObject.getString("text"), settingsObject.getJSONArray("vars")));
-                return;
-            default:
-                throw new RuntimeException("Invalid option");
-        }
-
-        jsonObject.put(ACTIVE_VALUE, active);
-        if (!active) {
-            jsonObject.put(TEXT_VALUE, activeObject.getString("negative"));
-        } else {
-            jsonObject.put(TEXT_VALUE, validateText(context, activeObject.get("text"), null));
-        }
-
-    }
-
-    private static String validateText(Context context, Object text, String... supply) throws JSONException {
-        if (text instanceof String) {
-            return String.format(String.valueOf(text), supply);
-        }
-        JSONObject textObject = (JSONObject) text;
-        JSONObject settingsObject = textObject.getJSONObject("settings");
-        String newSupply;
-        switch (settingsObject.getString("type")) {
-            case "database":
-                String table = settingsObject.getString("table");
-                String supplyValue = String.valueOf(supply[0]);
-                String supplyColumn = settingsObject.getString("supply");
-                String column = settingsObject.getString("column");
-                Cursor cursor = AppSqlHelper.instance(context)
-                        .getReadableDatabase()
-                        .query(table, new String[]{column}, supplyColumn + Media.EQUALS, new String[]{supplyValue}, null, null, null);
-                if (cursor.getCount() != 1) {
-                    return textObject.getString("negative");
-                }
-                cursor.moveToNext();
-                newSupply = cursor.getString(0);
-                cursor.close();
-                break;
-            case "preferences":
-                long val = context.getSharedPreferences(settingsObject.getString("name"), Context.MODE_PRIVATE)
-                        .getLong(settingsObject.getString("key"), 0);
-                if (val == 0) return textObject.getString("negative");
-                newSupply = "" + val;
-                break;
-            default:
-                throw new RuntimeException("Error in json file!");
-        }
-        return validateText(context, textObject.get("text"), newSupply);
     }
 
     public static void toast(Context context, String msg) {

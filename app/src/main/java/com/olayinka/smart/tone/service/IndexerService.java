@@ -22,16 +22,21 @@ package com.olayinka.smart.tone.service;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.provider.MediaStore;
+
 import com.olayinka.smart.tone.AppLogger;
+import com.olayinka.smart.tone.AppSettings;
 import com.olayinka.smart.tone.AppSqlHelper;
 import com.olayinka.smart.tone.model.Media;
+
 import lib.olayinka.smart.tone.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,6 +46,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -83,10 +89,10 @@ public class IndexerService extends IntentService {
         List<ContentValues> tones = cacheAllTones(database);
         database.execSQL("delete from " + Media.TABLE);
         database.execSQL("delete from " + Media.Tone.TABLE);
-        database.execSQL("delete from " + Media.Folder.TABLE);
         database.execSQL("delete from " + Media.Album.TABLE);
         indexUri(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, database, 0);
         indexUri(MediaStore.Audio.Media.INTERNAL_CONTENT_URI, database, 1);
+        updateFolderCollections(database, tones);
         saveCachedTones(database, tones);
 
         database.setTransactionSuccessful();
@@ -96,6 +102,32 @@ public class IndexerService extends IntentService {
                 .edit()
                 .putLong(LAST_INDEX, System.currentTimeMillis())
                 .apply();
+    }
+
+    private void updateFolderCollections(SQLiteDatabase database, List<ContentValues> tones) {
+        Cursor cursor = database.query(
+                Media.Collection.TABLE,
+                new String[]{Media.CollectionColumns._ID, Media.CollectionColumns.FOLDER_ID},
+                Media.CollectionColumns.FOLDER_ID + Media.NOT_EQUALS + -1, null, null, null, null
+        );
+
+        while (cursor.moveToNext()) {
+            long sortOrder = 10000;
+            Cursor mediaCursor = database.query(
+                    Media.TABLE,
+                    new String[]{Media.Columns._ID},
+                    Media.Columns.FOLDER_ID + Media.EQUALS + cursor.getLong(1), null, null, null, null
+            );
+            while (mediaCursor.moveToNext()) {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(Media.ToneColumns.COLLECTION_ID, cursor.getLong(0));
+                contentValues.put(Media.ToneColumns.MEDIA_ID, mediaCursor.getLong(0));
+                contentValues.put(Media.ToneColumns.SORT_ORDER, sortOrder++);
+                tones.add(contentValues);
+            }
+            mediaCursor.close();
+        }
+        cursor.close();
     }
 
     private void saveCachedTones(SQLiteDatabase database, List<ContentValues> tones) {
@@ -159,18 +191,11 @@ public class IndexerService extends IntentService {
             try {
                 folderId = database.insertOrThrow(Media.Folder.TABLE, null, folderValues);
             } catch (SQLException ignored) {
-                Cursor tmpCursor = database.query(
-                        Media.Folder.TABLE, new String[]{"*"},
-                        Media.FolderColumns.PATH + Media.EQUALS, new String[]{file.getAbsolutePath()},
-                        null, null, null
-                );
-                if (tmpCursor.moveToNext()) {
-                    folderId = tmpCursor.getInt(0);
-                } else {
+                folderId = Media.getFolderId(database, file.getAbsolutePath());
+                if (folderId == -1) {
                     AppLogger.wtf(this, "indexUri", "This shouldn't happen.");
                     throw new RuntimeException();
                 }
-                tmpCursor.close();
             }
 
             mediaValues.put(Media.Columns.MEDIA_ID, cursor.getString(0));
@@ -201,10 +226,13 @@ public class IndexerService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        long lastIndex = getSharedPreferences(NAME, MODE_PRIVATE)
-                .getLong(LAST_INDEX, System.currentTimeMillis() - 8 * 24 * 60 * 60 * 1000);
+        SharedPreferences prefs = getSharedPreferences(NAME, MODE_PRIVATE);
+        long lastIndex = prefs.getLong(LAST_INDEX, System.currentTimeMillis() - getIndexFreq(prefs));
         boolean forceIndexFlag = intent.getBooleanExtra(FORCE_INDEX, false);
-        if (System.currentTimeMillis() - lastIndex >= 7 * 24 * 60 * 60 * 1000 || forceIndexFlag)
+        AppLogger.wtf(this, "last.index", "" + lastIndex);
+        AppLogger.wtf(this, "index.freq", "" + getIndexFreq(prefs));
+        AppLogger.wtf(this, "force.index", "" + forceIndexFlag);
+        if (System.currentTimeMillis() - lastIndex >= getIndexFreq(prefs) || forceIndexFlag)
             index();
         if (intent.getData() != null)
             importCollection(intent.getData());
@@ -214,10 +242,14 @@ public class IndexerService extends IntentService {
         stopSelf();
     }
 
+    private long getIndexFreq(SharedPreferences prefs) {
+        return (new int[]{7 * 24, 24, 12, 6, 1}[prefs.getInt(AppSettings.INDEX_FREQ, 0)]) * 60 * 60 * 1000;
+    }
+
     private void cleanCollection() {
         SQLiteDatabase database = AppSqlHelper.instance(getApplicationContext()).getWritableDatabase();
         database.beginTransaction();
-        database.execSQL("DELETE FROM collection  WHERE NOT EXISTS(SELECT NULL FROM tone   WHERE tone.collection_id =collection. _id)");
+        database.execSQL("DELETE FROM collection  WHERE NOT EXISTS(SELECT NULL FROM tone WHERE tone.collection_id =collection. _id)");
         database.setTransactionSuccessful();
         database.endTransaction();
     }
@@ -231,21 +263,24 @@ public class IndexerService extends IntentService {
             JSONArray jsonArray = new JSONArray(jsonString);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                String name = jsonObject.getString("name");
+                String name = jsonObject.getString(Media.CollectionColumns.NAME);
+                long folderPath = jsonObject.optLong(Media.CollectionColumns.FOLDER_ID);
                 name = name + " " + getString(R.string.imported);
                 JSONArray selection = jsonObject.getJSONArray("tones");
                 JSONArray selectionIds = new JSONArray();
                 for (int j = 0; j < selection.length(); j++) {
-
                     Cursor cursor = database.query(Media.TABLE, new String[]{Media.Columns._ID}, Media.Columns.PATH + Media.EQUALS, new String[]{selection.getJSONObject(j).getString(Media.Columns.PATH)}, null, null, null);
+
                     if (cursor.getCount() == 1) {
                         cursor.moveToNext();
                         selectionIds.put(cursor.getLong(0));
                     }
                     cursor.close();
                 }
-                if (selectionIds.length() != 0)
-                    Media.saveCollection(getApplicationContext(), 0, name, selectionIds.toString());
+
+                if (selectionIds.length() != 0) {
+                    Media.saveCollection(getApplicationContext(), 0, name, selectionIds.toString(), folderPath);
+                }
             }
             database.close();
         } catch (IOException | JSONException e) {

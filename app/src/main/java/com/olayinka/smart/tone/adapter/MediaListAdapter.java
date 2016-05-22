@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+
 import com.olayinka.smart.tone.AppSqlHelper;
 import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.activity.ImageCacheActivity;
@@ -32,8 +33,10 @@ import com.olayinka.smart.tone.model.ListenableHashSet;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.MediaItem;
 import com.olayinka.smart.tone.task.MediaPlayBackTask;
+
 import lib.olayinka.smart.tone.R;
 
+import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.Set;
 
@@ -61,7 +64,7 @@ public class MediaListAdapter extends CursorAdapter implements CompoundButton.On
 
     public MediaListAdapter(Context context, String selection, String[] selectionArgs, Set<Long> selected) {
         super(context, AppSqlHelper.instance(context).getReadableDatabase()
-                .query(Media.TABLE, new String[]{"*"}, selection, selectionArgs, null, null, Media.Columns.NAME)
+                        .query(Media.TABLE, new String[]{"*"}, selection, selectionArgs, null, null, Media.Columns.NAME)
                 , false);
         this.mSelection = selected;
     }
@@ -92,7 +95,7 @@ public class MediaListAdapter extends CursorAdapter implements CompoundButton.On
         view.setTag(R.id.mediaItem, mediaItem);
 
         albumArt.setTag(R.id.mediaItem, mediaItem);
-        ((ImageCacheActivity) albumArt.getContext()).loadBitmap(Utils.uriForMediaItem(mediaItem), albumArt, (int) Utils.pxFromDp(view.getContext(), 50));
+        ((ImageCacheActivity) context).loadBitmap(Utils.uriForMediaItem(mediaItem), albumArt, (int) Utils.pxFromDp(view.getContext(), 50));
 
         albumArt.setOnTouchListener((View.OnTouchListener) context);
 

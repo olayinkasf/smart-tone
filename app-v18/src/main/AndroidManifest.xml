@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2015
   ~
   ~ Olayinka S. Folorunso <mail@olayinkasf.com>
@@ -19,114 +18,147 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.olayinka.smart.tone"
-          android:installLocation="internalOnly">
+    package="com.olayinka.smart.tone"
+    android:installLocation="internalOnly">
 
-    <uses-feature android:name="android.hardware.telephony" android:required="true"/>
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="true" />
 
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="ANDROID.PERMISSION.BIND_NOTIFICATION_LISTENER_SERVICE"/>
-    <uses-permission android:name="com.android.vending.BILLING"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="ANDROID.PERMISSION.BIND_NOTIFICATION_LISTENER_SERVICE" />
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
-            android:name=".SmartTone"
-            android:allowBackup="true"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/app.name"
-            android:theme="@style/AppTheme">
+        android:name=".SmartTone"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
 
-        <activity android:name=".MainActivity"
-                  android:screenOrientation="portrait"
-                  android:configChanges="orientation|keyboardHidden">
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="file"/>
-                <data android:mimeType="*/*"/>
-                <data android:pathPattern=".*\\.smt"/>
-                <data android:pathPattern=".*\\..*\\.smt"/>
-                <data android:pathPattern=".*\\..*\\..*\\.smt"/>
-                <data android:pathPattern=".*\\..*\\..*\\..*\\.smt"/>
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.smt"/>
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.smt"/>
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.smt"/>
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.smt"/>
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.smt"/>
-                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.smt"/>
-                <data android:host="*"/>
+                <data android:scheme="file" />
+                <data android:mimeType="*/*" />
+                <data android:pathPattern=".*\\.smt" />
+                <data android:pathPattern=".*\\..*\\.smt" />
+                <data android:pathPattern=".*\\..*\\..*\\.smt" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.smt" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.smt" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.smt" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.smt" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.smt" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.smt" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\..*\\.smt" />
+                <data android:host="*" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.MenuActivity"
-                  android:screenOrientation="portrait"
-                  android:configChanges="orientation|keyboardHidden"/>
-        <activity android:name=".activity.CollectionEditActivity"
-                  android:screenOrientation="portrait"
-                  android:configChanges="orientation|keyboardHidden"/>
-        <activity android:name=".activity.SearchMusicActivity"
-                  android:screenOrientation="portrait"
-                  android:configChanges="orientation|keyboardHidden">
+        <activity
+            android:name=".activity.MenuActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.CollectionEditActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SearchMusicActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH"/>
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-            <meta-data android:name="android.app.searchable"
-                       android:resource="@xml/searchable"/>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
         </activity>
-        <activity android:name=".activity.MediaGroupActivity"
-                  android:screenOrientation="portrait"
-                  android:configChanges="orientation|keyboardHidden"/>
-        <activity android:name=".activity.ContactActivity"
-                  android:screenOrientation="portrait"
-                  android:configChanges="orientation|keyboardHidden"/>
+        <activity
+            android:name=".activity.MediaGroupActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ContactActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.PermissionsActivity"
-                  android:screenOrientation="portrait"
-                  android:configChanges="orientation|keyboardHidden"/>
-        <activity android:name=".activity.SettingsActivity"
-                  android:screenOrientation="portrait"
-                  android:configChanges="orientation|keyboardHidden"/>
-        <activity android:name=".activity.CollectionPageActivity"
-                  android:screenOrientation="portrait"
-                  android:configChanges="orientation|keyboardHidden"/>
-        <activity android:name=".activity.AboutAppActivity"
-                  android:screenOrientation="portrait"
-                  android:configChanges="orientation|keyboardHidden"/>
-        <activity android:name=".activity.LegalActivity"
-                  android:screenOrientation="portrait"
-                  android:configChanges="orientation|keyboardHidden"/>
-        <activity android:name=".activity.OpenSourceLibraries"
-                  android:screenOrientation="portrait"
-                  android:configChanges="orientation|keyboardHidden"/>
-
-        <service android:exported="false" android:name=".service.IndexerService"/>
-        <service android:exported="false" android:name=".service.AppService"/>
-        <service android:exported="false" android:name=".service.ShuffleService"
-                 android:label="@string/smarttone.service"/>
-        <service android:exported="false" android:label="@string/ringtone.service"
-                 android:name=".service.RingtoneTelephonyService"/>
-
-        <service android:exported="false"
-                 android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
-                 android:name=".service.NotifListenerService"
-                 android:label="@string/notification.service">
+        <activity
+            android:name=".activity.PermissionsActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.CollectionPageActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.AboutAppActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.LegalActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.OpenSourceLibraries"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.nononsenseapps.filepicker.FilePickerActivity"
+            android:label="@string/app_name"
+            android:theme="@style/FilePickerTheme">
             <intent-filter>
-                <action android:name="android.service.notification.NotificationListenerService"/>
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".service.IndexerService"
+            android:exported="false" />
+        <service
+            android:name=".service.AppService"
+            android:exported="false" />
+        <service
+            android:name=".service.ShuffleService"
+            android:exported="false"
+            android:label="@string/smarttone.service" />
+        <service
+            android:name=".service.RingtoneTelephonyService"
+            android:exported="false"
+            android:label="@string/ringtone.service" />
+
+        <service
+            android:name=".service.NotifListenerService"
+            android:exported="false"
+            android:label="@string/notification.service"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
 
         <receiver android:name=".service.BootReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 

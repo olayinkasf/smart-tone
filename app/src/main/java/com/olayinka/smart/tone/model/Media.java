@@ -24,10 +24,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+
 import com.olayinka.smart.tone.AppSqlHelper;
+import com.olayinka.smart.tone.activity.CollectionPageActivity;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
 
 /**
  * Created by Olayinka on 4/26/2015.
@@ -43,6 +48,31 @@ public class Media {
     public static final String NOT_IN = " NOT IN ";
     public static final String OR = " OR ";
     public static String LIKE = " LIKE ?";
+
+    public static long getFolderId(Context context, File folderPath) {
+        return getFolderId(AppSqlHelper.instance(context).getReadableDatabase(), folderPath);
+    }
+
+    public static long getFolderId(SQLiteDatabase database, File folderPath) {
+        return getFolderId(database, folderPath.getAbsolutePath());
+    }
+
+    public static long getFolderId(Context context, String folderPath) {
+        return getFolderId(AppSqlHelper.instance(context).getReadableDatabase(), folderPath);
+    }
+
+    public static long getFolderId(SQLiteDatabase database, String folderPath) {
+        Cursor tmpCursor = database.query(
+                Media.Folder.TABLE, new String[]{"*"},
+                Media.FolderColumns.PATH + Media.EQUALS, new String[]{folderPath},
+                null, null, null
+        );
+        long folderId = -1;
+        if (tmpCursor.moveToNext())
+            folderId = tmpCursor.getLong(0);
+        tmpCursor.close();
+        return folderId;
+    }
 
 
     public static JSONArray getTones(Context context, long mCollectionId) throws JSONException {
@@ -68,7 +98,7 @@ public class Media {
         JSONObject object = new JSONObject();
         Cursor cursor = database.query(
                 Collection.TABLE,
-                new String[]{"*"},
+                new String[]{CollectionColumns._ID, CollectionColumns.NAME, CollectionColumns.FOLDER_ID, CollectionColumns.DATE_CREATED},
                 CollectionColumns._ID + Media.EQUALS,
                 new String[]{"" + mCollectionId},
                 null, null, null
@@ -76,7 +106,8 @@ public class Media {
         if (cursor.moveToNext()) {
             object.put(CollectionColumns._ID, cursor.getLong(0));
             object.put(CollectionColumns.NAME, cursor.getString(1));
-            object.put(CollectionColumns.DATE_CREATED, cursor.getString(2));
+            object.put(CollectionColumns.FOLDER_ID, cursor.getLong(2));
+            object.put(CollectionColumns.DATE_CREATED, cursor.getString(3));
         }
         cursor.close();
 
@@ -101,11 +132,13 @@ public class Media {
         return object;
     }
 
-    public static void saveCollection(Context applicationContext, long collectionId, String collectionName, String selectionString) throws JSONException {
+    public static void saveCollection(Context applicationContext, long collectionId, String collectionName, String selectionString, long folderId) throws JSONException {
         SQLiteDatabase database = AppSqlHelper.instance(applicationContext).getWritableDatabase();
         database.beginTransaction();
         ContentValues collectionValues = new ContentValues();
         collectionValues.put(Media.CollectionColumns.NAME, collectionName);
+        if (folderId != -1)
+            collectionValues.put(Media.CollectionColumns.FOLDER_ID, folderId);
         if (collectionId > 0) collectionValues.put(Media.CollectionColumns._ID, collectionId);
         try {
             collectionId = database.insertOrThrow(Media.Collection.TABLE, null, collectionValues);
@@ -144,6 +177,18 @@ public class Media {
 
         database.setTransactionSuccessful();
         database.endTransaction();
+    }
+
+    public static String getFolderPath(Context context, long folderId) {
+        SQLiteDatabase database = AppSqlHelper.instance(context).getReadableDatabase();
+        Cursor cursor = database.query(Folder.TABLE, new String[]{FolderColumns.PATH}, FolderColumns._ID + EQUALS, new String[]{String.valueOf(folderId)}, null, null, null);
+        if (cursor.moveToNext()) {
+            String path = cursor.getString(0);
+            cursor.close();
+            return path;
+        }
+        cursor.close();
+        return null;
     }
 
     public static class Columns {
@@ -209,5 +254,6 @@ public class Media {
         public static final String _ID = "_id";
         public static final String NAME = Columns.NAME;
         public static final String DATE_CREATED = "date_created";
+        public static final String FOLDER_ID = "folder_id";
     }
 }

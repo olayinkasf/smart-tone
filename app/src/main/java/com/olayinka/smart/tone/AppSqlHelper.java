@@ -23,6 +23,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import lib.olayinka.smart.tone.R;
 
 import java.io.BufferedReader;
@@ -107,6 +108,10 @@ public class AppSqlHelper extends SQLiteOpenHelper {
         }
         if (oldVersion <= 9) {
             for (String query : makeQueries(R.raw.update_db_9))
+                db.execSQL(query);
+        }
+        if (oldVersion <= 10) {
+            for (String query : makeQueries(R.raw.update_db_10))
                 db.execSQL(query);
         }
         db.setTransactionSuccessful();

@@ -41,6 +41,8 @@ import android.widget.AbsListView;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import com.olayinka.smart.tone.*;
 import com.olayinka.smart.tone.activity.AbstractMenuActivity;
 import com.olayinka.smart.tone.activity.CollectionEditActivity;
@@ -190,7 +192,14 @@ public class CollectionListAdapter extends CursorAdapter {
 
         RelativeLayout albumTable = (RelativeLayout) view.findViewById(R.id.albumArt);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        toolbar.setTitle(cursor.getString(1));
+        String title = cursor.getString(1);
+        toolbar.findViewById(R.id.folderPath).setVisibility(View.GONE);
+        if(cursor.getLong(3)>0){
+            toolbar.findViewById(R.id.folderPath).setVisibility(View.VISIBLE);
+            ((TextView) toolbar.findViewById(R.id.folderPath)).setText(Media.getFolderPath(context, cursor.getLong(3)));
+        }
+        ((TextView) toolbar.findViewById(R.id.collectionName)).setText(title);
+
         toolbar.getMenu().clear();
 
         if (cursor.getLong(0) == mActivePairs[0] && cursor.getLong(0) == mActivePairs[1])

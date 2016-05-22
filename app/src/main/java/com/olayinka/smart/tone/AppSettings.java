@@ -54,6 +54,7 @@ public class AppSettings {
     public static final String GOT_IT_DOUBLE_TAP = "got.it.double.tap";
     public static final String JUST_CHANGED = "just.changed";
     public static final String ORDER_CHANGE = "order.change";
+    public static final String INDEX_FREQ = "index.frequency";
     public static final String LOG_APP_ACTIVITY = "log.app.activity";
     public static final String ASK_LOG_APP_ACTIVITY = "ask.log.app.activity";
     public static final String BIND_ACCESSIBILITY_SERVICE = "android.permission.BIND_ACCESSIBILITY_SERVICE";

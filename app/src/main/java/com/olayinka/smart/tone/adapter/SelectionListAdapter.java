@@ -81,7 +81,7 @@ public class SelectionListAdapter extends DragSortCursorAdapter implements Liste
         artistView.setText(cursor.getString(6));
 
         albumArt.setTag(R.id.mediaItem, mediaItem);
-        ((ImageCacheActivity) albumArt.getContext()).loadBitmap(Utils.uriForMediaItem(mediaItem), albumArt, (int) Utils.pxFromDp(view.getContext(), 50));
+        ((ImageCacheActivity) context).loadBitmap(Utils.uriForMediaItem(mediaItem), albumArt, (int) Utils.pxFromDp(view.getContext(), 50));
 
         albumArt.setOnTouchListener((View.OnTouchListener) context);
     }

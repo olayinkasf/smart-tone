@@ -108,7 +108,7 @@
     <string name="open.source.license.header">Librairies Open Source utilisées</string>
     <string name="open.source.license.sub.header">Cette application utilise plusieurs librairies Open Source. Les logiciels suivants peuvent êtres inclus dans ce produit :
     </string>
-    <string name="app.name.caps">SMARTTONE 2</string>
+    <string name="app_name.caps">SMARTTONE 2</string>
     <string name="nothing.beyond">Sorry! Nothing beyond this point!</string>
     <string name="double.tap">Appuyer deux fois sur une pochette d\'album pour écouter un aperçu, appuyer une fois pour arrêter l\'aperçu.
     </string>
@@ -141,7 +141,7 @@
     <string name="service.inactive">SmartTone est désactivée</string>
     <string name="no.active.notification">Vous n\'avez pas activé de collection de sons de notifications</string>
     <string name="confirm.delete">Voulez-vous supprimer cette sonerie de la collection?</string>
-    <string name="order.change">Utiliser l\'ordre de la collection</string>
+    <string name="order.change">Changer selon l\'ordre des sonneries dans la collection</string>
 
 
     <string-array name="ringtone_freq">
