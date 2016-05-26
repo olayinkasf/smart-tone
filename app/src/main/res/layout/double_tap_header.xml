@@ -22,46 +22,43 @@
 
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:orientation="vertical">
-        <TextView
-                android:clickable="true"
-                android:text="@string/double.tap"
-                android:textSize="20sp"
-                android:padding="10dp"
-                android:textColor="@android:color/black"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
+            android:clickable="true"
+            android:padding="8dp"
+            android:text="@string/double.tap"
+            android:textSize="16sp" />
 
         <TextView
-                android:id="@+id/got_it"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:textColor="@android:color/black"
-                android:layout_gravity="center_vertical|right|end"
-                android:gravity="center_vertical|end"
-                android:drawableLeft="@drawable/ic_done_black_24dp"
-                android:drawableStart="@drawable/ic_done_black_24dp"
-                android:text="@string/got.it"
-                android:clickable="true"
-                android:padding="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
+            android:textSize="12sp"
+            android:id="@+id/got_it"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|right|end"
+            android:clickable="true"
+            android:drawableLeft="@drawable/ic_done_black_18dp"
+            android:drawableStart="@drawable/ic_done_black_18dp"
+            android:gravity="center_vertical|end"
+            android:text="@string/got.it" />
 
     </LinearLayout>
 
     <View
-            android:background="#11333333"
-            android:layout_margin="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"/>
-
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="4dp"
+        android:background="#11333333" />
 
 </LinearLayout>

@@ -48,13 +48,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -105,7 +106,6 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
     private View mListHeader;
     private CollectionListAdapter mAdapter;
     private int mAlbumArtWidth;
-    private DisplayMetrics mDisplayDimens;
 
     BroadcastReceiver mShuffleObserver = new BroadcastReceiver() {
         @Override
@@ -150,19 +150,18 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu);
         getVersion();
-        mDisplayDimens = Utils.displayDimens(this);
-        mAlbumArtWidth = (int) ((mDisplayDimens.widthPixels - Utils.pxFromDp(this, 20.0f)) / 2);
+        DisplayMetrics displayMetrics = Utils.displayDimens(this);
+        mAlbumArtWidth = (int) ((displayMetrics.widthPixels - Utils.pxFromDp(this, 20.0f)) / 2);
         mListView = (ListView) findViewById(R.id.list);
-        Log.wtf("dfgh", "" + R.id.list);
-        Log.wtf("dfgh", "" + mListView);
         mListHeader = LayoutInflater.from(this).inflate(R.layout.menu_header, null);
         mListView.addHeaderView(mListHeader);
         mListView.setEmptyView(findViewById(R.id.empty));
+        refreshWhatIsNew(findViewById(R.id.empty).findViewById(R.id.whatIsNew), true);
         mAdapter = new CollectionListAdapter(this);
         mListView.setAdapter(mAdapter);
         View footerView = new View(this);
         mListView.addFooterView(footerView);
-        footerView.setLayoutParams(new ViewGroup.LayoutParams(mDisplayDimens.widthPixels / 4, mDisplayDimens.widthPixels / 4));
+        footerView.setLayoutParams(new ViewGroup.LayoutParams(displayMetrics.widthPixels / 4, displayMetrics.widthPixels / 4));
         setCreateButtonClickListener();
 
         setServiceSwitchButton();
@@ -170,8 +169,54 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
         refreshCurrentNotif(true);
         refreshServiceNotifier(true);
         refreshSelectNotifier(true);
+        refreshWhatIsNew(mListHeader.findViewById(R.id.whatIsNew), true);
 
         if (showAskAppLog() || showRateThisApp()) ;
+    }
+
+    private void refreshCheckSamsung(boolean init) {
+        final View view = mListHeader.findViewById(R.id.checkSamsung);
+        if (view == null) return;
+        if (!android.os.Build.MANUFACTURER.toLowerCase().contains("samsung"))
+            hide(view, true, true);
+        else if (getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE).getBoolean(AppSettings.GOT_IT_SAMSUNG, false))
+            hide(view, true, true);
+        else if (!checked()) hide(view, init, false);
+        else {
+            if (checked()) show(view, false);
+            view.findViewById(R.id.positive).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE).edit()
+                            .putBoolean(AppSettings.GOT_IT_SAMSUNG, true).apply();
+                    hide(view, false, true);
+                }
+            });
+        }
+    }
+
+    private void refreshWhatIsNew(final View view, boolean init) {
+        if (view == null) return;
+        if (getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE)
+                .getBoolean(AppSettings.GOT_IT_WHAT_IS_NEW, false)) {
+            hide(view, init, true);
+        } else {
+            view.findViewById(R.id.positive).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE).edit()
+                            .putBoolean(AppSettings.GOT_IT_WHAT_IS_NEW, true).apply();
+                    hide(view, false, true);
+                    view.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            refreshWhatIsNew(mListHeader.findViewById(R.id.whatIsNew), false);
+                            refreshWhatIsNew(findViewById(R.id.empty).findViewById(R.id.whatIsNew), false);
+                        }
+                    }, 1000);
+                }
+            });
+        }
     }
 
     private boolean showAskAppLog() {
@@ -213,25 +258,28 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
         Long[] activePairs = AppSettings.getActivePairs(this);
         boolean active = getSharedPreferences(AppSettings.APP_SETTINGS, MODE_PRIVATE).getBoolean(AppSettings.ACTIVE_APP_SERVICE, false);
         if ((activePairs[0] == 0 && activePairs[1] == 0) || active) {
-            hide(mListHeader.findViewById(R.id.serviceNotifier), init);
+            hide(mListHeader.findViewById(R.id.serviceNotifier), init, false);
         } else {
-            show(mListHeader.findViewById(R.id.serviceNotifier), init, null);
+            show(mListHeader.findViewById(R.id.serviceNotifier), init);
         }
+        refreshCheckSamsung(init);
     }
 
-    private void show(View view, boolean init, Float v) {
+    private void show(View view, boolean init) {
+        if (view.getVisibility() == View.VISIBLE)
+            return;
         if (init)
             view.setVisibility(View.VISIBLE);
         else
-            unGotIt(view, v);
+            expand(view);
     }
 
-    private void hide(View view, boolean init) {
-        if (!init)
-            gotIt(view);
+    private void hide(View view, boolean init, boolean remove) {
+        if (!init) collapse(view, remove);
         else {
             view.setVisibility(View.GONE);
             view.getLayoutParams().height = 0;
+            if (remove) ((ViewGroup) view.getParent()).removeView(view);
         }
     }
 
@@ -261,9 +309,9 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
     private void refreshSelectNotifier(boolean init) {
         Long[] activePairs = AppSettings.getActivePairs(this);
         if (activePairs[0] == 0l && activePairs[1] == 0l) {
-            show(findViewById(R.id.selectNotifier), init, null);
+            show(findViewById(R.id.selectNotifier), init);
         } else {
-            hide(findViewById(R.id.selectNotifier), init);
+            hide(findViewById(R.id.selectNotifier), init, false);
         }
     }
 
@@ -313,15 +361,23 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
     }
 
     private void setServiceSwitchButton() {
-        SharedPreferences prefs = getSharedPreferences(AppSettings.APP_SETTINGS, MODE_PRIVATE);
         PrefsSwitchCompat serviceSwitch = (PrefsSwitchCompat) findViewById(R.id.serviceSwitch);
-        boolean enabled = (prefs.getLong(AppSettings.ACTIVE_NOTIFICATION, 0) != 0
+        serviceSwitch.setEnabled(enabled());
+        serviceSwitch.setOnCheckedChangeListener(null);
+        serviceSwitch.setChecked(checked());
+        serviceSwitch.setOnCheckedChangeListener(this);
+    }
+
+    private boolean checked() {
+        SharedPreferences prefs = getSharedPreferences(AppSettings.APP_SETTINGS, MODE_PRIVATE);
+        return enabled() & prefs.getBoolean(AppSettings.ACTIVE_APP_SERVICE, false);
+    }
+
+    private boolean enabled() {
+        SharedPreferences prefs = getSharedPreferences(AppSettings.APP_SETTINGS, MODE_PRIVATE);
+        return (prefs.getLong(AppSettings.ACTIVE_NOTIFICATION, 0) != 0
                 || prefs.getLong(AppSettings.ACTIVE_RINGTONE, 0) != 0)
                 && AppSqlHelper.hasData(this, Media.Collection.TABLE);
-        serviceSwitch.setEnabled(enabled);
-        serviceSwitch.setOnCheckedChangeListener(null);
-        serviceSwitch.setChecked(enabled & prefs.getBoolean(AppSettings.ACTIVE_APP_SERVICE, false));
-        serviceSwitch.setOnCheckedChangeListener(this);
     }
 
     private void refreshCurrentNotif(boolean init) {
@@ -382,18 +438,18 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
 
     private void refresh(Uri uri, View view, boolean init) {
         if (uri == null) {
-            hide(view.findViewById(R.id.properties), init);
+            hide(view.findViewById(R.id.properties), init, false);
             return;
         }
         Cursor cursor = getContentResolver().query(uri, IndexerService.PROJECTION, null, null, null);
 
         if (cursor == null) {
-            hide(view.findViewById(R.id.properties), init);
+            hide(view.findViewById(R.id.properties), init, false);
             return;
         }
         if (!cursor.moveToNext()) {
             cursor.close();
-            hide(view.findViewById(R.id.properties), init);
+            hide(view.findViewById(R.id.properties), init, false);
             return;
         }
 
@@ -429,7 +485,7 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
 
 
         loadBitmap(Utils.uriForMediaItem(mediaItem), albumArt, (int) Utils.pxFromDp(view.getContext(), 50));
-        show(view.findViewById(R.id.properties), init, Utils.pxFromDp(this, 100.0f));
+        show(view.findViewById(R.id.properties), init);
     }
 
     public void loadBitmap(RelativeLayout albumArts, long collectionId, HashMap<Long, TreeSet<MediaItem>> itemsMap) {
@@ -497,66 +553,79 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
         //finish();
     }
 
-    private void gotIt(final View header) {
-        if (header.getVisibility() == View.GONE)
+    public static void collapse(final View view, final boolean remove) {
+        if (view.getVisibility() == View.GONE)
             return;
-        final int height = header.getMeasuredHeight();
-        final ViewGroup.LayoutParams layoutParams = header.getLayoutParams();
 
-        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(this, "alpha", 0f).setDuration(300);
+        final int initialHeight = view.getMeasuredHeight();
 
-        ValueAnimator heightAnimator = ValueAnimator.ofInt(height, 0).setDuration(400);
-        heightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        Animation a = new Animation() {
             @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                layoutParams.height = (Integer) valueAnimator.getAnimatedValue();
-                header.setLayoutParams(layoutParams);
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                if (interpolatedTime == 1) {
+                    view.setVisibility(View.GONE);
+                } else {
+                    view.getLayoutParams().height = initialHeight - (int) (initialHeight * interpolatedTime);
+                    view.requestLayout();
+                }
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        a.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                view.setVisibility(View.GONE);
+                if (remove) ((ViewGroup) view.getParent()).removeView(view);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
             }
         });
 
-        AnimatorSet set = new AnimatorSet();
-        set.playSequentially(alphaAnimator, heightAnimator);
-        set.setInterpolator(new AccelerateDecelerateInterpolator());
-        set.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                header.setVisibility(View.GONE);
-            }
-        });
-
-        set.start();
+        // 1dp/ms
+        a.setDuration(400);
+        view.startAnimation(a);
     }
 
-    private void unGotIt(final View header, Float v) {
-        if (header.getVisibility() == View.VISIBLE)
+    private void expand(final View view) {
+        if (view.getVisibility() == View.VISIBLE)
             return;
-        header.setVisibility(View.VISIBLE);
-        header.measure(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT);
-        int height = header.getMeasuredHeight();
+        view.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        final int targetHeight = view.getMeasuredHeight();
 
-        final ViewGroup.LayoutParams layoutParams = header.getLayoutParams();
-        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(this, "alpha", 1.0f).setDuration(300);
-
-        ValueAnimator heightAnimator = ValueAnimator.ofInt(layoutParams.height, height).setDuration(400);
-        heightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        // Older versions of android (pre API 21) cancel animations for views with a height of 0.
+        view.getLayoutParams().height = 1;
+        view.setVisibility(View.VISIBLE);
+        Animation a = new Animation() {
             @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                layoutParams.height = (Integer) valueAnimator.getAnimatedValue();
-                header.setLayoutParams(layoutParams);
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                view.getLayoutParams().height = interpolatedTime == 1
+                        ? ViewGroup.LayoutParams.WRAP_CONTENT
+                        : (int) (targetHeight * interpolatedTime);
+                view.requestLayout();
             }
-        });
 
-        AnimatorSet set = new AnimatorSet();
-        set.playSequentially(alphaAnimator, heightAnimator);
-        set.setInterpolator(new AccelerateDecelerateInterpolator());
-        set.addListener(new AnimatorListenerAdapter() {
             @Override
-            public void onAnimationEnd(Animator animation) {
-                header.setVisibility(View.VISIBLE);
+            public boolean willChangeBounds() {
+                return true;
             }
-        });
+        };
 
-        set.start();
+        // 1dp/ms
+        a.setDuration(400);
+        view.startAnimation(a);
     }
 
     @Override

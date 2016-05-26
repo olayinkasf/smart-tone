@@ -52,6 +52,7 @@ public class AppSettings {
     public static final String LAST_CHANGE = ".last.change";
     public static final String LAST_USED = ".last.used";
     public static final String GOT_IT_DOUBLE_TAP = "got.it.double.tap";
+    public static final String GOT_IT_WHAT_IS_NEW = "got.it.what.is.new";
     public static final String JUST_CHANGED = "just.changed";
     public static final String ORDER_CHANGE = "order.change";
     public static final String INDEX_FREQ = "index.frequency";
@@ -62,6 +63,7 @@ public class AppSettings {
     public static final String ACTION_NOTIFICATION_LISTENER_SETTINGS = "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS";
     public static final String NOTIFICATION_PERMISSION = (!Utils.hasJellyBeanMR2() ? AppSettings.BIND_ACCESSIBILITY_SERVICE : AppSettings.BIND_NOTIFICATION_LISTENER_SERVICE);
     public static final String NOTIF_CANCELED = "notif.canceled";
+    public static final String GOT_IT_SAMSUNG = "got.it.samsung";
 
 
     public static void setFreq(Context context, String key, int which, int arrayId) {

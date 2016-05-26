@@ -23,6 +23,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import lib.olayinka.smart.tone.R;
 
@@ -36,12 +37,12 @@ import java.util.List;
 public class AppSqlHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "smart_tone";
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
     private static AppSqlHelper sInstance;
     private final Context mContext;
 
     public AppSqlHelper(Context context) {
-        super(context, AppSqlHelper.DATABASE_NAME, null, AppSqlHelper.DATABASE_VERSION);
+        super(context, AppSqlHelper.DATABASE_NAME, null, DATABASE_VERSION);
         mContext = context;
     }
 
@@ -111,8 +112,9 @@ public class AppSqlHelper extends SQLiteOpenHelper {
                 db.execSQL(query);
         }
         if (oldVersion <= 10) {
-            for (String query : makeQueries(R.raw.update_db_10))
+            for (String query : makeQueries(R.raw.update_db_10)){
                 db.execSQL(query);
+            }
         }
         db.setTransactionSuccessful();
         db.endTransaction();

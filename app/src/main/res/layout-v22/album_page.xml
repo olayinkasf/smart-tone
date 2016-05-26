@@ -34,7 +34,7 @@
             android:src="@mipmap/album_unknown"/>
 
     <android.support.v7.widget.Toolbar
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="100dp"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -45,8 +45,8 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
         <RelativeLayout
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -58,9 +58,9 @@
                     android:layout_height="wrap_content"
                     android:singleLine="true"
                     android:textColor="@android:color/primary_text_dark"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:paddingTop="5dp"/>
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:paddingTop="4dp"/>
 
             <TextView
                     android:layout_below="@+id/albumName"
@@ -72,16 +72,16 @@
                     android:singleLine="true"
                     android:textSize="14sp"
                     android:textColor="@android:color/secondary_text_dark"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:paddingTop="5dp"/>
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:paddingTop="4dp"/>
         </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>
     <ListView
             android:layout_below="@+id/toolbar"
             android:id="@+id/list"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="8dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/white_padding_no_corners"

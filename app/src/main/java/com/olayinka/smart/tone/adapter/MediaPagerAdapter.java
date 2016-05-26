@@ -29,6 +29,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.ListView;
 import com.olayinka.smart.tone.AppSettings;
+import com.olayinka.smart.tone.activity.AbstractMenuActivity;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.OrderedMediaSet;
 import lib.olayinka.smart.tone.R;
@@ -121,32 +122,7 @@ public class MediaPagerAdapter extends PagerAdapter {
     private void gotIt(Context context, final View header) {
         context.getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE)
                 .edit().putBoolean(AppSettings.GOT_IT_DOUBLE_TAP, true).apply();
-
-        final int height = header.getMeasuredHeight();
-        final AbsListView.LayoutParams layoutParams = (AbsListView.LayoutParams) header.getLayoutParams();
-
-        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(this, "alpha", 0f).setDuration(300);
-
-        ValueAnimator heightAnimator = ValueAnimator.ofInt(height, 0).setDuration(400);
-        heightAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                layoutParams.height = (Integer) valueAnimator.getAnimatedValue();
-                header.setLayoutParams(layoutParams);
-            }
-        });
-
-        AnimatorSet set = new AnimatorSet();
-        set.playSequentially(alphaAnimator, heightAnimator);
-        set.setInterpolator(new AccelerateDecelerateInterpolator());
-        set.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                ((ListView) header.getParent()).removeHeaderView(header);
-            }
-        });
-
-        set.start();
+        AbstractMenuActivity.collapse(header, false);
     }
 
     private boolean alreadyGotIt(Context context) {

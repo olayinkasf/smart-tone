@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2015
   ~
   ~ Olayinka S. Folorunso <mail@olayinkasf.com>
@@ -18,120 +17,157 @@
   ~ limitations under the License.
   -->
 
-<LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
 
         <com.olayinka.smart.tone.widget.PrefsSwitchCompat
-                android:layout_gravity="center_vertical|end"
-                android:id="@+id/serviceSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:background="#00000000"
-                app:prefs_name="@string/app.settings"
-                app:prefs_key="@string/active.app.service"/>
+            android:id="@+id/serviceSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:background="#00000000"
+            android:padding="8dp"
+            app:prefs_key="@string/active.app.service"
+            app:prefs_name="@string/app.settings" />
 
     </android.support.v7.widget.Toolbar>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    xmlns:fab="http://schemas.android.com/apk/res-auto"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
 
+    <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_below="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <ListView
-                android:id="@+id/list"
-                android:divider="@null"
-                android:listSelector="#00000000"
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@null"
+            android:listSelector="#00000000"
+            android:scrollbars="none" />
+
+        <LinearLayout
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/whatIsNew"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="none"/>
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:orientation="vertical">
 
-        <com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout
-            xmlns:rfal="http://schemas.android.com/apk/res-auto"
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:id="@+id/text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:gravity="clip_vertical"
+                        android:padding="8dp"
+                        android:text="@string/what.is.new"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/positive"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_below="@+id/text"
+                        android:clickable="true"
+                        android:drawableLeft="@drawable/ic_done_black_18dp"
+                        android:drawableStart="@drawable/ic_done_black_18dp"
+                        android:gravity="center"
+                        android:text="@string/done"
+                        android:textColor="@android:color/primary_text_light"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:padding="4dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="14dp"
+                    android:text="@string/create.collection"
+                    android:textSize="18sp" />
+
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/no.collection" />
+        </LinearLayout>
+
+        <com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout xmlns:rfal="http://schemas.android.com/apk/res-auto"
             android:id="@+id/activity_main_rfal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            rfal:rfal_frame_color="#ffffff"
-            rfal:rfal_frame_alpha="0.7"
             android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true">
-            <com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton
-                xmlns:rfab="http://schemas.android.com/apk/res-auto"
+            rfal:rfal_frame_alpha="0.85"
+            rfal:rfal_frame_color="#ffffff">
+
+            <com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton xmlns:rfab="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/activity_main_rfab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginRight="15dp"
-                android:layout_marginBottom="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="14dp"
+                android:layout_marginRight="14dp"
                 android:padding="8dp"
-                rfab:rfab_size="normal"
-                rfab:rfab_drawable="@drawable/rfab__drawable_rfab_default"
                 rfab:rfab_color_normal="@color/primaryDark"
                 rfab:rfab_color_pressed="@color/primary"
-                rfab:rfab_shadow_radius="7dp"
+                rfab:rfab_drawable="@drawable/rfab__drawable_rfab_default"
                 rfab:rfab_shadow_color="#999999"
                 rfab:rfab_shadow_dx="0dp"
-                rfab:rfab_shadow_dy="5dp"
-                />
+                rfab:rfab_shadow_dy="4dp"
+                rfab:rfab_shadow_radius="7dp"
+                rfab:rfab_size="normal" />
         </com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout>
 
-        <LinearLayout
-                android:visibility="gone"
-                android:id="@+id/empty"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            <android.support.v7.widget.CardView
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:clickable="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_width="match_parent"
-                    android:padding="5dp"
-                    android:layout_height="wrap_content">
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:orientation="vertical">
-                    <TextView
-                            android:text="@string/create.collection"
-                            android:textSize="18sp"
-                            android:padding="10dp"
-                            android:textColor="@android:color/black"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-            <TextView
-                    android:gravity="center"
-                    android:text="@string/no.collection"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-        </LinearLayout>
-
     </RelativeLayout>
-</LinearLayout>
+
+</RelativeLayout>

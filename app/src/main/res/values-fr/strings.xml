@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2015
   ~
   ~ Olayinka S. Folorunso <mail@olayinkasf.com>
@@ -28,8 +27,7 @@
     <string name="share.using">Partager</string>
     <string name="checkout">Hey! Jette un coup d\'oeil à l\'appli SmartTone :</string>
 
-    <string name="create.collection">Utilise le bouton ci-dessous pour créer une collection de sonneries ou de sons de notifications
-    </string>
+    <string name="create.collection">Utilise le bouton ci-dessous pour créer une collection de sonneries ou de sons de notifications</string>
     <string name="activate">Activer</string>
     <string name="select.all">Tout sélectionner</string>
     <string name="clear.selection">Supprimer la sélection</string>
@@ -83,8 +81,7 @@
     <string name="action.share.app">Partager cette appli !</string>
     <string name="app.version">Version de l\'application</string>
     <string name="donate">Faire un don</string>
-    <string name="donate.text">SmartTone est gratuite, mais si vous pensez qu\'elle le mérite, faites un don
-    </string>
+    <string name="donate.text">SmartTone est gratuite, mais si vous pensez qu\'elle le mérite, faites un don</string>
     <string name="donated">T\'es génial(e)!</string>
     <string name="action.contact.help">Contact/Aide</string>
     <string name="action.rate">Noter et commenter sur le Play Store</string>
@@ -106,20 +103,16 @@
     <string name="open.source.license">Librairies Open Source</string>
     <string name="install.browser">Aucune application ne peut éxecuter cette requête. Installez un navigateur web !</string>
     <string name="open.source.license.header">Librairies Open Source utilisées</string>
-    <string name="open.source.license.sub.header">Cette application utilise plusieurs librairies Open Source. Les logiciels suivants peuvent êtres inclus dans ce produit :
-    </string>
-    <string name="app_name.caps">SMARTTONE 2</string>
+    <string name="open.source.license.sub.header">Cette application utilise plusieurs librairies Open Source. Les logiciels suivants peuvent êtres inclus dans ce produit :</string>
     <string name="nothing.beyond">Sorry! Nothing beyond this point!</string>
-    <string name="double.tap">Appuyer deux fois sur une pochette d\'album pour écouter un aperçu, appuyer une fois pour arrêter l\'aperçu.
-    </string>
+    <string name="double.tap">Appuyer deux fois sur une pochette d\'album pour écouter un aperçu, appuyer une fois pour arrêter l\'aperçu.</string>
     <string name="long.press">Appuyer pendant longtemps sur une collection pour la supprimer</string>
 
     <string name="got.it">OKAY</string>
     <string name="action.search">Chercher une musique</string>
     <string name="billing.error">Erreur de requêtes aux services de facturation</string>
     <string name="billing.missing">Pas de service de facturation sur cet appareil</string>
-    <string name="select.one">Sélectionnez une des collections ci-dessous pour l\'utiliser comme sonneries ou sons de notifications
-    </string>
+    <string name="select.one">Sélectionnez une des collections ci-dessous pour l\'utiliser comme sonneries ou sons de notifications</string>
     <string name="toggle.activate">SmartTone est désactivée. Appuyez sur le bouton pour l\'activer</string>
     <string name="no.collection">BIENVENUE\nVOUS N\'AVEZ PAS DE COLLECTION</string>
     <string name="action.edit.collection">Editer la collection</string>
@@ -158,6 +151,13 @@
         <item>Une fois par jour</item>
     </string-array>
 
+    <string-array name="index_freq">
+        <item>Une heure</item>
+        <item>Toutes les 6 heures</item>
+        <item>Toutes les 12 heures</item>
+        <item>Une fois par jour</item>
+        <item>Une fois par semaine</item>
+    </string-array>
 
     <string-array name="tabs_header">
         <item>SELECTION</item>
@@ -168,5 +168,22 @@
         <item>DOSSIERS</item>
 
     </string-array>
+    <string name="action.about.app">A propos</string>
+    <string name="app.log">Journal de lápplication</string>
+    <string name="ask.attach.log.file">Joindre et envoyer le fichier du journal?</string>
+    <string name="collecting_log_files">Recuperation du journal de lápplication en cours.</string>
+    <string name="empty.reindex">Aucune ficher audio trouvée. Rescanner láppareil maintenant?</string>
+    <string name="grant.read.phone_state">Smartone a besoin de la permission "Etat de láppareil" pour changer la sonnerie d\'appel.</string>
+    <string name="grant.write.settings">Smartone a besoin de la permission "Parametres de láppareil" pour changer la sonnerie d\'appel.</string>
+    <string name="index.freq">Interval pour scanner automatiquement les fichiers audios</string>
+    <string name="log_app_activity">Journaliser les activités at actions de lápplication</string>
+    <string name="permission.alert">Veuillez prendre une minute pour examiner et donner les permissions nécessaires requises pour cette application à fonctionner avec succès. Il est conseillé de donner toutes les permissions pour éviter des erreurs. Pour révoquer ces permissions, s\'il vous plaît utilisez le <b>Paramètres du système</b>. Vous pouvez consulter les autorisations plus tard par le <b>Paramètres du système</b> ou par l\'application <b>Paramètres</b><![CDATA[ > ]]><b>A propos</b><![CDATA[ > ]]><b>Permissions</b></string>
+    <string name="permission.write.settings.alert">Pour changer les sonneries, l\'application a besoin de modifier quelques paramètres du système</string>
+    <string name="permissions">Permissions</string>
+    <string name="permissions.granted" formatted="false">%d de %d permissions donnée</string>
+    <string name="revoke">Veuillez utiliser les paramètres du système pour révoquer les permissions</string>
+    <string name="send.app.log">Envoyer le journal avec</string>
+    <string name="what.is.new">Vous pouvez maintenant sélectionner un dossier à utiliser comme votre collection. Ajouter et supprimer des sonneries à partir dans ce dossier. Des modifications peuvent prendre jusqu\'à une heure pour synchroniser selon vos paramètres.</string>
+    <string name="check.samsung">l\'Optimisation de l\'application avec <b>Smart Manager</b> pertube le fonctionnement de l\'application. Il faut arreter l\'optimisation de cette application dans <b>Smart Manager</b></string>
 
 </resources>

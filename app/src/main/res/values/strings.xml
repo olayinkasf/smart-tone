@@ -22,17 +22,14 @@
     <string name="app.settings">app.settings</string>
     <string name="active.app.service">active.app.service</string>
 
-    <string name="app_name" translatable="false">SmartTone 2</string>
+    <string name="app_name" translatable="false">SmartTone</string>
     <string name="about.app.title">About App</string>
     <string name="done">Done</string>
     <string name="share.using">Share using</string>
     <string name="checkout">Hey! Check out the SmartTone app at:</string>
     <string name="app.link" translatable="false">https://play.google.com/store/apps/details?id=app.smart.tone</string>
-    <string name="mail.uri" formatted="false" translatable="false">
-        mailto:olayinka.sf@gmail.com?subject=Help%20and%20Support
-    </string>
-    <string name="create.collection">Click the button below to create a collection of ringtones or notification sounds
-    </string>
+    <string name="mail.uri" formatted="false" translatable="false">mailto:olayinka.sf@gmail.com?subject=Help%20and%20Support</string>
+    <string name="create.collection">Click the button below to create a collection of ringtones or notification sounds</string>
     <string name="manage.collection" translatable="false">Collections</string>
     <string name="activate">Activate</string>
     <string name="select.all">Select all</string>
@@ -111,21 +108,16 @@
     <string name="open.source.license">Open Source Libraries</string>
     <string name="install.browser">No application can handle this request. Please install a web browser</string>
     <string name="open.source.license.header">Open Source libraries we use</string>
-    <string name="open.source.license.sub.header">This software is a result of some open source libraries. The following
-        software may be included in this product:
-    </string>
-    <string name="app_name.caps">SMARTTONE 2</string>
+    <string name="open.source.license.sub.header">This software is a result of some open source libraries. The following software may be included in this product:</string>
+    <string name="app_name.caps" translatable="false">SMARTTONE</string>
     <string name="nothing.beyond">Sorry! Nothing beyond this point!</string>
-    <string name="double.tap">Double tap on album art to preview music, single tap on any album art to stop preview.
-    </string>
+    <string name="double.tap">Double tap on album art to preview music, single tap on any album art to stop preview.</string>
     <string name="long.press">Long press on any collection to delete</string>
-
     <string name="got.it">GOT IT</string>
     <string name="action.search">Search music</string>
     <string name="billing.error">Error querying billing services</string>
     <string name="billing.missing">Billing service unavailable on device</string>
-    <string name="select.one">Select one of your collections below to use as ringtones or notification sounds
-    </string>
+    <string name="select.one">Select one of your collections below to use as ringtones or notification sounds</string>
     <string name="toggle.activate">SmartTone service is inactive. Use the toggle button above to activate</string>
     <string name="no.collection">WELCOME\nYOU HAVE NOT CREATED A COLLECTION</string>
     <string name="action.edit.collection">Edit collection</string>
@@ -158,33 +150,17 @@
     <string name="permissions">Permissions</string>
     <string name="permissions.granted" formatted="false">%d of %d permissions granted</string>
     <string name="revoke">Please use the system settings to revoke permission</string>
-    <string name="permission.alert">Please take a minute to review and allow the necessary permissions needed for this
-        application to run successfully. It is advisable to allow all permissions to avoid app crashing. To revoke any
-        permissions, please use the<b>System Settings</b>. You can review the permissions later on through the
-        <b>System Settings</b>
-        or through the application by going to
-        <b>Settings</b>
-        >
-        <b>About app</b>
-        >
-        <b>Permissions</b>
-    </string>
-    <string name="permission.write.settings.alert">To change your Ringtone or notification, the application needs the
-        permission to write settings.
-    </string>
-    <string name="grant.write.settings">SmartTone needs phone Settings permission to change your ringtone or
-        notification sound
-    </string>
-    <string name="grant.read.phone_state">SmartTone needs  Phone State permission to change your ringtone or
-        notification sound
-    </string>
+    <string name="permission.alert">Please take a minute to review and allow the necessary permissions needed for this application to run successfully. It is advisable to allow all permissions to avoid app crashing. To revoke any permissions, please use the<b>System Settings</b>. You can review the permissions later on through the <b>System Settings</b> or through the application by going to <b>Settings</b> > <b>About app</b> > <b>Permissions</b></string>
+    <string name="permission.write.settings.alert">To change your Ringtone or notification, the application needs the permission to write settings</string>
+    <string name="grant.write.settings">SmartTone needs Phone Settings permission to change your ringtone or notification sound</string>
+    <string name="grant.read.phone_state">SmartTone needs Phone State permission to change your ringtone or notification sound</string>
 
     <string-array name="index_freq">
-        <item>Weekly</item>
-        <item>Daily</item>
-        <item>12 hours interval</item>
-        <item>6 hours interval</item>
         <item>Every hour</item>
+        <item>6 hours interval</item>
+        <item>12 hours interval</item>
+        <item>Daily</item>
+        <item>Weekly</item>
     </string-array>
 
     <string-array name="ringtone_freq">
@@ -209,5 +185,8 @@
         <item>ALBUMS</item>
         <item>FOLDERS</item>
     </string-array>
+
+    <string name="what.is.new">Now you can select a folder to use as your collection. Add and remove ringtones from this folder. Changes may take up to an hour to synchronize depending on your settings.</string>
+    <string name="check.samsung">If you\'re optimizing this application in <b>Smart Manager</b>, the service will function for a while and then stop. Please turn optimization off for this application.</string>
 
 </resources>

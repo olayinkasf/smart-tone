@@ -30,8 +30,8 @@
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
-            android:paddingRight="5dp"
-            android:paddingEnd="5dp"
+            android:paddingRight="4dp"
+            android:paddingEnd="4dp"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 

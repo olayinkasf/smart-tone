@@ -243,7 +243,7 @@ public class IndexerService extends IntentService {
     }
 
     private long getIndexFreq(SharedPreferences prefs) {
-        return (new int[]{7 * 24, 24, 12, 6, 1}[prefs.getInt(AppSettings.INDEX_FREQ, 0)]) * 60 * 60 * 1000;
+        return (new int[]{1, 6, 12, 24, 7 * 24}[prefs.getInt(AppSettings.INDEX_FREQ, 0)]) * 60 * 60 * 1000;
     }
 
     private void cleanCollection() {
