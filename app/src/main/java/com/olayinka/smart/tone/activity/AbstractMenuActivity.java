@@ -151,7 +151,7 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
         setContentView(R.layout.menu);
         getVersion();
         DisplayMetrics displayMetrics = Utils.displayDimens(this);
-        mAlbumArtWidth = (int) ((displayMetrics.widthPixels - Utils.pxFromDp(this, 20.0f)) / 2);
+        mAlbumArtWidth = (int) ((displayMetrics.widthPixels - Utils.pxFromDp(this, 16.0f)) / 2);
         mListView = (ListView) findViewById(R.id.list);
         mListHeader = LayoutInflater.from(this).inflate(R.layout.menu_header, null);
         mListView.addHeaderView(mListHeader);

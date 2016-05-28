@@ -263,7 +263,7 @@ public class IndexerService extends IntentService {
             JSONArray jsonArray = new JSONArray(jsonString);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                String name = jsonObject.getString(Media.CollectionColumns.NAME);
+                String name = jsonObject.optString(Media.CollectionColumns.NAME, jsonObject.optString("name"));
                 long folderPath = jsonObject.optLong(Media.CollectionColumns.FOLDER_ID);
                 name = name + " " + getString(R.string.imported);
                 JSONArray selection = jsonObject.getJSONArray("tones");

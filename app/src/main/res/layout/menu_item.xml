@@ -20,32 +20,33 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:padding="4dp"
-              android:background="?attr/selectableItemBackground"
-              android:clickable="true"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:gravity="center_vertical"
+    android:minHeight="?actionBarSize"
+    android:orientation="vertical"
+    android:padding="4dp">
 
     <TextView
-            android:textColor="@android:color/secondary_text_light"
-            android:padding="4dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:gravity="center_vertical"
-            android:textSize="16sp"/>
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="4dp"
+        android:textColor="@android:color/secondary_text_light"
+        android:textSize="16sp" />
 
     <com.olayinka.smart.tone.widget.PrefsTextView
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:singleLine="false"
-            android:textColor="@android:color/tertiary_text_dark"
-            android:id="@+id/text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:textSize="12sp"/>
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:singleLine="false"
+        android:textColor="@android:color/tertiary_text_dark"
+        android:textSize="12sp" />
 
 </LinearLayout>

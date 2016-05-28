@@ -144,7 +144,7 @@ public class AppService extends IntentService {
             JSONArray collections = new JSONArray();
             while (collectionCursor.moveToNext()) {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("name", collectionCursor.getString(1));
+                jsonObject.put(Media.CollectionColumns.NAME, collectionCursor.getString(1));
                 JSONArray tones = new JSONArray();
                 Cursor cursor = database.rawQuery(
                         "select m.path from media m inner join tone t  on m._id = t.media_id  where t.collection_id = ?",
@@ -152,7 +152,7 @@ public class AppService extends IntentService {
                 );
                 while (cursor.moveToNext()) {
                     JSONObject wrapper = new JSONObject();
-                    wrapper.put("path", cursor.getString(0));
+                    wrapper.put(Media.Columns.PATH, cursor.getString(0));
                     tones.put(wrapper);
                 }
                 jsonObject.put("tones", tones);

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2015
   ~
   ~ Olayinka S. Folorunso <mail@olayinkasf.com>
@@ -19,35 +18,37 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:padding="4dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:layout_centerVertical="true"
+    android:minHeight="?actionBarSize"
+    android:padding="4dp">
 
     <TextView
-            android:textColor="@android:color/secondary_text_light"
-            android:padding="4dp"
-            android:layout_centerVertical="true"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/switchCompat"
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:gravity="center_vertical"
-            android:textSize="16sp"/>
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/switchCompat"
+        android:gravity="center_vertical"
+        android:padding="4dp"
+        android:text="@string/about.app"
+        android:textColor="@android:color/secondary_text_light"
+        android:textSize="16sp" />
 
     <com.olayinka.smart.tone.widget.PrefsSwitchCompat
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:id="@+id/switchCompat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:background="#00000000"
-            app:prefs_name="@string/app.settings"
-            app:prefs_key="@string/active.app.service"/>
+        android:id="@+id/switchCompat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="#00000000"
+        android:padding="8dp"
+        app:prefs_key="@string/active.app.service"
+        app:prefs_name="@string/app.settings" />
 
 
 </RelativeLayout>
