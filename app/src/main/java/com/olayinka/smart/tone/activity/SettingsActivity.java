@@ -132,6 +132,12 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         view = findViewById(R.id.sendLog);
         switchCompat = (PrefsSwitchCompat) view.findViewById(R.id.switchCompat);
         switchCompat.setPrefs(AppSettings.APP_SETTINGS, AppSettings.LOG_APP_ACTIVITY);
+        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                AppLogger.clear(SettingsActivity.this);
+            }
+        });
         titleView = (TextView) view.findViewById(R.id.title);
         titleView.setText(R.string.log_app_activity);
         view.setOnClickListener(this);

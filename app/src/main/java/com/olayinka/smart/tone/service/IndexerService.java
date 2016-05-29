@@ -259,7 +259,8 @@ public class IndexerService extends IntentService {
         try {
             SQLiteDatabase database = AppSqlHelper.instance(getApplicationContext()).getReadableDatabase();
             BufferedReader br = new BufferedReader(new FileReader(file));
-            String jsonString = br.readLine().trim();
+            String jsonString = br.readLine();
+            if(jsonString == null) return;
             JSONArray jsonArray = new JSONArray(jsonString);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);

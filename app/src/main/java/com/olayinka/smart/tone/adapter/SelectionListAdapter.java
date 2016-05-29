@@ -49,6 +49,7 @@ public class SelectionListAdapter extends DragSortCursorAdapter implements Liste
     public SelectionListAdapter(Context context, OrderedMediaSet<Long> selected) {
         super(context, new SelectionCursor(context, selected), false);
         this.mSelection = selected;
+        this.mContext = context;
     }
 
     public void requery() {
