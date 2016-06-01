@@ -32,7 +32,12 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.olayinka.smart.tone.*;
+import com.olayinka.smart.tone.AbsSmartTone;
+import com.olayinka.smart.tone.AppLogger;
+import com.olayinka.smart.tone.AppSettings;
+import com.olayinka.smart.tone.AppSqlHelper;
+import com.olayinka.smart.tone.MainActivity;
+import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.service.AppService;
 import com.olayinka.smart.tone.service.IndexerService;

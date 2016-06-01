@@ -23,14 +23,16 @@ import android.content.Context;
 import android.database.Cursor;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+
 import com.olayinka.smart.tone.AppSqlHelper;
 import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.MediaItem;
 import com.olayinka.smart.tone.task.MediaPlayBackTask;
-import lib.olayinka.smart.tone.R;
 
 import java.io.IOException;
+
+import lib.olayinka.smart.tone.R;
 
 /**
  * Created by Olayinka on 12/26/2014.

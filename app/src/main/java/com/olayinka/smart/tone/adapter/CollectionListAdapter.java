@@ -19,7 +19,11 @@
 
 package com.olayinka.smart.tone.adapter;
 
-import android.animation.*;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -43,18 +47,23 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.olayinka.smart.tone.*;
+import com.olayinka.smart.tone.AbsSmartTone;
+import com.olayinka.smart.tone.AppSettings;
+import com.olayinka.smart.tone.AppSqlHelper;
+import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.activity.AbstractMenuActivity;
 import com.olayinka.smart.tone.activity.CollectionEditActivity;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.MediaItem;
 import com.olayinka.smart.tone.task.AsyncTask;
 import com.olayinka.smart.tone.widget.CenterTopImageView;
-import lib.olayinka.smart.tone.R;
+
 import org.json.JSONException;
 
 import java.util.HashMap;
 import java.util.TreeSet;
+
+import lib.olayinka.smart.tone.R;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -187,6 +196,7 @@ public class CollectionListAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        view.setVisibility(View.VISIBLE);
         view.setTag(R.id.collectionId, cursor.getLong(0));
         view.setTag(R.id.collectionName, cursor.getString(1));
 
@@ -194,7 +204,7 @@ public class CollectionListAdapter extends CursorAdapter {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         String title = cursor.getString(1);
         toolbar.findViewById(R.id.folderPath).setVisibility(View.GONE);
-        if(cursor.getLong(3)>0){
+        if (cursor.getLong(3) > 0) {
             toolbar.findViewById(R.id.folderPath).setVisibility(View.VISIBLE);
             ((TextView) toolbar.findViewById(R.id.folderPath)).setText(Media.getFolderPath(context, cursor.getLong(3)));
         }

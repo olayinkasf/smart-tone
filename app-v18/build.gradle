@@ -28,8 +28,8 @@ android {
 
     defaultConfig {
         minSdkVersion 18
-        versionCode 84
-        versionName "2.4.1"
+        versionCode 86
+        versionName "2.4.2"
 
     }
 

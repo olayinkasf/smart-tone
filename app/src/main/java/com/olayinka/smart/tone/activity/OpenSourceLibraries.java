@@ -25,7 +25,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.webkit.WebView;
+
 import com.olayinka.smart.tone.Utils;
+
 import lib.olayinka.smart.tone.R;
 
 /**

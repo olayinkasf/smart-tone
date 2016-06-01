@@ -20,7 +20,6 @@
 package com.olayinka.smart.tone.service;
 
 import android.annotation.SuppressLint;
-import android.app.DownloadManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -32,11 +31,8 @@ import android.net.Uri;
 import com.olayinka.smart.tone.AppSqlHelper;
 import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.activity.CollectionEditActivity;
-import com.olayinka.smart.tone.activity.ContactActivity;
 import com.olayinka.smart.tone.activity.MediaGroupActivity;
 import com.olayinka.smart.tone.model.Media;
-
-import lib.olayinka.smart.tone.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,6 +43,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import lib.olayinka.smart.tone.R;
 
 /**
  * Created by Olayinka on 5/3/2015.

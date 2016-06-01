@@ -185,5 +185,8 @@
     <string name="send.app.log">Envoyer le journal avec</string>
     <string name="what.is.new">Vous pouvez maintenant sélectionner un dossier à utiliser comme votre collection. Ajouter et supprimer des sonneries à partir dans ce dossier. Des modifications peuvent prendre jusqu\'à une heure pour synchroniser selon vos paramètres.</string>
     <string name="check.samsung">l\'Optimisation de l\'application avec <b>Smart Manager</b> pertube le fonctionnement de l\'application. Il faut arreter l\'optimisation de cette application dans <b>Smart Manager</b></string>
+    <string name="change.notif.freq">La fréquence de changement de son de notification est maintenant pour tous les 6 heures</string>
+    <string name="change.ringtone.freq">La fréquence de changement des sonneries est maintenant pour tous les 6 heures</string>
+    <string name="grant.now">Autoriser</string>
 
 </resources>

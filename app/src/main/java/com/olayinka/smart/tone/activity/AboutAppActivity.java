@@ -26,18 +26,17 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
 import com.olayinka.smart.tone.PermissionUtils;
 import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.billing.utils.IabHelper;
 import com.olayinka.smart.tone.billing.utils.IabResult;
 import com.olayinka.smart.tone.billing.utils.Inventory;
 import com.olayinka.smart.tone.billing.utils.Purchase;
-import lib.olayinka.smart.tone.R;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -46,6 +45,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
+
+import lib.olayinka.smart.tone.R;
 
 /**
  * Created by Olayinka on 5/30/2015.

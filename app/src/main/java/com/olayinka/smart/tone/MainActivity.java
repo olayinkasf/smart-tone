@@ -21,12 +21,19 @@ package com.olayinka.smart.tone;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+
 import com.olayinka.smart.tone.activity.AbstractMenuActivity;
 import com.olayinka.smart.tone.activity.PermissionsActivity;
 import com.olayinka.smart.tone.service.IndexerService;
+
 import lib.olayinka.smart.tone.R;
 
 /**

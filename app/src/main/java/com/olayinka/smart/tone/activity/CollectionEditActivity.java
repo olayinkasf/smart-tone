@@ -21,7 +21,11 @@ package com.olayinka.smart.tone.activity;
 
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
-import android.content.*;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -34,6 +38,7 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import com.olayinka.smart.tone.AppSqlHelper;
 import com.olayinka.smart.tone.MainActivity;
 import com.olayinka.smart.tone.Utils;
@@ -43,12 +48,14 @@ import com.olayinka.smart.tone.model.OrderedMediaSet;
 import com.olayinka.smart.tone.service.AppService;
 import com.olayinka.smart.tone.service.IndexerService;
 import com.olayinka.smart.tone.widget.SlidingTabLayout;
-import lib.olayinka.smart.tone.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.LinkedHashSet;
+
+import lib.olayinka.smart.tone.R;
 
 /**
  * Created by olayinka on 4/30/15.

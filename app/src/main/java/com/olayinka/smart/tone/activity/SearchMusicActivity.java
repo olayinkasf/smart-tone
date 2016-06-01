@@ -30,15 +30,18 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
+
 import com.olayinka.smart.tone.AppSqlHelper;
 import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.adapter.MediaListAdapter;
 import com.olayinka.smart.tone.model.Media;
-import lib.olayinka.smart.tone.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.LinkedHashSet;
+
+import lib.olayinka.smart.tone.R;
 
 /**
  * Created by Olayinka on 6/17/2015.

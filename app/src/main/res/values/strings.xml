@@ -188,5 +188,8 @@
 
     <string name="what.is.new">Now you can select a folder to use as your collection. Add and remove ringtones from this folder. Changes may take up to an hour to synchronize depending on your settings.</string>
     <string name="check.samsung">If you\'re optimizing this application in <b>Smart Manager</b>, the service will function for a while and then stop. Please turn optimization off for this application.</string>
+    <string name="change.notif.freq">Your notification sound shuffle frequency has been set to every 6 hours</string>
+    <string name="change.ringtone.freq">Your ringtone shuffle frequency has been set to every 6 hours</string>
+    <string name="grant.now">Grant now</string>
 
 </resources>

@@ -39,16 +39,18 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+
 import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.listener.DoubleTapListener;
 import com.olayinka.smart.tone.model.MediaItem;
 import com.olayinka.smart.tone.task.AsyncTask;
 import com.olayinka.smart.tone.task.MediaPlayBackTask;
-import lib.olayinka.smart.tone.R;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+
+import lib.olayinka.smart.tone.R;
 
 /**
  * Created by Olayinka on 5/6/2015.

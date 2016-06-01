@@ -19,19 +19,19 @@
 
 package com.olayinka.smart.tone.adapter;
 
-import android.animation.*;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AbsListView;
 import android.widget.ListView;
+
 import com.olayinka.smart.tone.AppSettings;
 import com.olayinka.smart.tone.activity.AbstractMenuActivity;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.OrderedMediaSet;
+
 import lib.olayinka.smart.tone.R;
 
 /**

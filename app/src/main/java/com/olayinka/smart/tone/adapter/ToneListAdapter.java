@@ -42,9 +42,9 @@ import com.olayinka.smart.tone.activity.MediaGroupActivity;
 import com.olayinka.smart.tone.model.MediaItem;
 import com.olayinka.smart.tone.service.AppService;
 
-import lib.olayinka.smart.tone.R;
-
 import java.util.ArrayList;
+
+import lib.olayinka.smart.tone.R;
 
 /**
  * Created by Olayinka on 5/3/2015.

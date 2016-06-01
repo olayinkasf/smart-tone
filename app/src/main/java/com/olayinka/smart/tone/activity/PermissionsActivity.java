@@ -20,13 +20,16 @@ import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.olayinka.smart.tone.AppSettings;
 import com.olayinka.smart.tone.PermissionUtils;
 import com.olayinka.smart.tone.Utils;
-import lib.olayinka.smart.tone.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import lib.olayinka.smart.tone.R;
 
 /**
  * Created by Olayinka on 11/21/2015.

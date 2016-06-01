@@ -37,10 +37,10 @@ import com.olayinka.smart.tone.adapter.ToneListAdapter;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.MediaItem;
 
-import lib.olayinka.smart.tone.R;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import lib.olayinka.smart.tone.R;
 
 /**
  * Created by Olayinka on 5/10/2015.

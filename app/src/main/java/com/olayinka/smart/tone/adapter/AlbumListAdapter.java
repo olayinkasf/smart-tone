@@ -32,6 +32,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.olayinka.smart.tone.AppSqlHelper;
 import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.activity.CollectionEditActivity;
@@ -40,6 +41,7 @@ import com.olayinka.smart.tone.activity.MediaGroupActivity;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.MediaItem;
 import com.olayinka.smart.tone.model.OrderedMediaSet;
+
 import lib.olayinka.smart.tone.R;
 
 /**

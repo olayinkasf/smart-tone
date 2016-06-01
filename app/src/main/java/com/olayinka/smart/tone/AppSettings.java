@@ -20,19 +20,26 @@
 package com.olayinka.smart.tone;
 
 import android.app.PendingIntent;
-import android.content.*;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
+
 import com.olayinka.smart.tone.model.Media;
-import lib.olayinka.smart.tone.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Random;
+
+import lib.olayinka.smart.tone.R;
 
 import static android.content.Context.MODE_PRIVATE;
 

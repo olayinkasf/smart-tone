@@ -20,6 +20,7 @@
 package com.olayinka.smart.tone;
 
 import android.app.Application;
+
 import com.olayinka.smart.tone.service.RingtoneTelephonyService;
 import com.olayinka.smart.tone.service.ServiceManager;
 import com.olayinka.smart.tone.service.ShuffleService;

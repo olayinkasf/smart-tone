@@ -3,7 +3,7 @@ package com.olayinka.smart.tone;
 import android.content.Context;
 import android.util.Log;
 
-import com.olayinka.smart.tone.activity.SettingsActivity;
+import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
@@ -11,8 +11,6 @@ import ch.qos.logback.classic.android.LogcatAppender;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.FileAppender;
-
-import org.slf4j.LoggerFactory;
 
 /**
  * Created by Olayinka on 11/9/2015.

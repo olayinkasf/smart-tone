@@ -23,8 +23,10 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
+
 import com.olayinka.smart.tone.AppLogger;
 import com.olayinka.smart.tone.AppSettings;
+
 import org.json.JSONException;
 
 /**

@@ -43,17 +43,25 @@ import android.view.Display;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
-import com.olayinka.smart.tone.model.Media;
-import com.olayinka.smart.tone.model.MediaItem;
-import lib.olayinka.smart.tone.R;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.*;
+import com.olayinka.smart.tone.model.MediaItem;
+
+import org.json.JSONArray;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import lib.olayinka.smart.tone.R;
 
 /**
  * Created by Olayinka on 4/12/2015.

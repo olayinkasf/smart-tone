@@ -21,6 +21,7 @@ package com.olayinka.smart.tone.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.MediaItem;
 import com.olayinka.smart.tone.model.OrderedMediaSet;

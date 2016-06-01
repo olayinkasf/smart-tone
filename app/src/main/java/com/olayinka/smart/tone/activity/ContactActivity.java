@@ -31,18 +31,20 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+
 import com.olayinka.smart.tone.AppLogger;
 import com.olayinka.smart.tone.AppSettings;
 import com.olayinka.smart.tone.PermissionUtils;
 import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.task.AsyncTask;
-import lib.olayinka.smart.tone.R;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
+
+import lib.olayinka.smart.tone.R;
 
 import static com.olayinka.smart.tone.Utils.getExternalStorageDir;
 

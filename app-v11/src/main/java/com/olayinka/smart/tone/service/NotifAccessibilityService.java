@@ -29,19 +29,35 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.view.accessibility.AccessibilityEvent;
-import com.olayinka.smart.tone.*;
+
+import com.olayinka.smart.tone.AppLogger;
+import com.olayinka.smart.tone.AppSettings;
+import com.olayinka.smart.tone.PermissionUtils;
+import com.olayinka.smart.tone.R;
+import com.olayinka.smart.tone.Utils;
+
 import org.json.JSONException;
 
 import java.util.List;
 
 public class NotifAccessibilityService extends AccessibilityService {
 
-
-    private long mLastNotifiedListener = 0;
+    private final Handler mHandler = new Handler();
+    private final Runnable mPermissionRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (PermissionUtils.hasAccessibilityPermission(NotifAccessibilityService.this)) {
+                NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                mNotifyMgr.cancel(R.id.notifListenerNotif);
+                mHandler.removeCallbacks(this);
+            } else mHandler.postDelayed(this, 500);
+        }
+    };
 
 
     public static boolean shouldRun(Context context) {
@@ -91,7 +107,7 @@ public class NotifAccessibilityService extends AccessibilityService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
         if (!shouldRun(this)) {
             AppLogger.wtf(this, "onStartCommand/NotifAccessibilityService", "Shouldn't run! Stop alarm and return START_NOT_STICKY");
             ServiceManager.stopAlarm(getApplicationContext(), NotifAccessibilityService.class);
@@ -99,39 +115,55 @@ public class NotifAccessibilityService extends AccessibilityService {
             return START_NOT_STICKY;
         }
 
+        NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         if (intent.getBooleanExtra(AppSettings.NOTIF_CANCELED, false) && !PermissionUtils.hasNotificationPermission(this)) {
             ServiceManager.stopAlarm(this, NotifAccessibilityService.class);
             //Start repeating change service
             AppSettings.setFreq(this, AppSettings.NOTIF_FREQ, 1, R.array.notification_freq);
             ServiceManager.startAlarm(this, ShuffleService.class);
             stopSelf();
+            mNotifyMgr.notify(
+                    R.id.notifListenerNotif,
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.ic_notif_small)
+                            .setLargeIcon(Utils.getLargeIcon(this))
+                            .setContentTitle(getString(R.string.notification_service))
+                            .setContentText(getString(R.string.change_notif_freq))
+                            .setTicker(getString(R.string.change_notif_freq))
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.change_notif_freq)))
+                            .setSound(uri)
+                            .build()
+            );
             return START_NOT_STICKY;
         }
 
-        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-        if (!PermissionUtils.hasNotificationPermission(this)) {
-            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.drawable.ic_notif_small)
-                    .setLargeIcon(Utils.getLargeIcon(this))
-                    .setContentTitle(getString(R.string.notification_service))
-                    .setContentText(getString(R.string.grant_accessibility))
-                    .setTicker(getString(R.string.grant_accessibility))
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.grant_accessibility)))
-                    .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS), 0));
-            intent.putExtra(AppSettings.NOTIF_CANCELED, true);
-            mBuilder.setDeleteIntent(PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT));
-            if (System.currentTimeMillis() - mLastNotifiedListener > 15 * 60 * 1000) {
-                mBuilder.setSound(uri);
-                mLastNotifiedListener = System.currentTimeMillis();
-            } else
-                mBuilder.setSound(null).setVibrate(new long[]{0L});
-            Notification notification = mBuilder.build();
-            notification.flags = Notification.DEFAULT_LIGHTS;
-            mNotifyMgr.notify(R.id.notifListenerNotif, notification);
-        } else {
-            mNotifyMgr.cancel(R.id.notifListenerNotif);
+        if (!PermissionUtils.hasAccessibilityPermission(this)) {
+            Intent positiveIntent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+            Intent negativeIntent = new Intent(this, NotifAccessibilityService.class);
+            negativeIntent.putExtra(AppSettings.NOTIF_CANCELED, true);
+            PendingIntent positivePendingIntent = PendingIntent.getActivity(this, 0, positiveIntent, 0);
+            PendingIntent cancelPendingIntent = PendingIntent.getService(getApplicationContext(), 0, negativeIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+            mNotifyMgr.notify(
+                    R.id.notifListenerNotif,
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.ic_notif_small)
+                            .setLargeIcon(Utils.getLargeIcon(this))
+                            .setContentTitle(getString(R.string.notification_service))
+                            .setContentText(getString(R.string.grant_accessibility))
+                            .setTicker(getString(R.string.grant_accessibility))
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.requires_accessibility)))
+                            .setContentIntent(positivePendingIntent)
+                            .setSound(uri)
+                            .addAction(R.drawable.ic_lock_open_black_24dp, getString(R.string.grant_now), positivePendingIntent)
+                            .addAction(R.drawable.ic_clear_black_24dp, getString(R.string.cancel), cancelPendingIntent)
+                            .setOngoing(true).build()
+            );
+            mHandler.postDelayed(mPermissionRunnable, 500);
+            return START_NOT_STICKY;
         }
+
+        mNotifyMgr.cancel(R.id.notifListenerNotif);
 
         return START_NOT_STICKY;
 

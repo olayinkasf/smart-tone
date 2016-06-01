@@ -19,7 +19,13 @@
 
 package com.olayinka.smart.tone.model;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Olayinka on 6/19/2015.

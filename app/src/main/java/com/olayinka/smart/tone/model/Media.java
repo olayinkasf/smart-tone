@@ -26,7 +26,6 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.olayinka.smart.tone.AppSqlHelper;
-import com.olayinka.smart.tone.activity.CollectionPageActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;

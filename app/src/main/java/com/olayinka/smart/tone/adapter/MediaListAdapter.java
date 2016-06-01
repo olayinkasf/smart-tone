@@ -24,7 +24,11 @@ import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CursorAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.olayinka.smart.tone.AppSqlHelper;
 import com.olayinka.smart.tone.Utils;
@@ -34,11 +38,10 @@ import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.MediaItem;
 import com.olayinka.smart.tone.task.MediaPlayBackTask;
 
-import lib.olayinka.smart.tone.R;
-
-import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.Set;
+
+import lib.olayinka.smart.tone.R;
 
 /**
  * Created by Olayinka on 5/3/2015.

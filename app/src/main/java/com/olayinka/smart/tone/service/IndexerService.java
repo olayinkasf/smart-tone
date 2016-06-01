@@ -35,8 +35,6 @@ import com.olayinka.smart.tone.AppSettings;
 import com.olayinka.smart.tone.AppSqlHelper;
 import com.olayinka.smart.tone.model.Media;
 
-import lib.olayinka.smart.tone.R;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,8 +44,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
+
+import lib.olayinka.smart.tone.R;
 
 /**
  * Created by Olayinka on 4/20/2015.

@@ -23,7 +23,9 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.widget.TextView;
+
 import com.olayinka.smart.tone.AppSettings;
+
 import lib.olayinka.smart.tone.R;
 
 /**

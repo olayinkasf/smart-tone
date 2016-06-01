@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.mobeta.android.dslv.DragSortCursorAdapter;
 import com.olayinka.smart.tone.AppLogger;
 import com.olayinka.smart.tone.Utils;
@@ -35,9 +36,10 @@ import com.olayinka.smart.tone.model.ListenableHashSet;
 import com.olayinka.smart.tone.model.MediaItem;
 import com.olayinka.smart.tone.model.OrderedMediaSet;
 import com.olayinka.smart.tone.model.SelectionCursor;
-import lib.olayinka.smart.tone.R;
 
 import java.util.Collection;
+
+import lib.olayinka.smart.tone.R;
 
 /**
  * Created by Olayinka on 5/24/2015.

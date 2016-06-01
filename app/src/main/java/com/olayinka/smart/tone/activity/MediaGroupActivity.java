@@ -33,17 +33,20 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.olayinka.smart.tone.AppSqlHelper;
 import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.adapter.MediaListAdapter;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.MediaItem;
-import lib.olayinka.smart.tone.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.LinkedHashSet;
+
+import lib.olayinka.smart.tone.R;
 
 /**
  * Created by Olayinka on 5/2/2015.
