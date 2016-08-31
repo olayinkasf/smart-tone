@@ -46,6 +46,7 @@
             <include android:id="@+id/appVersion" layout="@layout/menu_item"/>
             <include android:id="@+id/permissions" layout="@layout/menu_item"/>
             <include android:id="@+id/donate" layout="@layout/menu_item"/>
+            <include android:id="@+id/help" layout="@layout/menu_item"/>
             <include android:id="@+id/legal" layout="@layout/menu_item"/>
             <LinearLayout
                     android:padding="4dp"

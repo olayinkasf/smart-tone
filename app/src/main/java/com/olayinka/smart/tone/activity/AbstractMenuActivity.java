@@ -117,6 +117,7 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
     };
     private RapidFloatingActionHelper mRapidFloatingActionHelper;
 
+
     @Override
     void initToolbar(Toolbar toolbar) {
         ActionBar actionBar = getSupportActionBar();
@@ -163,9 +164,36 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
         refreshCurrentNotif(true);
         refreshServiceNotifier(true);
         refreshSelectNotifier(true);
+        refreshHelpPage(true);
         refreshWhatIsNew(mListHeader.findViewById(R.id.whatIsNew), true);
 
         if (showAskAppLog() || showRateThisApp()) ;
+    }
+
+    private void refreshHelpPage(boolean init) {
+        final View view = mListHeader.findViewById(R.id.helpPage);
+        if (view == null) return;
+        int dismissed = getSharedPreferences().getInt(AppSettings.GOT_IT_HELP_PAGE, 0);
+        if (dismissed >= 3) hide(view, true, true);
+        else if (!checked()) hide(view, init, false);
+        else {
+            if (checked()) show(view, false);
+            view.findViewById(R.id.positive).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://smarttone.olayinkasf.com/help-faq"));
+                    startActivity(browserIntent);
+                }
+            });
+            view.findViewById(R.id.negative).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SharedPreferences sharedPreferences = getSharedPreferences();
+                    sharedPreferences.edit().putInt(AppSettings.GOT_IT_HELP_PAGE, sharedPreferences.getInt(AppSettings.GOT_IT_HELP_PAGE, 0) + 1).apply();
+                    hide(view, false, true);
+                }
+            });
+        }
     }
 
     private void refreshCheckSamsung(boolean init) {
@@ -173,7 +201,7 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
         if (view == null) return;
         if (!android.os.Build.MANUFACTURER.toLowerCase().contains("samsung"))
             hide(view, true, true);
-        else if (getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE).getBoolean(AppSettings.GOT_IT_SAMSUNG, false))
+        else if (getSharedPreferences().getBoolean(AppSettings.GOT_IT_SAMSUNG, false))
             hide(view, true, true);
         else if (!checked()) hide(view, init, false);
         else {
@@ -181,7 +209,7 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
             view.findViewById(R.id.positive).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE).edit()
+                    getSharedPreferences().edit()
                             .putBoolean(AppSettings.GOT_IT_SAMSUNG, true).apply();
                     hide(view, false, true);
                 }
@@ -191,14 +219,14 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
 
     private void refreshWhatIsNew(final View view, boolean init) {
         if (view == null) return;
-        if (getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE)
+        if (getSharedPreferences()
                 .getBoolean(AppSettings.GOT_IT_WHAT_IS_NEW, false)) {
             hide(view, init, true);
         } else {
             view.findViewById(R.id.positive).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE).edit()
+                    getSharedPreferences().edit()
                             .putBoolean(AppSettings.GOT_IT_WHAT_IS_NEW, true).apply();
                     hide(view, false, true);
                     view.postDelayed(new Runnable() {
@@ -215,9 +243,9 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
 
     private boolean showAskAppLog() {
 
-        if (getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE).getBoolean(AppSettings.ASK_LOG_APP_ACTIVITY, false))
+        if (getSharedPreferences().getBoolean(AppSettings.ASK_LOG_APP_ACTIVITY, false))
             return false;
-        getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE).edit().putBoolean(AppSettings.ASK_LOG_APP_ACTIVITY, true).apply();
+        getSharedPreferences().edit().putBoolean(AppSettings.ASK_LOG_APP_ACTIVITY, true).apply();
 
         new AlertDialog.Builder(this)
                 .setCancelable(false)
@@ -226,13 +254,13 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
                 .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE).edit().putBoolean(AppSettings.LOG_APP_ACTIVITY, false).apply();
+                        getSharedPreferences().edit().putBoolean(AppSettings.LOG_APP_ACTIVITY, false).apply();
                     }
                 })
                 .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE).edit().putBoolean(AppSettings.LOG_APP_ACTIVITY, true).apply();
+                        getSharedPreferences().edit().putBoolean(AppSettings.LOG_APP_ACTIVITY, true).apply();
                     }
                 })
                 .show();

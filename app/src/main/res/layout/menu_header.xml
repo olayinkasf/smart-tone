@@ -24,7 +24,7 @@
     android:paddingTop="4dp">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/whatIsNew"
+        android:id="@+id/helpPage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -36,39 +36,101 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:padding="8dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="8dp">
 
             <TextView
-                android:clickable="true"
-                android:background="?attr/selectableItemBackground"
                 android:id="@+id/text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
                 android:gravity="clip_vertical"
-                android:text="@string/what.is.new"
                 android:padding="8dp"
+                android:text="@string/help.page.notice"
                 android:textSize="16sp" />
 
             <TextView
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_below="@+id/text"
-                android:textSize="12sp"
                 android:id="@+id/positive"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/text"
+                android:clickable="true"
+                android:drawableLeft="@drawable/ic_link_black_18dp"
+                android:drawablePadding="4dp"
+                android:drawableStart="@drawable/ic_link_black_18dp"
                 android:gravity="center"
+                android:text="@string/visit"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/negative"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text"
+                android:layout_toLeftOf="@+id/positive"
+                android:layout_toStartOf="@+id/positive"
                 android:clickable="true"
                 android:drawableLeft="@drawable/ic_done_black_18dp"
                 android:drawableStart="@drawable/ic_done_black_18dp"
-                android:text="@string/done" />
+                android:gravity="center"
+                android:text="@string/done"
+                android:textSize="12sp" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
+    <!--
+        <android.support.v7.widget.CardView
+            android:id="@+id/helpPage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:orientation="vertical">
 
+            <RelativeLayout
+                android:padding="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:clickable="true"
+                    android:background="?attr/selectableItemBackground"
+                    android:id="@+id/text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="clip_vertical"
+                    android:text="@string/check.samsung"
+                    android:padding="8dp"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@+id/text"
+                    android:textSize="12sp"
+                    android:id="@+id/positive"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:drawableLeft="@drawable/ic_done_black_18dp"
+                    android:drawableStart="@drawable/ic_done_black_18dp"
+                    android:text="@string/done" />
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+    -->
     <android.support.v7.widget.CardView
         android:id="@+id/checkSamsung"
         android:layout_width="match_parent"
@@ -82,36 +144,36 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:padding="8dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="8dp">
 
             <TextView
-                android:clickable="true"
-                android:background="?attr/selectableItemBackground"
                 android:id="@+id/text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
                 android:gravity="clip_vertical"
-                android:text="@string/check.samsung"
                 android:padding="8dp"
+                android:text="@string/check.samsung"
                 android:textSize="16sp" />
 
             <TextView
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_below="@+id/text"
-                android:textSize="12sp"
                 android:id="@+id/positive"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/text"
                 android:clickable="true"
                 android:drawableLeft="@drawable/ic_done_black_18dp"
                 android:drawableStart="@drawable/ic_done_black_18dp"
-                android:text="@string/done" />
+                android:gravity="center"
+                android:text="@string/done"
+                android:textSize="12sp" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 
@@ -126,11 +188,11 @@
         android:orientation="vertical">
 
         <TextView
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
             android:gravity="clip_vertical"
             android:padding="16dp"
             android:text="@string/toggle.activate"
@@ -149,11 +211,11 @@
         android:orientation="vertical">
 
         <TextView
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
             android:gravity="clip_vertical"
             android:padding="16dp"
             android:text="@string/select.one"

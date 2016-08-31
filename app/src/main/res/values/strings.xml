@@ -25,6 +25,8 @@
     <string name="app_name" translatable="false">SmartTone</string>
     <string name="about.app.title">About App</string>
     <string name="done">Done</string>
+    <string name="help">Help/FAQ</string>
+    <string name="visit">Help Page</string>
     <string name="share.using">Share using</string>
     <string name="checkout">Hey! Check out the SmartTone app at:</string>
     <string name="app.link" translatable="false">https://play.google.com/store/apps/details?id=app.smart.tone</string>
@@ -154,6 +156,7 @@
     <string name="permission.write.settings.alert">To change your Ringtone or notification, the application needs the permission to write settings</string>
     <string name="grant.write.settings">SmartTone needs Phone Settings permission to change your ringtone or notification sound</string>
     <string name="grant.read.phone_state">SmartTone needs Phone State permission to change your ringtone or notification sound</string>
+    <string name="help.page.notice">For any question you may have, please visit our Help and FAQ page by clicking the button below.</string>
 
     <string-array name="index_freq">
         <item>Every hour</item>

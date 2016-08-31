@@ -259,7 +259,7 @@ public class CollectionListAdapter extends CursorAdapter {
         if (header.getVisibility() == View.GONE)
             return;
         final int height = header.getMeasuredHeight();
-        final AbsListView.LayoutParams layoutParams = (AbsListView.LayoutParams) header.getLayoutParams();
+        final ViewGroup.LayoutParams layoutParams =  header.getLayoutParams();
 
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(context, "alpha", 0f).setDuration(300);
 

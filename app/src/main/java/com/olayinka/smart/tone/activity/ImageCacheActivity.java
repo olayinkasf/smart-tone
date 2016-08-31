@@ -21,6 +21,8 @@ package com.olayinka.smart.tone.activity;
 
 import android.annotation.TargetApi;
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -40,6 +42,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.olayinka.smart.tone.AppSettings;
 import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.listener.DoubleTapListener;
 import com.olayinka.smart.tone.model.MediaItem;
@@ -60,6 +63,11 @@ public abstract class ImageCacheActivity extends AppCompatActivity implements Vi
     private LruCache<String, Bitmap> mMemoryCache;
     private GestureDetector mDetector;
     private DoubleTapListener mDoubleTapListener;
+
+    public SharedPreferences getSharedPreferences() {
+        return getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE);
+    }
+
 
     public static boolean cancelPotentialWork(Uri data, ImageView imageView) {
         final UriBitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);

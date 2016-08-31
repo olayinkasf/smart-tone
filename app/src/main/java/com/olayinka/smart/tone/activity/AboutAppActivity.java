@@ -185,6 +185,19 @@ public class AboutAppActivity extends AppCompatActivity {
             }
         });
 
+        itemView = findViewById(R.id.help);
+        titleView = (TextView) itemView.findViewById(R.id.title);
+        textView = (TextView) itemView.findViewById(R.id.text);
+        textView.setVisibility(View.GONE);
+        titleView.setText(R.string.help);
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://smarttone.olayinkasf.com/help-faq"));
+                startActivity(browserIntent);
+            }
+        });
+
         ((TextView) findViewById(R.id.aboutAppText)).setText(Utils.getRawString(this, R.raw.about_app));
 
         Intent serviceIntent = new Intent("com.android.vending.billing.InAppBillingService.BIND");

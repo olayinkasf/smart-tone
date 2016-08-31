@@ -188,5 +188,7 @@
     <string name="change.notif.freq">La fréquence de changement de son de notification est maintenant pour tous les 6 heures</string>
     <string name="change.ringtone.freq">La fréquence de changement des sonneries est maintenant pour tous les 6 heures</string>
     <string name="grant.now">Autoriser</string>
+    <string name="help.page.notice">Pour toutes questions, veuillez visiter notre site en cliquant sur le bouton ci-dessous</string>
+
 
 </resources>
