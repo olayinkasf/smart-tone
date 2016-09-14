@@ -50,6 +50,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.widget.AbsListView;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -58,7 +59,6 @@ import android.widget.TextView;
 
 import com.nononsenseapps.filepicker.FilePickerActivity;
 import com.olayinka.rate.app.RateThisAppAlert;
-import com.olayinka.smart.tone.AbsSmartTone;
 import com.olayinka.smart.tone.AppLogger;
 import com.olayinka.smart.tone.AppSettings;
 import com.olayinka.smart.tone.AppSqlHelper;
@@ -68,6 +68,7 @@ import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.MediaItem;
 import com.olayinka.smart.tone.service.AppService;
 import com.olayinka.smart.tone.service.IndexerService;
+import com.olayinka.smart.tone.service.SmartToneService;
 import com.olayinka.smart.tone.widget.PrefsSwitchCompat;
 import com.wangjie.androidbucket.utils.imageprocess.ABShape;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionButton;
@@ -75,8 +76,6 @@ import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionHelper;
 import com.wangjie.rapidfloatingactionbutton.RapidFloatingActionLayout;
 import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RFACLabelItem;
 import com.wangjie.rapidfloatingactionbutton.contentimpl.labellist.RapidFloatingActionContentLabelList;
-
-import org.json.JSONException;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -148,15 +147,15 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
         DisplayMetrics displayMetrics = Utils.displayDimens(this);
         mAlbumArtWidth = (int) ((displayMetrics.widthPixels - Utils.pxFromDp(this, 16.0f)) / 2);
         mListView = (ListView) findViewById(R.id.list);
-        mListHeader = LayoutInflater.from(this).inflate(R.layout.menu_header, null);
+        mListHeader = LayoutInflater.from(this).inflate(R.layout.menu_header, mListView, false);
         mListView.addHeaderView(mListHeader);
         mListView.setEmptyView(findViewById(R.id.empty));
         refreshWhatIsNew(findViewById(R.id.empty).findViewById(R.id.whatIsNew), true);
         mAdapter = new CollectionListAdapter(this);
         mListView.setAdapter(mAdapter);
         View footerView = new View(this);
+        footerView.setLayoutParams(new AbsListView.LayoutParams(displayMetrics.widthPixels / 4, displayMetrics.widthPixels / 4));
         mListView.addFooterView(footerView);
-        footerView.setLayoutParams(new ViewGroup.LayoutParams(displayMetrics.widthPixels / 4, displayMetrics.widthPixels / 4));
         setCreateButtonClickListener();
 
         setServiceSwitchButton();
@@ -376,8 +375,9 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (isChecked)
-            ((AbsSmartTone) getApplication()).startServices();
+        if (isChecked){
+            SmartToneService.startServicesCheckChanged(this);
+        }
         else ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancelAll();
         refreshServiceNotifier(false);
     }
@@ -419,12 +419,7 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
                         Utils.toast(v.getContext(), getString(R.string.service_inactive));
                         return;
                     }
-                    try {
-                        AppSettings.changeNotificationSound(v.getContext(), false);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        Utils.toast(v.getContext(), getString(R.string.shuffle_error));
-                    }
+                    AppSettings.changeNotificationSound(v.getContext(), false);
                 }
             });
         }
@@ -447,12 +442,7 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
                         Utils.toast(v.getContext(), getString(R.string.service_inactive));
                         return;
                     }
-                    try {
-                        AppSettings.changeRingtone(v.getContext(), false);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        Utils.toast(v.getContext(), getString(R.string.shuffle_error));
-                    }
+                    AppSettings.changeRingtone(v.getContext(), false);
                 }
             });
         }
@@ -565,7 +555,7 @@ public abstract class AbstractMenuActivity extends ImageCacheActivity implements
         }
         ImageView imageView = (ImageView) v.findViewById(R.id.transitionImage);
         Intent intent = new Intent(this, CollectionPageActivity.class);
-        intent.putExtra(CollectionPageActivity.ART_MEDIA_ITEM, mediaItem == null ? null : mediaItem.toString());
+        intent.putExtra(CollectionPageActivity.ART_MEDIA_ITEM, mediaItem);
         intent.putExtra(CollectionPageActivity.COLLECTION_ID, collectionId);
         if (Utils.hasLollipop()) {
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, imageView, getString(R.string.transition_collection_page));

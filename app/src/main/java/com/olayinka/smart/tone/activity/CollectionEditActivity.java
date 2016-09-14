@@ -22,6 +22,7 @@ package com.olayinka.smart.tone.activity;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -48,10 +49,6 @@ import com.olayinka.smart.tone.model.OrderedMediaSet;
 import com.olayinka.smart.tone.service.AppService;
 import com.olayinka.smart.tone.service.IndexerService;
 import com.olayinka.smart.tone.widget.SlidingTabLayout;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.LinkedHashSet;
 
@@ -196,17 +193,13 @@ public class CollectionEditActivity extends ImageCacheActivity {
     private void setCollection() {
         mCollectionId = getIntent().getLongExtra(COLLECTION_ID, 0);
         mCollectionName = "";
-        try {
-            JSONObject collectionObject = Media.getCollection(this, mCollectionId);
-            JSONArray selectionJsonArray = Media.getTones(this, mCollectionId);
-            mCollectionName = collectionObject.optString(Media.CollectionColumns.NAME, "");
-            mSelection = new OrderedMediaSet<>(selectionJsonArray.length());
-            for (int i = 0; i < selectionJsonArray.length(); i++) {
-                mSelection.add(selectionJsonArray.getLong(i));
-            }
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+
+        ContentValues collectionObject = Media.getCollection(this, mCollectionId);
+        long[] selectionArray = Media.getTones(this, mCollectionId);
+        mCollectionName = collectionObject.getAsString(Media.CollectionColumns.NAME);
+        mSelection = new OrderedMediaSet<>(selectionArray.length);
+        for (long id : selectionArray)
+            mSelection.add(id);
     }
 
     @Override
@@ -219,17 +212,13 @@ public class CollectionEditActivity extends ImageCacheActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GROUP_RETURN_CODE) {
-            try {
-                mSelection.clear();
-                JSONArray selectionJsonArray = new JSONArray(data.getStringExtra(MediaGroupActivity.SELECTION));
-                LinkedHashSet<Long> tmpCollection = new LinkedHashSet<>(selectionJsonArray.length());
-                for (int i = 0; i < selectionJsonArray.length(); i++) {
-                    tmpCollection.add(selectionJsonArray.getLong(i));
-                }
-                mSelection.addAll(tmpCollection);
-            } catch (JSONException e) {
-                e.printStackTrace();
+            mSelection.clear();
+            long[] selectionJsonArray = data.getLongArrayExtra(MediaGroupActivity.SELECTION);
+            LinkedHashSet<Long> tmpCollection = new LinkedHashSet<>(selectionJsonArray.length);
+            for (long aSelectionJsonArray : selectionJsonArray) {
+                tmpCollection.add(aSelectionJsonArray);
             }
+            mSelection.addAll(tmpCollection);
         }
     }
 

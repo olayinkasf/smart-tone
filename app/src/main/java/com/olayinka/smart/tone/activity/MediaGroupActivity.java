@@ -40,9 +40,7 @@ import com.olayinka.smart.tone.adapter.MediaListAdapter;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.MediaItem;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.LinkedHashSet;
 
@@ -110,12 +108,12 @@ public class MediaGroupActivity extends ImageCacheActivity {
     }
 
     private void setSelection() throws JSONException {
-        JSONArray jsonArray = new JSONArray(getIntent().getStringExtra(SELECTION));
+        long[] selection = getIntent().getLongArrayExtra(SELECTION);
         mSelection = new LinkedHashSet<>(1000);
-        for (int i = 0; i < jsonArray.length(); i++) {
-            mSelection.add(jsonArray.getLong(i));
+        for (long id : selection) {
+            mSelection.add(id);
         }
-        mMediaItem = MediaItem.fromJSONObject(new JSONObject(getIntent().getStringExtra(MEDIA_ITEM)));
+        mMediaItem = getIntent().getParcelableExtra(MEDIA_ITEM);
         ImageView albumArt = (ImageView) findViewById(R.id.albumArt);
         Utils.squareImageView(this, albumArt);
         albumArt.setTag(R.id.mediaItem, mMediaItem);

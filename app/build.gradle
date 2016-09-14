@@ -16,19 +16,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 import java.text.SimpleDateFormat
-
 apply plugin: "com.android.library"
 android {
 
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 24
+    buildToolsVersion '24.0.2'
 
     defaultConfig {
         minSdkVersion 11
-        targetSdkVersion 23
+        targetSdkVersion 24
 
         // Setting Preferences
         def fileName = "number.build"
@@ -51,18 +48,6 @@ android {
 
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-project.txt"
-        }
-
-    }
 
     repositories {
         mavenLocal()
@@ -74,8 +59,8 @@ android {
         compile fileTree(dir: "libs", include: ["*.jar"])
         compile project(":android-rate-this-app")
         compile project(":drag-sort-listview-master")
-        compile "com.android.support:cardview-v7:23.4.0"
-        compile "com.android.support:recyclerview-v7:23.4.0"
+        compile "com.android.support:cardview-v7:24.2.0"
+        compile "com.android.support:recyclerview-v7:24.2.0"
         compile "com.melnykov:floatingactionbutton:1.1.0"
         compile "com.github.tony19:logback-android-core:1.1.1-4"
         compile "com.github.tony19:logback-android-classic:1.1.1-4"
@@ -84,4 +69,7 @@ android {
         compile "com.github.wangjiegulu:RapidFloatingActionButton:1.0.3"
         compile 'com.github.wangjiegulu:AndroidBucket:1.0.4'
     }
+
+}
+dependencies {
 }

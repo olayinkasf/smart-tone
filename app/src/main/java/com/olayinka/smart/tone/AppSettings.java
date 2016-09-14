@@ -19,24 +19,21 @@
 
 package com.olayinka.smart.tone;
 
-import android.app.PendingIntent;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.util.Log;
 
 import com.olayinka.smart.tone.model.Media;
+import com.olayinka.smart.tone.service.MediaPlayerStub;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.io.File;
 import java.util.Random;
 
 import lib.olayinka.smart.tone.R;
@@ -47,6 +44,7 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by Olayinka on 5/8/2015.
  */
 public class AppSettings {
+
     public static final String APP_SETTINGS = "app.settings";
     public static final String ACTIVE_NOTIFICATION = "active.notification";
     public static final String ACTIVE_RINGTONE = "active.ringtone";
@@ -69,10 +67,104 @@ public class AppSettings {
     public static final String BIND_NOTIFICATION_LISTENER_SERVICE = "android.permission.BIND_NOTIFICATION_LISTENER_SERVICE";
     public static final String ACTION_NOTIFICATION_LISTENER_SETTINGS = "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS";
     public static final String NOTIFICATION_PERMISSION = (!Utils.hasJellyBeanMR2() ? AppSettings.BIND_ACCESSIBILITY_SERVICE : AppSettings.BIND_NOTIFICATION_LISTENER_SERVICE);
-    public static final String NOTIF_CANCELED = "notif.canceled";
     public static final String GOT_IT_SAMSUNG = "got.it.samsung";
     public static final String GOT_IT_HELP_PAGE = "got.it.help.page";
 
+
+    public static final class ChangeParams implements Parcelable {
+        private final int type;
+        private final String mediaType;
+        private final int notifId;
+        private final int notifMessage;
+        private final String logTag;
+        private final String idPrefsName;
+        private final String freqPrefsName;
+
+        protected ChangeParams(int type, String mediaType, int notifId, int notifMessage, String logTag, String idPrefsName, String freqPrefsName) {
+            this.type = type;
+            this.mediaType = mediaType;
+            this.notifId = notifId;
+            this.notifMessage = notifMessage;
+            this.logTag = logTag;
+            this.idPrefsName = idPrefsName;
+            this.freqPrefsName = freqPrefsName;
+        }
+
+        protected ChangeParams(Parcel in) {
+            type = in.readInt();
+            mediaType = in.readString();
+            notifId = in.readInt();
+            notifMessage = in.readInt();
+            logTag = in.readString();
+            idPrefsName = in.readString();
+            freqPrefsName = in.readString();
+        }
+
+        public static final Creator<ChangeParams> CREATOR = new Creator<ChangeParams>() {
+            @Override
+            public ChangeParams createFromParcel(Parcel in) {
+                return new ChangeParams(in);
+            }
+
+            @Override
+            public ChangeParams[] newArray(int size) {
+                return new ChangeParams[size];
+            }
+        };
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(type);
+            dest.writeString(mediaType);
+            dest.writeInt(notifId);
+            dest.writeInt(notifMessage);
+            dest.writeString(logTag);
+            dest.writeString(idPrefsName);
+            dest.writeString(freqPrefsName);
+        }
+
+        public String getIdPrefsName() {
+            return idPrefsName;
+        }
+
+        public int getNotifMessage() {
+            return notifMessage;
+        }
+
+        public int getNotifId() {
+            return notifId;
+        }
+
+        public int getType() {
+            return type;
+        }
+
+    }
+
+    private static final ChangeParams NOTIF_CHANGE_PARAMS = new ChangeParams(
+            RingtoneManager.TYPE_NOTIFICATION,
+            MediaStore.Audio.Media.IS_NOTIFICATION,
+            R.id.changeNotifNotif,
+            R.string.notification_change,
+            "changeNotificationSound",
+            ACTIVE_NOTIFICATION,
+            NOTIF_FREQ
+    );
+
+    private static final ChangeParams RINGTONE_CHANGE_PARAMS = new ChangeParams(
+            RingtoneManager.TYPE_RINGTONE,
+            MediaStore.Audio.Media.IS_RINGTONE,
+            R.id.changeRingtoneNotif,
+            R.string.ringtone_change,
+            "changeRingtone",
+            ACTIVE_RINGTONE,
+            RINGTONE_FREQ
+    );
 
     public static void setFreq(Context context, String key, int which, int arrayId) {
         long time = (which == 3 ? 4 : which) * 6 * 60 * 60 * 1000;
@@ -81,136 +173,127 @@ public class AppSettings {
         context.getSharedPreferences(AppSettings.APP_SETTINGS, MODE_PRIVATE).edit().putString(key + TEXT, context.getResources().getStringArray(arrayId)[which]).apply();
     }
 
-    private static Uri changeSound(Context context, int type, String key, String freqKey, boolean isRingtone, boolean isNotification) throws JSONException {
+    private static ContentValues changeSound(Context context, ChangeParams changeParams) {
+        if (!checkWriteSettingsForChange(context)) return null;
+        Uri previousUri = RingtoneManager.getActualDefaultRingtoneUri(context, changeParams.type);
+        long collectionId = context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE).getLong(changeParams.idPrefsName, 0L);
+        if (collectionId == 0) {
+            AppLogger.wtf(context, "changeSound", "No active collection for " + changeParams.idPrefsName);
+            return null;
+        }
+        long[] tones = Media.getTones(context, collectionId);
+        if (tones.length == 0) {
+            AppLogger.wtf(context, "changeSound", "No tones for collection for " + changeParams.idPrefsName);
+            context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE).edit()
+                    .putLong(changeParams.idPrefsName, 0).apply();
+            return null;
+        }
+        int position = getPosition(context, changeParams, tones);
+        context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE).edit().putInt(changeParams.idPrefsName + LAST_USED, position).apply();
+        AppLogger.wtf(context, "changeSound/" + changeParams.idPrefsName, "" + position);
+        ContentValues media = Media.getMedia(context, tones[position]);
+        Uri nextUri = getToneUri(media);
+        File nextFile = Utils.fileForUri(context, nextUri);
+        if (nextFile != null && nextFile.exists()) {
+            ContentValues values = new ContentValues();
+            values.put(changeParams.mediaType, true);
+            int updated = context.getContentResolver().update(nextUri, values, null, null);
+            if (updated > 0)
+                AppLogger.wtf(context, "changeSound/" + changeParams.mediaType, "New sound added to list");
+            RingtoneManager.setActualDefaultRingtoneUri(context, changeParams.type, nextUri);
+            context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE)
+                    .edit().putLong(changeParams.freqPrefsName + LAST_CHANGE, System.currentTimeMillis())
+                    .apply();
+            updatePreviousSettings(previousUri, context, changeParams);
+            return media;
+        } else {
+            AppLogger.wtf(context, "changeSound/", "Invalid uri selected " + nextUri.toString());
+        }
+        return null;
+    }
+
+    public static Uri getToneUri(ContentValues media) {
+        Uri uri;
+        if (media.getAsInteger(Media.Columns.IS_INTERNAL) == 1)
+            uri = MediaStore.Audio.Media.INTERNAL_CONTENT_URI;
+        else uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        return Uri.withAppendedPath(uri, "" + media.getAsLong(Media.Columns.MEDIA_ID));
+    }
+
+    private static int getPosition(Context context, ChangeParams changeParams, long[] tones) {
+        int lastIndex = context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE).getInt(changeParams.idPrefsName + LAST_USED, -1);
+        if (!context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE).getBoolean(ORDER_CHANGE, false)) {
+            int position = new Random().nextInt(tones.length);
+            if (position != lastIndex)
+                return position;
+        }
+        lastIndex = Math.min(lastIndex, tones.length - 1);
+        return (lastIndex + 1) % tones.length;
+
+    }
+
+    private static void updatePreviousSettings(Uri activeUri, Context context, ChangeParams changeParams) {
+        if (activeUri == null) return;
+        ContentValues contentValues = new ContentValues();
+        AppLogger.wtf(context, String.format("changeSound/current: %s", changeParams.logTag), "" + activeUri);
+        contentValues.put(changeParams.mediaType, false);
+        context.getContentResolver().update(activeUri, contentValues, null, null);
+    }
+
+    private static boolean checkWriteSettingsForChange(Context context) {
         try {
             if (!Utils.checkWriteSettings(context)) {
                 AppLogger.wtf(context, "changeSound", "No write settings permission");
-                return null;
+                return false;
             }
         } catch (Throwable throwable) {
             Log.wtf("changeSound", throwable.getMessage());
+            AppLogger.wtf(context, "changeSound", throwable);
             throwable.printStackTrace();
         }
-        ContentValues contentValues = new ContentValues();
-
-        Uri notifUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
-        Uri ringtoneUri = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_RINGTONE);
-        long notifId = notifUri != null ? ContentUris.parseId(notifUri) : -1L;
-        long ringtoneId = ringtoneUri != null ? ContentUris.parseId(ringtoneUri) : -1L;
-        AppLogger.wtf(context, "changeSound/currentNotifSound", "" + notifId);
-        AppLogger.wtf(context, "changeSound/currentRingtoneSound", "" + ringtoneId);
-        contentValues.put(MediaStore.Audio.Media.IS_NOTIFICATION, 0);
-        contentValues.put(MediaStore.Audio.Media.IS_RINGTONE, 0);
-        context.getContentResolver().update(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                contentValues,
-                MediaStore.Audio.Media.IS_MUSIC + Media.EQUALS + Media.AND + MediaStore.Audio.Media._ID + Media.NOT_IN + "(?,?)",
-                new String[]{"1", "" + notifId, "" + ringtoneId}
-        );
-        context.getContentResolver().update(
-                MediaStore.Audio.Media.INTERNAL_CONTENT_URI,
-                contentValues,
-                MediaStore.Audio.Media.IS_MUSIC + Media.EQUALS + Media.AND + MediaStore.Audio.Media._ID + Media.NOT_IN + "(?,?)",
-                new String[]{"1", "" + notifId, "" + ringtoneId}
-        );
-
-
-        long collectionId = context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE)
-                .getLong(key, 0L);
-        if (collectionId == 0) {
-            AppLogger.wtf(context, "changeSound", "No active collection for " + key);
-            return null;
-        }
-        JSONArray tones = Media.getTones(context, collectionId);
-        if (tones.length() == 0) {
-            AppLogger.wtf(context, "changeSound", "No tones for collection for " + key);
-            context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE).edit()
-                    .putLong(key, 0).apply();
-            return null;
-        }
-
-        int position;
-        int lastIndex = context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE).getInt(key + LAST_USED, -1);
-        if (!context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE).getBoolean(ORDER_CHANGE, false)) {
-            position = new Random().nextInt(tones.length());
-            if (position == lastIndex)
-                position = (lastIndex + 1) % tones.length();
-        } else {
-            lastIndex = Math.min(lastIndex, tones.length() - 1);
-            position = (lastIndex + 1) % tones.length();
-        }
-        context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE).edit().putInt(key + LAST_USED, position).apply();
-        AppLogger.wtf(context, "changeSound/" + key, "" + position);
-        JSONObject tone = Media.getMedia(context, tones.getLong(position));
-        Uri uri;
-        if (tone.getInt(Media.Columns.IS_INTERNAL) == 1) uri = MediaStore.Audio.Media.INTERNAL_CONTENT_URI;
-        else uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        uri = Uri.withAppendedPath(uri, "" + tone.getLong(Media.Columns.MEDIA_ID));
-        if (Utils.isValidUri(context, uri)) {
-            {
-                ContentValues values = new ContentValues();
-                if (isRingtone)
-                    values.put(MediaStore.Audio.Media.IS_RINGTONE, true);
-                if (isNotification)
-                    values.put(MediaStore.Audio.Media.IS_NOTIFICATION, true);
-                int updated = context.getContentResolver().update(uri, values, null, null);
-                if (updated > 0) {
-                    AppLogger.wtf(context, "changeSound/" + type, "New sound added to list");
-                }
-            }
-            RingtoneManager.setActualDefaultRingtoneUri(context, type, uri);
-            context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE).edit()
-                    .putLong(freqKey + LAST_CHANGE, System.currentTimeMillis()).apply();
-        } else {
-            AppLogger.wtf(context, "changeSound/", "Invalid uri selected " + uri.toString());
-            uri = null;
-        }
-        return uri;
+        return true;
     }
 
-    public static Uri changeRingtone(Context context) throws JSONException {
+    public static ContentValues changeRingtone(Context context) {
         return changeRingtone(context, true);
     }
 
-    public static Uri changeRingtone(Context context, Boolean notify) throws JSONException {
-        Uri uri = changeSound(context, RingtoneManager.TYPE_RINGTONE, ACTIVE_RINGTONE, RINGTONE_FREQ, true, false);
-        if (uri != null && notify) {
-            notify(context, context.getString(R.string.ringtone_change), R.id.changeRingtoneNotif);
-        }
-        if (uri != null) {
-            Intent intent = new Intent(JUST_CHANGED);
-            intent.putExtra(JUST_CHANGED, ACTIVE_RINGTONE);
-            context.sendBroadcast(intent);
-        }
-        return uri;
-    }
-
-    public static Uri changeNotificationSound(Context context) throws JSONException {
+    public static ContentValues changeNotificationSound(Context context) {
         return changeNotificationSound(context, true);
     }
 
-    public static Uri changeNotificationSound(Context context, Boolean notify) throws JSONException {
-        AppLogger.wtf(context, "changeNotificationSound", notify.toString());
-        Uri uri = changeSound(context, RingtoneManager.TYPE_NOTIFICATION, ACTIVE_NOTIFICATION, NOTIF_FREQ, false, true);
-        if (uri != null && notify) {
-            notify(context, context.getString(R.string.notification_change), R.id.changeNotifNotif);
-        }
-
-        if (uri != null) {
-            Intent intent = new Intent(JUST_CHANGED);
-            intent.putExtra(JUST_CHANGED, ACTIVE_NOTIFICATION);
-            context.sendBroadcast(intent);
-        }
-        AppLogger.wtf(context, "changeNotificationSound/uri: ", String.valueOf(uri));
-        return uri;
+    public static ContentValues changeRingtone(Context context, boolean notify) {
+        return changeSound(
+                context,
+                notify,
+                RINGTONE_CHANGE_PARAMS
+        );
     }
 
-    private static void notify(Context context, String string, int notificationId) {
-        SharedPreferences preferences = context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE);
-        if (preferences.getBoolean(NOTIFY_CHANGE, false)) {
-            Intent intent = new Intent(Settings.ACTION_SOUND_SETTINGS);
-            Utils.notify(context, string, notificationId, PendingIntent.getActivity(context, 0, intent, 0));
-        }
+    public static ContentValues changeNotificationSound(Context context, boolean notify) {
+        return changeSound(
+                context,
+                notify,
+                NOTIF_CHANGE_PARAMS
+        );
+    }
+
+    public static ContentValues changeSound(Context context, boolean notify, ChangeParams changeParams) {
+        AppLogger.wtf(context, changeParams.logTag, String.valueOf(notify));
+        ContentValues mediaContentValues = changeSound(context, changeParams);
+        if (mediaContentValues != null) {
+            if (notify)
+                MediaPlayerStub.notify(context, changeParams, mediaContentValues);
+            broadcastChange(context, changeParams.idPrefsName);
+            AppLogger.wtf(context, String.format("%s/uri: ", changeParams.logTag), mediaContentValues.toString());
+        } else AppLogger.wtf(context, String.format("%s/uri: ", changeParams.logTag), "failed");
+        return mediaContentValues;
+    }
+
+    private static void broadcastChange(Context context, String what) {
+        Intent intent = new Intent(JUST_CHANGED);
+        intent.putExtra(JUST_CHANGED, what);
+        context.sendBroadcast(intent);
     }
 
     public static void deleteCheck(Context context, long collectionId) {

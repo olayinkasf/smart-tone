@@ -20,6 +20,7 @@
 package com.olayinka.smart.tone.activity;
 
 import android.annotation.TargetApi;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,9 +38,6 @@ import com.olayinka.smart.tone.adapter.ToneListAdapter;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.MediaItem;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import lib.olayinka.smart.tone.R;
 
 /**
@@ -53,17 +51,14 @@ public class CollectionPageActivity extends ImageCacheActivity implements View.O
 
     long mCollectionId;
 
-    JSONObject mCollectionObject;
+    ContentValues mCollectionContentValues;
     private ToneListAdapter mAdapter;
 
     @Override
     protected void onPause() {
-        if (mCollectionId != 0 && mCollectionObject != null)
-            try {
-                mAdapter.persist(mCollectionId, mCollectionObject.getString(Media.CollectionColumns.NAME));
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
+        if (mCollectionId != 0 && mCollectionContentValues != null) {
+            mAdapter.persist(mCollectionId, mCollectionContentValues.getAsString(Media.CollectionColumns.NAME));
+        }
         super.onPause();
     }
 
@@ -110,40 +105,28 @@ public class CollectionPageActivity extends ImageCacheActivity implements View.O
 
     private void setCollection() {
         mCollectionId = getIntent().getLongExtra(COLLECTION_ID, 0);
-        try {
-            mCollectionObject = Media.getCollection(this, mCollectionId);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+        mCollectionContentValues = Media.getCollection(this, mCollectionId);
     }
 
     private void setCollectionArt() {
         ImageView albumArt = (ImageView) findViewById(R.id.albumArt);
         Utils.squareImageView(this, albumArt);
-        String mediaItemString = getIntent().getStringExtra(ART_MEDIA_ITEM);
-        if (mediaItemString != null) try {
-            MediaItem mediaItem = MediaItem.fromJSONObject(new JSONObject(mediaItemString));
+        MediaItem mediaItem = getIntent().getParcelableExtra(ART_MEDIA_ITEM);
+        if (mediaItem != null)
             loadBitmap(Utils.uriForMediaItem(mediaItem), albumArt, Utils.displayDimens(this).widthPixels / 5);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     void initToolbar(Toolbar toolbar) {
-        try {
-            ((TextView) toolbar.findViewById(R.id.collectionName)).setText(mCollectionObject.getString(Media.CollectionColumns.NAME));
-            if (isFolderCollection()) {
-                toolbar.findViewById(R.id.folderPath).setVisibility(View.VISIBLE);
-                ((TextView) toolbar.findViewById(R.id.folderPath)).setText(Media.getFolderPath(this, mCollectionObject.getLong(Media.CollectionColumns.FOLDER_ID)));
-            }
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
+        ((TextView) toolbar.findViewById(R.id.collectionName)).setText(mCollectionContentValues.getAsString(Media.CollectionColumns.NAME));
+        if (isFolderCollection()) {
+            toolbar.findViewById(R.id.folderPath).setVisibility(View.VISIBLE);
+            ((TextView) toolbar.findViewById(R.id.folderPath)).setText(Media.getFolderPath(this, mCollectionContentValues.getAsLong(Media.CollectionColumns.FOLDER_ID)));
         }
     }
 
     private boolean isFolderCollection() {
-        return mCollectionObject.optLong(Media.CollectionColumns.FOLDER_ID) > 0;
+        return mCollectionContentValues.getAsLong(Media.CollectionColumns.FOLDER_ID) > 0;
     }
 
     @Override

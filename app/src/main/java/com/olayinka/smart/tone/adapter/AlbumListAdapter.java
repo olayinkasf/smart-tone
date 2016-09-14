@@ -47,13 +47,13 @@ import lib.olayinka.smart.tone.R;
 /**
  * Created by Olayinka on 5/3/2015.
  */
-public class AlbumListAdapter extends CursorAdapter implements  View.OnClickListener {
+public class AlbumListAdapter extends CursorAdapter implements View.OnClickListener {
 
     private OrderedMediaSet<Long> mSelection;
 
     public AlbumListAdapter(Context context, String table, OrderedMediaSet<Long> selected) {
         super(context, AppSqlHelper.instance(context).getReadableDatabase()
-                .query(table, new String[]{"*"}, null, null, null, null, Media.Columns.NAME)
+                        .query(table, new String[]{"*"}, null, null, null, null, Media.Columns.NAME)
                 , false);
         mSelection = selected;
     }
@@ -96,12 +96,13 @@ public class AlbumListAdapter extends CursorAdapter implements  View.OnClickList
     public void onClick(View v) {
         Intent intent = new Intent(v.getContext(), MediaGroupActivity.class);
         intent.putExtra(MediaGroupActivity.SELECTION, Utils.serialize(mSelection.getList()));
-        intent.putExtra(MediaGroupActivity.MEDIA_ITEM, v.getTag(R.id.mediaItem).toString());
+        intent.putExtra(MediaGroupActivity.MEDIA_ITEM, (MediaItem) v.getTag(R.id.mediaItem));
         intent.putExtra(MediaGroupActivity.TABLE, getTable());
         if (Utils.hasLollipop()) {
             ActivityOptionsCompat options = ActivityOptionsCompat.
                     makeSceneTransitionAnimation((Activity) v.getContext(), v, v.getContext().getString(R.string.transition_media_group));
             ((Activity) v.getContext()).startActivityForResult(intent, CollectionEditActivity.GROUP_RETURN_CODE, options.toBundle());
-        } else ((Activity) v.getContext()).startActivityForResult(intent, CollectionEditActivity.GROUP_RETURN_CODE);
+        } else
+            ((Activity) v.getContext()).startActivityForResult(intent, CollectionEditActivity.GROUP_RETURN_CODE);
     }
 }

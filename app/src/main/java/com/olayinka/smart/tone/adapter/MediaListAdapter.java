@@ -36,7 +36,7 @@ import com.olayinka.smart.tone.activity.ImageCacheActivity;
 import com.olayinka.smart.tone.model.ListenableHashSet;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.MediaItem;
-import com.olayinka.smart.tone.task.MediaPlayBackTask;
+import com.olayinka.smart.tone.service.MediaPlayerStub;
 
 import java.util.Collection;
 import java.util.Set;
@@ -115,7 +115,7 @@ public class MediaListAdapter extends CursorAdapter implements CompoundButton.On
 
     @Override
     public void onClick(View view) {
-        MediaPlayBackTask.stop();
+        MediaPlayerStub.stop(view.getContext());
         CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox);
         checkBox.setChecked(!checkBox.isChecked());
     }

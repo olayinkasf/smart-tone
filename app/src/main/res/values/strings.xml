@@ -42,6 +42,8 @@
     <string name="collection.name.exist">Another collection has this name.</string>
     <string name="rename">Rename collection</string>
     <string name="previewing">Playing</string>
+    <string name="preview">Preview</string>
+    <string name="stop.preview">Stop Preview</string>
     <string name="douple.tap">Double tap on music icon to preview</string>
     <string name="importing">Importing collections …</string>
     <string name="ringtone">Ringtone</string>
@@ -96,14 +98,15 @@
     <string name="contact">Contact</string>
     <string name="contact.dev">Contact Developer</string>
     <string name="share">Hey check out the SmartTone app at:</string>
-    <string name="ringtone.change">Your call ringtone has been changed</string>
-    <string name="notification.change">Your notification sound has been changed</string>
+    <string name="ringtone.change">SmartTone - Ringtone changed</string>
+    <string name="notification.change">SmartTone - Notification Sound changed</string>
     <string name="action.delete.collection">Delete collection</string>
     <string name="deleted">deleted</string>
     <string name="collection">Collection</string>
     <string name="cant.create.dir">Error exporting collection. Couldn\'t create backup directory!</string>
     <string name="collection.export.sent">Your collection is being exported</string>
     <string name="export.complete">Your collections has been exported to:</string>
+    <string name="export.empty">No collection found for exporting</string>
     <string name="legal">Legal</string>
     <string name="terms.of.service">Terms of service</string>
     <string name="privacy.policy">Privacy policy</string>

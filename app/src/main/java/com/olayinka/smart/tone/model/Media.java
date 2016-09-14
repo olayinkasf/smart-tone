@@ -22,16 +22,15 @@ package com.olayinka.smart.tone.model;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.olayinka.smart.tone.AppSqlHelper;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.olayinka.smart.tone.Utils;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by Olayinka on 4/26/2015.
@@ -73,8 +72,7 @@ public class Media {
         return folderId;
     }
 
-
-    public static JSONArray getTones(Context context, long mCollectionId) throws JSONException {
+    public static long[] getTones(Context context, long mCollectionId) {
         SQLiteDatabase database = AppSqlHelper.instance(context).getReadableDatabase();
         String[] columns = new String[]{ToneColumns.MEDIA_ID};
         Cursor cursor = database.query(
@@ -84,17 +82,17 @@ public class Media {
                 new String[]{"" + mCollectionId},
                 null, null, ToneColumns.SORT_ORDER
         );
-        JSONArray tones = new JSONArray();
+        ArrayList<Long> tones = new ArrayList<>();
         while (cursor.moveToNext()) {
-            tones.put(cursor.getString(0));
+            tones.add(cursor.getLong(0));
         }
         cursor.close();
-        return tones;
+        return Utils.serialize(tones);
     }
 
-    public static JSONObject getCollection(Context context, long mCollectionId) throws JSONException {
+    public static ContentValues getCollection(Context context, long mCollectionId) {
         SQLiteDatabase database = AppSqlHelper.instance(context).getReadableDatabase();
-        JSONObject object = new JSONObject();
+        ContentValues contentValues = new ContentValues();
         Cursor cursor = database.query(
                 Collection.TABLE,
                 new String[]{CollectionColumns._ID, CollectionColumns.NAME, CollectionColumns.FOLDER_ID, CollectionColumns.DATE_CREATED},
@@ -103,35 +101,30 @@ public class Media {
                 null, null, null
         );
         if (cursor.moveToNext()) {
-            object.put(CollectionColumns._ID, cursor.getLong(0));
-            object.put(CollectionColumns.NAME, cursor.getString(1));
-            object.put(CollectionColumns.FOLDER_ID, cursor.getLong(2));
-            object.put(CollectionColumns.DATE_CREATED, cursor.getString(3));
+            DatabaseUtils.cursorRowToContentValues(cursor, contentValues);
         }
         cursor.close();
 
-        return object;
+        return contentValues;
     }
 
-    public static JSONObject getMedia(Context context, long mediaId) throws JSONException {
+    public static ContentValues getMedia(Context context, long mediaId) {
         SQLiteDatabase database = AppSqlHelper.instance(context).getReadableDatabase();
-        JSONObject object = new JSONObject();
+        ContentValues contentValues = new ContentValues();
         Cursor cursor = database.query(
                 Media.TABLE, new String[]{"*"},
                 Columns._ID + Media.EQUALS, new String[]{"" + mediaId},
                 null, null, null
         );
         if (cursor.moveToNext()) {
-            String[] columns = cursor.getColumnNames();
-            for (int i = 0; i < columns.length; i++)
-                object.put(columns[i], cursor.getString(i));
+            DatabaseUtils.cursorRowToContentValues(cursor, contentValues);
         }
         cursor.close();
 
-        return object;
+        return contentValues;
     }
 
-    public static void saveCollection(Context applicationContext, long collectionId, String collectionName, String selectionString, long folderId) throws JSONException {
+    public static void saveCollection(Context applicationContext, long collectionId, String collectionName, long[] selection, long folderId) {
         SQLiteDatabase database = AppSqlHelper.instance(applicationContext).getWritableDatabase();
         database.beginTransaction();
         ContentValues collectionValues = new ContentValues();
@@ -148,11 +141,10 @@ public class Media {
             }
         }
         database.delete(Tone.TABLE, ToneColumns.COLLECTION_ID + EQUALS, new String[]{"" + collectionId});
-        JSONArray selection = new JSONArray(selectionString);
         ContentValues toneValues = new ContentValues();
         toneValues.put(Media.ToneColumns.COLLECTION_ID, collectionId);
-        for (int i = 0; i < selection.length(); i++) {
-            long mediaId = selection.getLong(i);
+        for (int i = 0; i < selection.length; i++) {
+            long mediaId = selection[i];
             if (mediaId <= 0) {
                 throw new RuntimeException();
             }

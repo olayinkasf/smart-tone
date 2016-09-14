@@ -43,6 +43,8 @@ import com.olayinka.smart.tone.Utils;
  */
 public class NotifListenerService extends NotificationListenerService {
 
+    private static final String NOTIF_CANCELED = "notification.request.notif.canceled";
+
     private final Handler mHandler = new Handler();
     private final Runnable mPermissionRunnable = new Runnable() {
         @Override
@@ -64,63 +66,67 @@ public class NotifListenerService extends NotificationListenerService {
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
-        AppLogger.wtf(this, "onNotificationPosted", sbn.toString());
-        if (sbn.getNotification().contentView == null)
+        if (sbn.getPackageName().equals(getPackageName()))
             return;
-        try {
-            if (shouldRun(this)) {
-                AppSettings.changeNotificationSound(this, false);
-            } else stopSelf();
-        } catch (Throwable throwable) {
-            AppLogger.wtf(this, "onNotificationPosted", throwable);
-        }
+        AppLogger.wtf(this, "onNotificationPosted", sbn.toString());
+        if (shouldRun(this)) AppSettings.changeNotificationSound(this);
+        else stopSelf();
     }
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
-        AppLogger.wtf(this, "onNotificationRemoved", sbn.toString());
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent != null )
+            handleIntent(intent);
+        return START_STICKY;
+    }
+
+    public int handleIntent(Intent intent) {
+
+        NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         if (!shouldRun(this)) {
+            mNotifyMgr.cancel(R.id.notifListenerNotif);
             AppLogger.wtf(this, "onStartCommand/NotifListenerService", "Shouldn't run! Stop alarm and return START_NOT_STICKY");
-            ServiceManager.stopAlarm(getApplicationContext(), NotifListenerService.class);
             stopSelf();
             return START_NOT_STICKY;
         }
 
-        NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-        if (intent.getBooleanExtra(AppSettings.NOTIF_CANCELED, false) && !PermissionUtils.hasNotificationPermission(this)) {
-            ServiceManager.stopAlarm(this, NotifListenerService.class);
-            //Start repeating change service
-            AppSettings.setFreq(this, AppSettings.NOTIF_FREQ, 1, R.array.notification_freq);
-            ServiceManager.startAlarm(this, ShuffleService.class);
-            stopSelf();
-            mNotifyMgr.notify(
-                    R.id.notifListenerNotif,
-                    new NotificationCompat.Builder(this)
-                            .setSmallIcon(R.drawable.ic_notif_small)
-                            .setLargeIcon(Utils.getLargeIcon(this))
-                            .setContentTitle(getString(R.string.notification_service))
-                            .setContentText(getString(R.string.change_notif_freq))
-                            .setTicker(getString(R.string.change_notif_freq))
-                            .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.change_notif_freq)))
-                            .setSound(uri)
-                            .build()
-            );
-            return START_NOT_STICKY;
+
+        String action = intent.getAction();
+        if (action!= null && action.equals(NOTIF_CANCELED)) {
+            if (!PermissionUtils.hasNotificationPermission(this)) {
+                AppSettings.setFreq(this, AppSettings.NOTIF_FREQ, 1, R.array.notification_freq);
+                ShuffleStub.Notification.start(this);
+                mNotifyMgr.notify(
+                        R.id.notifListenerNotif,
+                        new NotificationCompat.Builder(this)
+                                .setSmallIcon(R.drawable.ic_notif_small)
+                                .setLargeIcon(Utils.getLargeIcon(this))
+                                .setContentTitle(getString(R.string.notification_service))
+                                .setContentText(getString(R.string.change_notif_freq))
+                                .setTicker(getString(R.string.change_notif_freq))
+                                .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.change_notif_freq)))
+                                .setSound(uri)
+                                .build()
+                );
+                stopSelf();
+                return START_NOT_STICKY;
+            }
+            return START_STICKY;
         }
 
         if (!PermissionUtils.hasNotificationPermission(this)) {
             Intent positiveIntent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
-            Intent negativeIntent = new Intent(this, NotifListenerService.class);
-            negativeIntent.putExtra(AppSettings.NOTIF_CANCELED, true);
+            Intent cancelIntent = new Intent(this, NotifListenerService.class);
+            cancelIntent.setAction(NOTIF_CANCELED);
             PendingIntent positivePendingIntent = PendingIntent.getActivity(this, 0, positiveIntent, 0);
-            PendingIntent cancelPendingIntent = PendingIntent.getService(getApplicationContext(), 0, negativeIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+            PendingIntent cancelPendingIntent = PendingIntent.getService(getApplicationContext(), 0, cancelIntent, PendingIntent.FLAG_CANCEL_CURRENT);
             mNotifyMgr.notify(
                     R.id.notifListenerNotif,
                     new NotificationCompat.Builder(this)
@@ -138,11 +144,21 @@ public class NotifListenerService extends NotificationListenerService {
                             .build()
             );
             mHandler.postDelayed(mPermissionRunnable, 500);
-            return START_NOT_STICKY;
+            return START_STICKY;
         }
 
         mNotifyMgr.cancel(R.id.notifListenerNotif);
 
-        return START_NOT_STICKY;
+        return START_STICKY;
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            mHandler.removeCallbacks(mPermissionRunnable);
+        } catch (Throwable ignored) {
+        }
     }
 }

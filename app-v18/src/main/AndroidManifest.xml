@@ -138,14 +138,9 @@
             android:name=".service.AppService"
             android:exported="false" />
         <service
-            android:name=".service.ShuffleService"
-            android:exported="false"
-            android:label="@string/smarttone.service" />
-        <service
             android:name=".service.RingtoneTelephonyService"
             android:exported="false"
             android:label="@string/ringtone.service" />
-
         <service
             android:name=".service.NotifListenerService"
             android:exported="false"
@@ -155,12 +150,17 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
+        <service
+            android:name=".service.SmartToneService"
+            android:exported="false"
+            android:label="@string/smarttone.service" />
 
-        <receiver android:name=".service.BootReceiver">
+        <receiver android:name=".service.Receivers$BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
 
     </application>
 

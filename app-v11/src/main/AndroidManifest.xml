@@ -135,24 +135,24 @@
             android:name=".service.AppService"
             android:exported="false" />
         <service
-            android:name=".service.ShuffleService"
-            android:exported="false"
-            android:label="@string/smarttone.service" />
-        <service
             android:name=".service.RingtoneTelephonyService"
             android:exported="false"
             android:label="@string/ringtone.service" />
 
         <service
-            android:name=".service.NotifAccessibilityService"
+            android:name=".service.NotifListenerService"
             android:label="@string/notification.service"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
         </service>
+        <service
+            android:name=".service.SmartToneService"
+            android:exported="false"
+            android:label="@string/smarttone.service" />
 
-        <receiver android:name=".service.BootReceiver">
+        <receiver android:name=".service.Receivers$BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

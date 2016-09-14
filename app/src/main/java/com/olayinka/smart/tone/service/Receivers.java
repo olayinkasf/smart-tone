@@ -17,19 +17,24 @@
  * limitations under the License.
  */
 
-package com.olayinka.smart.tone;
+package com.olayinka.smart.tone.service;
 
-import com.olayinka.smart.tone.service.NotifAccessibilityService;
-import com.olayinka.smart.tone.service.ServiceManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 
-/**
- * Created by Olayinka on 5/9/2015.
- */
-public class SmartTone extends AbsSmartTone {
+import com.olayinka.smart.tone.AppLogger;
 
+public class Receivers {
 
-    @Override
-    protected void startApiServices() {
-        ServiceManager.startAlarm(getApplicationContext(), NotifAccessibilityService.class);
+    public static class BootReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            AppLogger.wtf(context, "BootReceiver onReceive", "" + context.toString());
+            SmartToneService.startServices(context);
+        }
     }
+
 }
+

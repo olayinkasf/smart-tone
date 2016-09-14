@@ -33,6 +33,7 @@ import android.provider.MediaStore;
 import com.olayinka.smart.tone.AppLogger;
 import com.olayinka.smart.tone.AppSettings;
 import com.olayinka.smart.tone.AppSqlHelper;
+import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.model.Media;
 
 import org.json.JSONArray;
@@ -264,22 +265,22 @@ public class IndexerService extends IntentService {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String name = jsonObject.optString(Media.CollectionColumns.NAME, jsonObject.optString("name"));
-                long folderPath = jsonObject.optLong(Media.CollectionColumns.FOLDER_ID);
+                long folderPath = jsonObject.optLong(Media.CollectionColumns.FOLDER_ID, -1);
                 name = name + " " + getString(R.string.imported);
                 JSONArray selection = jsonObject.getJSONArray("tones");
-                JSONArray selectionIds = new JSONArray();
+                ArrayList<Long> selectionIds = new ArrayList<>();
                 for (int j = 0; j < selection.length(); j++) {
                     Cursor cursor = database.query(Media.TABLE, new String[]{Media.Columns._ID}, Media.Columns.PATH + Media.EQUALS, new String[]{selection.getJSONObject(j).getString(Media.Columns.PATH)}, null, null, null);
 
                     if (cursor.getCount() == 1) {
                         cursor.moveToNext();
-                        selectionIds.put(cursor.getLong(0));
+                        selectionIds.add(cursor.getLong(0));
                     }
                     cursor.close();
                 }
 
-                if (selectionIds.length() != 0) {
-                    Media.saveCollection(getApplicationContext(), 0, name, selectionIds.toString(), folderPath);
+                if (selectionIds.size() != 0) {
+                    Media.saveCollection(getApplicationContext(), 0, name, Utils.serialize(selectionIds), folderPath);
                 }
             }
             database.close();

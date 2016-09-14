@@ -21,18 +21,16 @@ package com.olayinka.smart.tone.listener;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
 import com.olayinka.smart.tone.AppSqlHelper;
-import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.MediaItem;
-import com.olayinka.smart.tone.task.MediaPlayBackTask;
+import com.olayinka.smart.tone.service.MediaPlayerStub;
 
-import java.io.IOException;
-
-import lib.olayinka.smart.tone.R;
+import java.io.File;
 
 /**
  * Created by Olayinka on 12/26/2014.
@@ -47,24 +45,16 @@ public class DoubleTapListener extends GestureDetector.SimpleOnGestureListener {
     }
 
     public boolean onDoubleTap(MotionEvent motionEvent) {
-        Cursor cursor = null;
-        try {
-            cursor = AppSqlHelper.instance(mContext).getReadableDatabase()
-                    .query(
-                            Media.TABLE, new String[]{"*"},
-                            Media.Columns._ID + Media.EQUALS + Media.AND + Media.Columns.IS_INTERNAL + Media.EQUALS,
-                            new String[]{"" + mediaItem.getId(), "" + mediaItem.getInternal()}, null, null, null
-                    );
-            cursor.moveToNext();
-            MediaPlayBackTask.play(mContext, cursor.getString(3));
-        } catch (IOException localIOException) {
-            cursor.close();
-            localIOException.printStackTrace();
-            return true;
-        } catch (Exception ignored) {
-            return true;
-        }
-        Utils.toast(mContext, mContext.getString(R.string.previewing) + " " + cursor.getString(2));
+        Cursor cursor = AppSqlHelper.instance(mContext).getReadableDatabase()
+                .query(
+                        Media.TABLE, new String[]{"*"},
+                        Media.Columns._ID + Media.EQUALS + Media.AND + Media.Columns.IS_INTERNAL + Media.EQUALS,
+                        new String[]{"" + mediaItem.getId(), "" + mediaItem.getInternal()}, null, null, null
+                );
+        cursor.moveToNext();
+        File file = new File(cursor.getString(3));
+        MediaPlayerStub.start(mContext, Uri.fromFile(file));
+        cursor.close();
         return true;
     }
 
@@ -73,9 +63,10 @@ public class DoubleTapListener extends GestureDetector.SimpleOnGestureListener {
     }
 
     public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
-        MediaPlayBackTask.stop();
+        MediaPlayerStub.stop(mContext);
         return false;
     }
+
 
     public void setMediaItem(MediaItem mediaItem) {
         this.mediaItem = mediaItem;

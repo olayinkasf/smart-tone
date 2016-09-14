@@ -32,7 +32,6 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.olayinka.smart.tone.AbsSmartTone;
 import com.olayinka.smart.tone.AppLogger;
 import com.olayinka.smart.tone.AppSettings;
 import com.olayinka.smart.tone.AppSqlHelper;
@@ -41,6 +40,7 @@ import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.service.AppService;
 import com.olayinka.smart.tone.service.IndexerService;
+import com.olayinka.smart.tone.service.SmartToneService;
 import com.olayinka.smart.tone.widget.PrefsSwitchCompat;
 import com.olayinka.smart.tone.widget.PrefsTextView;
 
@@ -60,8 +60,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                     AppSettings.setFreq(SettingsActivity.this, key, which, arrayId);
                     PrefsTextView local = (PrefsTextView) v.findViewById(R.id.text);
                     local.setPrefsText();
-                    if (arrayId == R.array.index_freq) return;
-                    ((AbsSmartTone) getApplication()).startServices();
+                    if (arrayId == R.array.ringtone_freq) SmartToneService.startServicesRingtoneChanged(SettingsActivity.this);
+                    if (arrayId == R.array.notification_freq) SmartToneService.startServicesNotifChanged(SettingsActivity.this);
                 }
             }).show();
         }
@@ -250,6 +250,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        ((AbsSmartTone) getApplication()).startServices();
+        SmartToneService.startServicesCheckChanged(this);
     }
 }

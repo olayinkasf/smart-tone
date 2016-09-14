@@ -19,17 +19,35 @@
 
 package com.olayinka.smart.tone.model;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by Olayinka on 5/3/2015.
  */
-public class MediaItem implements Comparable<MediaItem> {
+public class MediaItem implements Comparable<MediaItem>, Parcelable {
     long mId;
     long mAlbumId;
     int mInternal;
 
+
+    protected MediaItem(Parcel in) {
+        mId = in.readLong();
+        mAlbumId = in.readLong();
+        mInternal = in.readInt();
+    }
+
+    public static final Creator<MediaItem> CREATOR = new Creator<MediaItem>() {
+        @Override
+        public MediaItem createFromParcel(Parcel in) {
+            return new MediaItem(in);
+        }
+
+        @Override
+        public MediaItem[] newArray(int size) {
+            return new MediaItem[size];
+        }
+    };
 
     public void setId(long mId) {
         this.mId = mId;
@@ -45,14 +63,6 @@ public class MediaItem implements Comparable<MediaItem> {
         this.mInternal = internal;
     }
 
-    public static MediaItem fromJSONObject(JSONObject jsonObject) throws JSONException {
-        MediaItem mediaItem = new MediaItem();
-        mediaItem.mId = jsonObject.getLong(Media.Columns._ID);
-        mediaItem.mAlbumId = jsonObject.getLong(Media.Columns.ALBUM_ID);
-        mediaItem.mInternal = jsonObject.getInt(Media.Columns.IS_INTERNAL);
-        return mediaItem;
-    }
-
     public long getId() {
         return mId;
     }
@@ -65,23 +75,6 @@ public class MediaItem implements Comparable<MediaItem> {
         return mInternal;
     }
 
-    public JSONObject toJSONObject() throws JSONException {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put(Media.Columns._ID, mId);
-        jsonObject.put(Media.Columns.ALBUM_ID, mAlbumId);
-        jsonObject.put(Media.Columns.IS_INTERNAL, mInternal);
-        return jsonObject;
-    }
-
-    @Override
-    public String toString() {
-        try {
-            return toJSONObject().toString();
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Override
     public int compareTo(MediaItem another) {
         if (mAlbumId < another.mAlbumId) return -1;
@@ -89,5 +82,17 @@ public class MediaItem implements Comparable<MediaItem> {
         if (mInternal < another.mInternal) return -1;
         if (mInternal > another.mInternal) return 1;
         return 0;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(mId);
+        dest.writeLong(mAlbumId);
+        dest.writeInt(mInternal);
     }
 }

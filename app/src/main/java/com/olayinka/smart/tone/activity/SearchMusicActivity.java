@@ -36,7 +36,6 @@ import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.adapter.MediaListAdapter;
 import com.olayinka.smart.tone.model.Media;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.LinkedHashSet;
@@ -79,10 +78,10 @@ public class SearchMusicActivity extends ImageCacheActivity {
     }
 
     private void setSelection() throws JSONException {
-        JSONArray jsonArray = new JSONArray(getIntent().getStringExtra(SELECTION));
+        long[] selection = getIntent().getLongArrayExtra(SELECTION);
         mSelection = new LinkedHashSet<>(1000);
-        for (int i = 0; i < jsonArray.length(); i++) {
-            mSelection.add(jsonArray.getLong(i));
+        for (long aSelection : selection) {
+            mSelection.add(aSelection);
         }
     }
 

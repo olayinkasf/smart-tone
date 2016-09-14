@@ -46,8 +46,8 @@ import com.olayinka.smart.tone.AppSettings;
 import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.listener.DoubleTapListener;
 import com.olayinka.smart.tone.model.MediaItem;
+import com.olayinka.smart.tone.service.MediaPlayerStub;
 import com.olayinka.smart.tone.task.AsyncTask;
-import com.olayinka.smart.tone.task.MediaPlayBackTask;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -230,7 +230,7 @@ public abstract class ImageCacheActivity extends AppCompatActivity implements Vi
     protected void onStop() {
         super.onStop();
         mMemoryCache.evictAll();
-        MediaPlayBackTask.stop();
+        MediaPlayerStub.stop(this);
     }
 
     static class AsyncDrawable extends BitmapDrawable {

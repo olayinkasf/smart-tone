@@ -20,10 +20,9 @@
 package com.olayinka.smart.tone;
 
 import android.app.Application;
+import android.content.Intent;
 
-import com.olayinka.smart.tone.service.RingtoneTelephonyService;
-import com.olayinka.smart.tone.service.ServiceManager;
-import com.olayinka.smart.tone.service.ShuffleService;
+import com.olayinka.smart.tone.service.SmartToneService;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,14 +32,14 @@ import java.io.PrintWriter;
 /**
  * Created by Olayinka on 5/9/2015.
  */
-public abstract class AbsSmartTone extends Application {
+public class SmartTone extends Application {
 
     @Override
     public void onCreate() {
         monitorLog();
         AppLogger.wtf(this, "onCreate", "Launching main process.");
         super.onCreate();
-        startServices();
+        startService(new Intent(this, SmartToneService.class));
     }
 
     private void monitorLog() {
@@ -62,13 +61,4 @@ public abstract class AbsSmartTone extends Application {
         }
     }
 
-
-    public void startServices() {
-        ServiceManager.startAlarm(this, RingtoneTelephonyService.class);
-        ServiceManager.startAlarm(this, ShuffleService.class);
-        startApiServices();
-    }
-
-
-    protected abstract void startApiServices();
 }

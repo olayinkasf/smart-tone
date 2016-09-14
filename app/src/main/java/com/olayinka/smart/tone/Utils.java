@@ -46,8 +46,6 @@ import android.widget.Toast;
 
 import com.olayinka.smart.tone.model.MediaItem;
 
-import org.json.JSONArray;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -169,12 +167,16 @@ public class Utils {
         toast(context, context.getString(resId));
     }
 
-    public static String serialize(Collection selection) {
-        JSONArray jsonArray = new JSONArray();
-        for (Object id : selection) {
-            jsonArray.put(id);
+    public static long[] serialize(Collection<Long> selection) {
+        long[] a = new long[selection.size()];
+        {
+            int i = 0;
+            for (Long id : selection) {
+                a[i] = id;
+                i++;
+            }
         }
-        return jsonArray.toString();
+        return a;
     }
 
     public static float dpFromPx(final Context context, final float px) {
@@ -193,19 +195,18 @@ public class Utils {
         return metrics;
     }
 
-    public static boolean isValidUri(Context context, Uri uri) {
+    public static File fileForUri(Context context, Uri uri) {
         ContentResolver cr = context.getContentResolver();
         String[] projection = {MediaStore.MediaColumns.DATA};
         Cursor cur = cr.query(uri, projection, null, null, null);
         if (cur != null && cur.moveToNext()) {
             String filePath = cur.getString(0);
-            if (new File(filePath).exists()) {
-                cur.close();
-                return true;
-            }
+            File file = new File(filePath);
+            cur.close();
+            return file;
         }
         if (cur != null) cur.close();
-        return false;
+        return null;
     }
 
     public static Uri uriForMediaItem(MediaItem mediaItem) {
@@ -237,6 +238,22 @@ public class Utils {
         notification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
         NotificationManager mNotifyMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         mNotifyMgr.notify(notificationId, notification);
+    }
+
+    public static NotificationCompat.Builder notifyManager(Context context, String title, String contentText, PendingIntent intent) {
+
+        if (sCachedBitmap == null)
+            sCachedBitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_notif_large);
+
+        return new NotificationCompat.Builder(context)
+                .setSmallIcon(R.drawable.ic_notif_small)
+                .setContentTitle(title)
+                .setContentText(contentText)
+                .setAutoCancel(true)
+                .setLargeIcon(sCachedBitmap)
+                .setTicker(title + "\n" +  contentText)
+                .setContentIntent(intent)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(contentText));
     }
 
     public static String readFile(File file) throws IOException {

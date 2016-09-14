@@ -42,6 +42,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import lib.olayinka.smart.tone.R;
@@ -50,13 +51,13 @@ import lib.olayinka.smart.tone.R;
  * Created by Olayinka on 5/3/2015.
  */
 public class AppService extends IntentService {
+
     public static final String SAVE_COLLECTION = "save.collection";
     public static final String FAUX_ID = "faux.id";
     private static final String NAME = "SmartTone App Service";
     public static final String EXPORT_COLLECTIONS = "export.collections";
     public static final String SAVE_FOLDER_COLLECTION = "save.folder.collection";
     public static final String EXTRA_FOLDER = "extra.folder";
-
 
     public AppService(String name) {
         super(name);
@@ -70,15 +71,11 @@ public class AppService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         switch (intent.getType()) {
             case SAVE_COLLECTION: {
-                String selectionString = intent.getStringExtra(MediaGroupActivity.SELECTION);
+                long[] selection = intent.getLongArrayExtra(MediaGroupActivity.SELECTION);
                 String collectionName = intent.getStringExtra(CollectionEditActivity.COLLECTION_NAME);
                 long collectionId = intent.getLongExtra(CollectionEditActivity.COLLECTION_ID, 0);
                 long fauxId = intent.getLongExtra(FAUX_ID, 0);
-                try {
-                    Media.saveCollection(getApplicationContext(), collectionId, collectionName, selectionString, -1);
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
-                }
+                Media.saveCollection(getApplicationContext(), collectionId, collectionName, selection, -1);
                 intent = new Intent(SAVE_COLLECTION);
                 intent.putExtra(FAUX_ID, fauxId);
                 sendBroadcast(intent);
@@ -96,12 +93,7 @@ public class AppService extends IntentService {
                 if (folderId == -1) throw new RuntimeException("Haha! Joke is on you.");
                 String collectionName = intent.getStringExtra(CollectionEditActivity.COLLECTION_NAME);
                 long fauxId = intent.getLongExtra(FAUX_ID, 0);
-                try {
-                    Media.saveCollection(getApplicationContext(), 0, collectionName, tonesInFolder(this, folderId), folderId);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                }
+                Media.saveCollection(getApplicationContext(), 0, collectionName, tonesInFolder(this, folderId), folderId);
                 intent = new Intent(SAVE_FOLDER_COLLECTION);
                 intent.putExtra(FAUX_ID, fauxId);
                 sendBroadcast(intent);
@@ -110,18 +102,17 @@ public class AppService extends IntentService {
         }
     }
 
-    public static String tonesInFolder(Context context, long folderId) {
+    public static long[] tonesInFolder(Context context, long folderId) {
         SQLiteDatabase database = AppSqlHelper.instance(context).getReadableDatabase();
         Cursor cursor = database.query(
                 Media.TABLE, new String[]{Media.Columns._ID, Media.Columns.NAME},
                 Media.Columns.FOLDER_ID + Media.EQUALS, new String[]{String.valueOf(folderId)}, null, null, Media.Columns.NAME
         );
-        JSONArray jsonArray = new JSONArray();
-        while (cursor.moveToNext()) jsonArray.put(cursor.getLong(0));
+        ArrayList<Long> idList = new ArrayList<>();
+        while (cursor.moveToNext()) idList.add(cursor.getLong(0));
         cursor.close();
-        return jsonArray.toString();
+        return Utils.serialize(idList);
     }
-
 
     public String export() throws IOException {
         @SuppressLint("SimpleDateFormat")
@@ -138,14 +129,17 @@ public class AppService extends IntentService {
         try {
             SQLiteDatabase database = AppSqlHelper.instance(getApplicationContext()).getReadableDatabase();
             Cursor collectionCursor = database.rawQuery("select * from collection where folder_id = -1", null);
-            if (collectionCursor.getCount() == 0) return null;
+            if (collectionCursor.getCount() == 0) {
+                Utils.notify(this, getString(R.string.export_empty), R.id.backup, null);
+                return null;
+            }
             JSONArray collections = new JSONArray();
             while (collectionCursor.moveToNext()) {
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put(Media.CollectionColumns.NAME, collectionCursor.getString(1));
                 JSONArray tones = new JSONArray();
                 Cursor cursor = database.rawQuery(
-                        "select m.path from media m inner join tone t  on m._id = t.media_id  where t.collection_id = ?",
+                        "select m.path, t.sort_order from media m inner join tone t on m._id = t.media_id  where t.collection_id = ? order by t.sort_order ",
                         new String[]{"" + collectionCursor.getLong(0)}
                 );
                 while (cursor.moveToNext()) {
@@ -174,6 +168,5 @@ public class AppService extends IntentService {
             Utils.notify(this, getString(R.string.export_complete) + " " + file.getAbsolutePath(), R.id.backup, null);
         return file.getAbsolutePath();
     }
-
 
 }

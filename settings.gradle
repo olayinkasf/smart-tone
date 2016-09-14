@@ -19,4 +19,4 @@
 
 
 
-include ':android-rate-this-app','drag-sort-listview-master', ':app', ':app-v11', 'app-v18'
+include ':android-rate-this-app','drag-sort-listview-master', ':app', 'app-v18', 'app-v11'

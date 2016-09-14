@@ -41,31 +41,37 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.AbsListView;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.olayinka.smart.tone.AbsSmartTone;
-import com.olayinka.smart.tone.AppSettings;
 import com.olayinka.smart.tone.AppSqlHelper;
 import com.olayinka.smart.tone.Utils;
 import com.olayinka.smart.tone.activity.AbstractMenuActivity;
 import com.olayinka.smart.tone.activity.CollectionEditActivity;
 import com.olayinka.smart.tone.model.Media;
 import com.olayinka.smart.tone.model.MediaItem;
+import com.olayinka.smart.tone.service.SmartToneService;
 import com.olayinka.smart.tone.task.AsyncTask;
 import com.olayinka.smart.tone.widget.CenterTopImageView;
 
-import org.json.JSONException;
-
+import java.io.File;
 import java.util.HashMap;
 import java.util.TreeSet;
 
 import lib.olayinka.smart.tone.R;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.olayinka.smart.tone.AppSettings.ACTIVE_APP_SERVICE;
+import static com.olayinka.smart.tone.AppSettings.ACTIVE_NOTIFICATION;
+import static com.olayinka.smart.tone.AppSettings.ACTIVE_RINGTONE;
+import static com.olayinka.smart.tone.AppSettings.APP_SETTINGS;
+import static com.olayinka.smart.tone.AppSettings.LAST_USED;
+import static com.olayinka.smart.tone.AppSettings.changeNotificationSound;
+import static com.olayinka.smart.tone.AppSettings.changeRingtone;
+import static com.olayinka.smart.tone.AppSettings.deleteCheck;
+import static com.olayinka.smart.tone.AppSettings.getActivePairs;
 
 /**
  * Created by Olayinka on 5/3/2015.
@@ -84,7 +90,7 @@ public class CollectionListAdapter extends CursorAdapter {
         mToneLoaderMap = new HashMap<>(50);
         mItemClickListener = (View.OnClickListener) context;
         mActivity = (AbstractMenuActivity) context;
-        mActivePairs = AppSettings.getActivePairs(context);
+        mActivePairs = getActivePairs(context);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -131,7 +137,7 @@ public class CollectionListAdapter extends CursorAdapter {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             mActivePairs[1] = 0l;
-                            context.getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE).edit().putLong(AppSettings.ACTIVE_NOTIFICATION, 0l).apply();
+                            context.getSharedPreferences(APP_SETTINGS, Context.MODE_PRIVATE).edit().putLong(ACTIVE_NOTIFICATION, 0l).apply();
                             mActivity.refreshForChange();
                         }
                     }).show();
@@ -143,17 +149,13 @@ public class CollectionListAdapter extends CursorAdapter {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             mActivePairs[1] = collectionId;
-                            SharedPreferences prefs = context.getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE);
-                            prefs.edit().putLong(AppSettings.ACTIVE_NOTIFICATION, collectionId).apply();
-                            prefs.edit().putBoolean(AppSettings.ACTIVE_APP_SERVICE, true).apply();
-                            try {
-                                context.getSharedPreferences(AppSettings.APP_SETTINGS, MODE_PRIVATE).edit().putInt(AppSettings.ACTIVE_NOTIFICATION + AppSettings.LAST_USED, -1).apply();
-                                AppSettings.changeNotificationSound(context, true);
-                                ((AbsSmartTone) context.getApplicationContext()).startServices();
-                                mActivity.refreshForChange();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                            SharedPreferences prefs = context.getSharedPreferences(APP_SETTINGS, Context.MODE_PRIVATE);
+                            prefs.edit().putLong(ACTIVE_NOTIFICATION, collectionId).apply();
+                            prefs.edit().putBoolean(ACTIVE_APP_SERVICE, true).apply();
+                            context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE).edit().putInt(ACTIVE_NOTIFICATION + LAST_USED, -1).apply();
+                            changeNotificationSound(context, true);
+                            SmartToneService.startServicesNotifChanged(context);
+                            mActivity.refreshForChange();
                         }
                     }).show();
         } else if (menuItem.getItemId() == R.id.removeRingtone) {
@@ -163,8 +165,8 @@ public class CollectionListAdapter extends CursorAdapter {
                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            mActivePairs[0] = 0l;
-                            context.getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE).edit().putLong(AppSettings.ACTIVE_RINGTONE, 0l).apply();
+                            mActivePairs[0] = 0L;
+                            context.getSharedPreferences(APP_SETTINGS, Context.MODE_PRIVATE).edit().putLong(ACTIVE_RINGTONE, 0L).apply();
                             mActivity.refreshForChange();
                         }
                     }).show();
@@ -176,18 +178,14 @@ public class CollectionListAdapter extends CursorAdapter {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             mActivePairs[0] = collectionId;
-                            SharedPreferences prefs = context.getSharedPreferences(AppSettings.APP_SETTINGS, Context.MODE_PRIVATE);
-                            prefs.edit().putLong(AppSettings.ACTIVE_RINGTONE, collectionId).apply();
-                            prefs.edit().putBoolean(AppSettings.ACTIVE_APP_SERVICE, true).apply();
+                            SharedPreferences prefs = context.getSharedPreferences(APP_SETTINGS, Context.MODE_PRIVATE);
+                            prefs.edit().putLong(ACTIVE_RINGTONE, collectionId).apply();
+                            prefs.edit().putBoolean(ACTIVE_APP_SERVICE, true).apply();
 
-                            try {
-                                context.getSharedPreferences(AppSettings.APP_SETTINGS, MODE_PRIVATE).edit().putInt(AppSettings.ACTIVE_RINGTONE + AppSettings.LAST_USED, -1).apply();
-                                AppSettings.changeRingtone(context, true);
-                                ((AbsSmartTone) context.getApplicationContext()).startServices();
-                                mActivity.refreshForChange();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+                            context.getSharedPreferences(APP_SETTINGS, MODE_PRIVATE).edit().putInt(ACTIVE_RINGTONE + LAST_USED, -1).apply();
+                            changeRingtone(context, true);
+                            SmartToneService.startServicesRingtoneChanged(context);
+                            mActivity.refreshForChange();
 
                         }
                     }).show();
@@ -247,7 +245,7 @@ public class CollectionListAdapter extends CursorAdapter {
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        AppSettings.deleteCheck(context, collectionId);
+                        deleteCheck(context, collectionId);
                         Media.deleteCollection(context, collectionId);
                         Utils.toast(context, context.getString(R.string.collection) + " " + name + " " + context.getString(R.string.deleted));
                         gotIt(context, view);
@@ -259,7 +257,7 @@ public class CollectionListAdapter extends CursorAdapter {
         if (header.getVisibility() == View.GONE)
             return;
         final int height = header.getMeasuredHeight();
-        final ViewGroup.LayoutParams layoutParams =  header.getLayoutParams();
+        final ViewGroup.LayoutParams layoutParams = header.getLayoutParams();
 
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(context, "alpha", 0f).setDuration(300);
 
@@ -316,7 +314,8 @@ public class CollectionListAdapter extends CursorAdapter {
             while (cursor.moveToNext() && items.size() < AbstractMenuActivity.NUM_THUMBNAILS) {
 
                 MediaItem mediaItem = new MediaItem(cursor.getLong(0), cursor.getLong(1), cursor.getInt(2));
-                if (Utils.isValidUri((Context) params[0], Utils.uriForMediaItem(mediaItem))) {
+                File file = Utils.fileForUri((Context) params[0], Utils.uriForMediaItem(mediaItem));
+                if (file != null && file.exists()) {
                     items.add(mediaItem);
                 }
             }
@@ -326,7 +325,7 @@ public class CollectionListAdapter extends CursorAdapter {
     }
 
     public static MergeCursor cursor(Context context) {
-        Long[] activePairs = AppSettings.getActivePairs(context);
+        Long[] activePairs = getActivePairs(context);
         Cursor ringtoneCursor = AppSqlHelper.instance(context).getReadableDatabase()
                 .query(Media.Collection.TABLE, new String[]{"*"}, Media.CollectionColumns._ID + Media.EQUALS, new String[]{"" + activePairs[0]}, null, null, null);
         Cursor notifCursor = null;
